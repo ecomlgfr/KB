@@ -1,0 +1,349 @@
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Credentials DIR   : /opt/keybuzz-installer/credentials
+  Apps DIR          : /opt/keybuzz-installer/apps
+  Log               : /opt/keybuzz-installer/logs/apps_prepare_env.log
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/5 : Vérification des credentials data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m postgres.env trouvé
+  [0;32mOK[0m redis.env trouvé
+  [0;32mOK[0m rabbitmq.env trouvé
+  [0;33mWARN[0m minio.env introuvable, création...
+
+Résumé des credentials :
+  MinIO      : http://s3.keybuzz.io:9000
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/5 : Test connectivité data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+Test depuis k3s-worker-01 (10.0.0.110) :
+
+[0;33mWARN[0m (port fermé ou data-plane non déployée)
+[0;33mWARN[0m (port fermé ou data-plane non déployée)
+[0;33mWARN[0m (port fermé ou data-plane non déployée)
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/5 : Génération des .env applicatifs ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Génération n8n.env
+  [0;32mOK[0m n8n.env créé
+→ Génération chatwoot.env
+  [0;32mOK[0m chatwoot.env créé
+→ Génération erpnext.env
+  [0;32mOK[0m erpnext.env créé
+→ Génération litellm.env
+  [0;32mOK[0m litellm.env créé
+→ Génération qdrant.env
+  [0;32mOK[0m qdrant.env créé
+→ Génération superset.env
+  [0;32mOK[0m superset.env créé
+
+  [0;32mOK[0m 6 fichiers .env créés dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/5 : Création des secrets Kubernetes ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:23:18] Création des namespaces...
+  ✓ Namespace n8n
+  ✓ Namespace chatwoot
+  ✓ Namespace erpnext
+  ✓ Namespace litellm
+  ✓ Namespace qdrant
+  ✓ Namespace superset
+
+[2025-10-31 16:23:18] Création des secrets depuis les .env...
+  ℹ Les secrets seront créés lors du déploiement Helm
+  ℹ Fichiers .env disponibles dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 5/5 : Génération du résumé ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m Résumé créé : /opt/keybuzz-installer/credentials/apps-summary.txt
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m PRÉPARATION DES ENVIRONNEMENTS TERMINÉE
+═══════════════════════════════════════════════════════════════════
+
+Fichiers créés :
+  - 4 credentials : postgres, redis, rabbitmq, minio
+  - 6 apps .env   : n8n, chatwoot, erpnext, litellm, qdrant, superset
+  - 6 namespaces K8s créés
+
+Commandes utiles :
+  # Voir les .env générés
+  ls -lh /opt/keybuzz-installer/apps/
+
+  # Voir le résumé
+  cat /opt/keybuzz-installer/credentials/apps-summary.txt
+
+  # Voir les namespaces
+  ssh root@10.0.0.100 kubectl get namespaces
+
+Prochaine étape :
+  ./apps_helm_deploy.sh
+
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Credentials DIR   : /opt/keybuzz-installer/credentials
+  Apps DIR          : /opt/keybuzz-installer/apps
+  Log               : /opt/keybuzz-installer/logs/apps_prepare_env.log
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/5 : Vérification des credentials data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m postgres.env trouvé
+  [0;32mOK[0m redis.env trouvé
+  [0;32mOK[0m rabbitmq.env trouvé
+  [0;32mOK[0m minio.env trouvé
+
+Résumé des credentials :
+  PostgreSQL : 10.0.0.10:4632 (POOL)
+  Redis      : 10.0.0.10:6379
+  RabbitMQ   : 10.0.0.10:5672
+  MinIO      : http://s3.keybuzz.io:9000
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/5 : Test connectivité data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+Test depuis k3s-worker-01 (10.0.0.110) :
+
+  PostgreSQL 10.0.0.10:4632 ... [0;32mOK[0m
+  Redis 10.0.0.10:6379 ... [0;32mOK[0m
+  RabbitMQ 10.0.0.10:5672 ... [0;32mOK[0m
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/5 : Génération des .env applicatifs ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Génération n8n.env
+  [0;32mOK[0m n8n.env créé
+→ Génération chatwoot.env
+  [0;32mOK[0m chatwoot.env créé
+→ Génération erpnext.env
+  [0;32mOK[0m erpnext.env créé
+→ Génération litellm.env
+  [0;32mOK[0m litellm.env créé
+→ Génération qdrant.env
+  [0;32mOK[0m qdrant.env créé
+→ Génération superset.env
+  [0;32mOK[0m superset.env créé
+
+  [0;32mOK[0m 6 fichiers .env créés dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/5 : Création des secrets Kubernetes ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:32:27] Création des namespaces...
+  ✓ Namespace n8n
+  ✓ Namespace chatwoot
+  ✓ Namespace erpnext
+  ✓ Namespace litellm
+  ✓ Namespace qdrant
+  ✓ Namespace superset
+
+[2025-10-31 16:32:30] Création des secrets depuis les .env...
+  ℹ Les secrets seront créés lors du déploiement Helm
+  ℹ Fichiers .env disponibles dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 5/5 : Génération du résumé ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m Résumé créé : /opt/keybuzz-installer/credentials/apps-summary.txt
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m PRÉPARATION DES ENVIRONNEMENTS TERMINÉE
+═══════════════════════════════════════════════════════════════════
+
+Fichiers créés :
+  - 4 credentials : postgres, redis, rabbitmq, minio
+  - 6 apps .env   : n8n, chatwoot, erpnext, litellm, qdrant, superset
+  - 6 namespaces K8s créés
+
+Commandes utiles :
+  # Voir les .env générés
+  ls -lh /opt/keybuzz-installer/apps/
+
+  # Voir le résumé
+  cat /opt/keybuzz-installer/credentials/apps-summary.txt
+
+  # Voir les namespaces
+  ssh root@10.0.0.100 kubectl get namespaces
+
+Prochaine étape :
+  ./apps_helm_deploy.sh
+
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Credentials DIR   : /opt/keybuzz-installer/credentials
+  Apps DIR          : /opt/keybuzz-installer/apps
+  Log               : /opt/keybuzz-installer/logs/apps_prepare_env.log
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/5 : Vérification des credentials data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m postgres.env trouvé
+  [0;32mOK[0m redis.env trouvé
+  [0;32mOK[0m rabbitmq.env trouvé
+  [0;32mOK[0m minio.env trouvé
+
+Résumé des credentials :
+  PostgreSQL : 10.0.0.10:4632 (POOL)
+  Redis      : 10.0.0.10:6379
+  RabbitMQ   : 10.0.0.10:5672
+  MinIO      : http://s3.keybuzz.io:9000
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/5 : Test connectivité data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+Test depuis k3s-worker-01 (10.0.0.110) :
+
+  PostgreSQL 10.0.0.10:4632 ... [0;32mOK[0m
+  Redis 10.0.0.10:6379 ... [0;32mOK[0m
+  RabbitMQ 10.0.0.10:5672 ... [0;32mOK[0m
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/5 : Génération des .env applicatifs ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Génération n8n.env
+  [0;32mOK[0m n8n.env créé
+→ Génération chatwoot.env
+  [0;32mOK[0m chatwoot.env créé
+→ Génération erpnext.env
+  [0;32mOK[0m erpnext.env créé
+→ Génération litellm.env
+  [0;32mOK[0m litellm.env créé
+→ Génération qdrant.env
+  [0;32mOK[0m qdrant.env créé
+→ Génération superset.env
+  [0;32mOK[0m superset.env créé
+
+  [0;32mOK[0m 6 fichiers .env créés dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/5 : Création des secrets Kubernetes ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:58:15] Création des namespaces...
+  ✓ Namespace n8n
+  ✓ Namespace chatwoot
+  ✓ Namespace erpnext
+  ✓ Namespace litellm
+  ✓ Namespace qdrant
+  ✓ Namespace superset
+
+[2025-10-31 16:58:18] Création des secrets depuis les .env...
+  ℹ Les secrets seront créés lors du déploiement Helm
+  ℹ Fichiers .env disponibles dans /opt/keybuzz-installer/apps
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 5/5 : Génération du résumé ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m Résumé créé : /opt/keybuzz-installer/credentials/apps-summary.txt
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m PRÉPARATION DES ENVIRONNEMENTS TERMINÉE
+═══════════════════════════════════════════════════════════════════
+
+Fichiers créés :
+  - 4 credentials : postgres, redis, rabbitmq, minio
+  - 6 apps .env   : n8n, chatwoot, erpnext, litellm, qdrant, superset
+  - 6 namespaces K8s créés
+
+Commandes utiles :
+  # Voir les .env générés
+  ls -lh /opt/keybuzz-installer/apps/
+
+  # Voir le résumé
+  cat /opt/keybuzz-installer/credentials/apps-summary.txt
+
+  # Voir les namespaces
+  ssh root@10.0.0.100 kubectl get namespaces
+
+Prochaine étape :
+  ./apps_helm_deploy.sh
+
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Credentials DIR   : /opt/keybuzz-installer/credentials
+  Apps DIR          : /opt/keybuzz-installer/apps
+  Log               : /opt/keybuzz-installer/logs/apps_prepare_env.log
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/4 : Chargement credentials data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m postgres.env trouvé
+  [0;32mOK[0m redis.env trouvé
+  [0;32mOK[0m rabbitmq.env trouvé
+  [0;32mOK[0m minio.env trouvé
+
+Résumé des credentials :
+  PostgreSQL : 10.0.0.10:4632 (POOL)
+  Redis      : 10.0.0.10:6379
+  MinIO      : http://s3.keybuzz.io:9000
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/4 : Test connectivité data-plane ═══
+═══════════════════════════════════════════════════════════════════
+
+Test depuis k3s-worker-01 (10.0.0.110) :
+
+  PostgreSQL 10.0.0.10:4632 ... [0;32mOK[0m
+  Redis 10.0.0.10:6379 ... [0;32mOK[0m
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/4 : Génération des .env applicatifs ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Génération n8n.env
+  [0;32mOK[0m n8n.env créé
+→ Génération chatwoot.env
+  [0;32mOK[0m chatwoot.env créé
+→ Génération litellm.env
+  [0;32mOK[0m litellm.env créé
+→ Génération qdrant.env
+  [0;32mOK[0m qdrant.env créé
+→ Génération superset.env
+  [0;32mOK[0m superset.env créé
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/4 : Création des secrets Kubernetes ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Copie des .env sur master-01
+
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m Environnements préparés
+═══════════════════════════════════════════════════════════════════
+
+Fichiers générés dans /opt/keybuzz-installer/apps :
+-rw------- 1 root root 920 Nov  3 01:29 /opt/keybuzz-installer/apps/chatwoot.env
+-rw------- 1 root root 844 Oct 31 16:58 /opt/keybuzz-installer/apps/erpnext.env
+-rw------- 1 root root 358 Nov  3 01:29 /opt/keybuzz-installer/apps/litellm.env
+-rw------- 1 root root 762 Nov  3 01:29 /opt/keybuzz-installer/apps/n8n.env
+-rw------- 1 root root 207 Nov  3 01:29 /opt/keybuzz-installer/apps/qdrant.env
+-rw------- 1 root root 471 Nov  3 01:29 /opt/keybuzz-installer/apps/superset.env
+
+Prochaine étape :
+  ./04_apps_helm_deploy.sh
+

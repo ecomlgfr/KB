@@ -1,0 +1,57 @@
+[2025-11-03 22:32:18] Vérification K3s...
+[2025-11-03 22:32:18] Modification du service k3s...
+[2025-11-03 22:32:18] SAN ajouté au service systemd
+[2025-11-03 22:32:18] Rechargement systemd...
+[2025-11-03 22:32:19] Suppression des certificats existants...
+[2025-11-03 22:32:19] Redémarrage K3s...
+[2025-11-03 22:33:19] ERREUR : K3s n'a pas redémarré
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    kubectl          Run kubectl
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    crictl           Run crictl
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    ctr              Run ctr
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    check-config     Run config check
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    token            Manage bootstrap tokens
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    etcd-snapshot
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    secrets-encrypt  Control secrets encryption and keys rotation
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    certificate      Manage K3s certificates
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    completion       Install shell completion script
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    help, h          Shows a list of commands or help for one command
+Nov 03 22:33:11 k3s-master-02 k3s[12835]: GLOBAL OPTIONS:
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    --debug                     (logging) Turn on debug logs [$K3S_DEBUG]
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    --data-dir value, -d value  (data) Folder to hold state (default: /var/lib/rancher/k3s or ${HOME}/.rancher/k3s if not root)
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    --help, -h                  show help
+Nov 03 22:33:11 k3s-master-02 k3s[12835]:    --version, -v               print the version
+Nov 03 22:33:11 k3s-master-02 k3s[12835]: time="2025-11-03T22:33:11Z" level=fatal msg="flag provided but not defined: -tls-san"
+Nov 03 22:33:11 k3s-master-02 systemd[1]: k3s.service: Main process exited, code=exited, status=1/FAILURE
+Nov 03 22:33:11 k3s-master-02 systemd[1]: k3s.service: Failed with result 'exit-code'.
+Nov 03 22:33:11 k3s-master-02 systemd[1]: Failed to start k3s.service - Lightweight Kubernetes.
+Nov 03 22:33:17 k3s-master-02 systemd[1]: k3s.service: Scheduled restart job, restart counter is at 11.
+Nov 03 22:33:17 k3s-master-02 systemd[1]: Starting k3s.service - Lightweight Kubernetes...
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: Incorrect Usage. flag provided but not defined: -tls-san
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: NAME:
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    k3s - Kubernetes, but small and simple
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: USAGE:
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    k3s [global options] command [command options] [arguments...]
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: VERSION:
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    v1.28.5+k3s1 (5b2d1271)
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: COMMANDS:
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    server           Run management server
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    agent            Run node agent
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    kubectl          Run kubectl
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    crictl           Run crictl
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    ctr              Run ctr
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    check-config     Run config check
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    token            Manage bootstrap tokens
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    etcd-snapshot
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    secrets-encrypt  Control secrets encryption and keys rotation
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    certificate      Manage K3s certificates
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    completion       Install shell completion script
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    help, h          Shows a list of commands or help for one command
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: GLOBAL OPTIONS:
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    --debug                     (logging) Turn on debug logs [$K3S_DEBUG]
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    --data-dir value, -d value  (data) Folder to hold state (default: /var/lib/rancher/k3s or ${HOME}/.rancher/k3s if not root)
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    --help, -h                  show help
+Nov 03 22:33:17 k3s-master-02 k3s[12850]:    --version, -v               print the version
+Nov 03 22:33:17 k3s-master-02 k3s[12850]: time="2025-11-03T22:33:17Z" level=fatal msg="flag provided but not defined: -tls-san"
+Nov 03 22:33:17 k3s-master-02 systemd[1]: k3s.service: Main process exited, code=exited, status=1/FAILURE
+Nov 03 22:33:17 k3s-master-02 systemd[1]: k3s.service: Failed with result 'exit-code'.
+Nov 03 22:33:17 k3s-master-02 systemd[1]: Failed to start k3s.service - Lightweight Kubernetes.

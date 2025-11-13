@@ -1,0 +1,347 @@
+
+Installation RabbitMQ Quorum Cluster HA (Quorum par défaut)
+Timestamp: 2025-10-30 14:03:05
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Queue trouvés: 3
+  Serveurs HAProxy trouvés: 2
+  queue-01: 10.0.0.126
+  queue-02: 10.0.0.127
+  queue-03: 10.0.0.128
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Chargement des credentials existants...
+  Cookie Erlang: 933db44067007b1b...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs RabbitMQ                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de queue-01 (10.0.0.126)...
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+    ✓ Structure créée
+  Préparation de queue-02 (10.0.0.127)...
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+    ✓ Structure créée
+  Préparation de queue-03 (10.0.0.128)...
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+    ✓ Structure créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement RabbitMQ (Quorum par défaut - PATCHÉ)     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement de queue-01...
+Unable to find image 'rabbitmq:3.13-management' locally
+3.13-management: Pulling from library/rabbitmq
+4b3ffd8ccb52: Pulling fs layer
+1fecf0e475be: Pulling fs layer
+5dfddc3658b8: Pulling fs layer
+8ddbdcbe86b0: Pulling fs layer
+ce334ee7a96e: Pulling fs layer
+e32118121bc1: Pulling fs layer
+a7620a19f6fc: Pulling fs layer
+50095a1a3490: Pulling fs layer
+5a061f63f03b: Pulling fs layer
+450217c3094e: Pulling fs layer
+e32118121bc1: Waiting
+a7620a19f6fc: Waiting
+50095a1a3490: Waiting
+5a061f63f03b: Waiting
+450217c3094e: Waiting
+8ddbdcbe86b0: Waiting
+ce334ee7a96e: Waiting
+5dfddc3658b8: Verifying Checksum
+5dfddc3658b8: Download complete
+8ddbdcbe86b0: Verifying Checksum
+8ddbdcbe86b0: Download complete
+4b3ffd8ccb52: Verifying Checksum
+4b3ffd8ccb52: Download complete
+1fecf0e475be: Verifying Checksum
+1fecf0e475be: Download complete
+a7620a19f6fc: Verifying Checksum
+a7620a19f6fc: Download complete
+e32118121bc1: Verifying Checksum
+e32118121bc1: Download complete
+ce334ee7a96e: Verifying Checksum
+ce334ee7a96e: Download complete
+50095a1a3490: Verifying Checksum
+50095a1a3490: Download complete
+5a061f63f03b: Verifying Checksum
+5a061f63f03b: Download complete
+4b3ffd8ccb52: Pull complete
+450217c3094e: Verifying Checksum
+450217c3094e: Download complete
+1fecf0e475be: Pull complete
+5dfddc3658b8: Pull complete
+8ddbdcbe86b0: Pull complete
+ce334ee7a96e: Pull complete
+e32118121bc1: Pull complete
+a7620a19f6fc: Pull complete
+50095a1a3490: Pull complete
+5a061f63f03b: Pull complete
+450217c3094e: Pull complete
+Digest: sha256:3b65f271d3e6028ef7609dadbc36e41c2fc29f67ab62103099ae44792c8dbda8
+Status: Downloaded newer image for rabbitmq:3.13-management
+d84ef7a67384ee22d5e6cb5102d294e0b6f0ab4edc5e6bf7362b6ce07e91a229
+    ✓ queue-01 démarré avec quorum par défaut
+  Déploiement de queue-02...
+Unable to find image 'rabbitmq:3.13-management' locally
+3.13-management: Pulling from library/rabbitmq
+4b3ffd8ccb52: Pulling fs layer
+1fecf0e475be: Pulling fs layer
+5dfddc3658b8: Pulling fs layer
+8ddbdcbe86b0: Pulling fs layer
+ce334ee7a96e: Pulling fs layer
+e32118121bc1: Pulling fs layer
+a7620a19f6fc: Pulling fs layer
+50095a1a3490: Pulling fs layer
+5a061f63f03b: Pulling fs layer
+450217c3094e: Pulling fs layer
+e32118121bc1: Waiting
+a7620a19f6fc: Waiting
+50095a1a3490: Waiting
+5a061f63f03b: Waiting
+450217c3094e: Waiting
+8ddbdcbe86b0: Waiting
+ce334ee7a96e: Waiting
+5dfddc3658b8: Verifying Checksum
+5dfddc3658b8: Download complete
+4b3ffd8ccb52: Verifying Checksum
+4b3ffd8ccb52: Download complete
+1fecf0e475be: Verifying Checksum
+1fecf0e475be: Download complete
+8ddbdcbe86b0: Verifying Checksum
+8ddbdcbe86b0: Download complete
+a7620a19f6fc: Verifying Checksum
+a7620a19f6fc: Download complete
+e32118121bc1: Verifying Checksum
+e32118121bc1: Download complete
+ce334ee7a96e: Verifying Checksum
+ce334ee7a96e: Download complete
+4b3ffd8ccb52: Pull complete
+5a061f63f03b: Verifying Checksum
+5a061f63f03b: Download complete
+50095a1a3490: Verifying Checksum
+50095a1a3490: Download complete
+1fecf0e475be: Pull complete
+5dfddc3658b8: Pull complete
+450217c3094e: Verifying Checksum
+450217c3094e: Download complete
+8ddbdcbe86b0: Pull complete
+ce334ee7a96e: Pull complete
+e32118121bc1: Pull complete
+a7620a19f6fc: Pull complete
+50095a1a3490: Pull complete
+5a061f63f03b: Pull complete
+450217c3094e: Pull complete
+Digest: sha256:3b65f271d3e6028ef7609dadbc36e41c2fc29f67ab62103099ae44792c8dbda8
+Status: Downloaded newer image for rabbitmq:3.13-management
+834a6b81000c09f781f5d1977300066719f477da38a9b68fdcd579ab233b5d82
+    ✓ queue-02 démarré avec quorum par défaut
+  Déploiement de queue-03...
+Unable to find image 'rabbitmq:3.13-management' locally
+3.13-management: Pulling from library/rabbitmq
+4b3ffd8ccb52: Pulling fs layer
+1fecf0e475be: Pulling fs layer
+5dfddc3658b8: Pulling fs layer
+8ddbdcbe86b0: Pulling fs layer
+ce334ee7a96e: Pulling fs layer
+e32118121bc1: Pulling fs layer
+a7620a19f6fc: Pulling fs layer
+50095a1a3490: Pulling fs layer
+5a061f63f03b: Pulling fs layer
+450217c3094e: Pulling fs layer
+e32118121bc1: Waiting
+a7620a19f6fc: Waiting
+50095a1a3490: Waiting
+5a061f63f03b: Waiting
+450217c3094e: Waiting
+8ddbdcbe86b0: Waiting
+ce334ee7a96e: Waiting
+5dfddc3658b8: Verifying Checksum
+5dfddc3658b8: Download complete
+4b3ffd8ccb52: Verifying Checksum
+4b3ffd8ccb52: Download complete
+8ddbdcbe86b0: Verifying Checksum
+8ddbdcbe86b0: Download complete
+e32118121bc1: Verifying Checksum
+e32118121bc1: Download complete
+ce334ee7a96e: Verifying Checksum
+ce334ee7a96e: Download complete
+a7620a19f6fc: Verifying Checksum
+a7620a19f6fc: Download complete
+4b3ffd8ccb52: Pull complete
+50095a1a3490: Verifying Checksum
+50095a1a3490: Download complete
+5a061f63f03b: Verifying Checksum
+5a061f63f03b: Download complete
+1fecf0e475be: Verifying Checksum
+1fecf0e475be: Download complete
+450217c3094e: Verifying Checksum
+450217c3094e: Download complete
+1fecf0e475be: Pull complete
+5dfddc3658b8: Pull complete
+8ddbdcbe86b0: Pull complete
+ce334ee7a96e: Pull complete
+e32118121bc1: Pull complete
+a7620a19f6fc: Pull complete
+50095a1a3490: Pull complete
+5a061f63f03b: Pull complete
+450217c3094e: Pull complete
+Digest: sha256:3b65f271d3e6028ef7609dadbc36e41c2fc29f67ab62103099ae44792c8dbda8
+Status: Downloaded newer image for rabbitmq:3.13-management
+45091e65a607fe1c8c9f724cfeb7a628fa2c03b4e5cea198594bbe8b024dc672
+    ✓ queue-03 démarré avec quorum par défaut
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Formation du cluster                                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Ajout de queue-02 au cluster...
+Stopping rabbit application on node rabbit@queue-02 ...
+Resetting node rabbit@queue-02 ...
+Clustering node rabbit@queue-02 with rabbit@queue-01
+Starting node rabbit@queue-02 ...
+    ✓ Rejoint le cluster
+  Ajout de queue-03 au cluster...
+Stopping rabbit application on node rabbit@queue-03 ...
+Resetting node rabbit@queue-03 ...
+Clustering node rabbit@queue-03 with rabbit@queue-01
+Starting node rabbit@queue-03 ...
+    ✓ Rejoint le cluster
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Vérification (quorum par défaut activé)               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Vérification de default_queue_type sur queue-01:
+default_queue_type = quorum
+
+  État du cluster:
+Basics
+Disk Nodes
+Running Nodes
+
+  Test de connectivité:
+    queue-01: [0;32mOK[0m
+    queue-02: [0;32mOK[0m
+    queue-03: [0;32mOK[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Load Balancer HAProxy (UI interne seulement)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+310d1f6cde547dec1b8e5646efe39d8285dede5f024c4cbc470aa7c1e9867cb7
+    ✓ HAProxy configuré sur IP 10.0.0.11 (UI interne seulement)
+  Configuration de haproxy-02 (10.0.0.12)...
+9f0ecf4d321172ef18c40515754447cb500ed6a157b6097e5bed48b144e64e02
+    ✓ HAProxy configuré sur IP 10.0.0.12 (UI interne seulement)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01 (AMQP 5672): [0;32mOK[0m
+    haproxy-01 (UI 15672): [0;32mOK[0m (interne seulement)
+    haproxy-02 (AMQP 5672): [0;32mOK[0m
+    haproxy-02 (UI 15672): [0;32mOK[0m (interne seulement)
+
+  Test via Load Balancer Hetzner (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management UI (15672): [0;32mOK[0m (accès via SSH tunnel recommandé)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672 (SSH tunnel recommandé)
+  • User: admin
+  • Quorum par défaut: ACTIVÉ ✓
+
+Pour tester:
+  ssh -L 15672:10.0.0.10:15672 root@<install-01>
+  Puis: http://localhost:15672
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════
+  État du cluster:
+Basics
+Disk Nodes
+Running Nodes
+
+  Test de connectivité:
+    queue-01: [0;32mOK[0m
+    queue-02: [0;32mOK[0m
+    queue-03: [0;32mOK[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Load Balancer HAProxy (UI interne seulement)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+310d1f6cde547dec1b8e5646efe39d8285dede5f024c4cbc470aa7c1e9867cb7
+    ✓ HAProxy configuré sur IP 10.0.0.11 (UI interne seulement)
+  Configuration de haproxy-02 (10.0.0.12)...
+9f0ecf4d321172ef18c40515754447cb500ed6a157b6097e5bed48b144e64e02
+    ✓ HAProxy configuré sur IP 10.0.0.12 (UI interne seulement)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01 (AMQP 5672): [0;32mOK[0m
+    haproxy-01 (UI 15672): [0;32mOK[0m (interne seulement)
+    haproxy-02 (AMQP 5672): [0;32mOK[0m
+    haproxy-02 (UI 15672): [0;32mOK[0m (interne seulement)
+
+  Test via Load Balancer Hetzner (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management UI (15672): [0;32mOK[0m (accès via SSH tunnel recommandé)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672 (SSH tunnel recommandé)
+  • User: admin
+  • Quorum par défaut: ACTIVÉ ✓
+
+Pour tester:
+  ssh -L 15672:10.0.0.10:15672 root@<install-01>
+  Puis: http://localhost:15672
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════

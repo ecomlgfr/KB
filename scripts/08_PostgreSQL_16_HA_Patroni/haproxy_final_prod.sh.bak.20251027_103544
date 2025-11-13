@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -u
+set -o pipefail
+
+echo "╔════════════════════════════════════════════════════════════════════╗"
+echo "║    HAPROXY_FINAL_PROD - HAProxy avec bind localhost + IP privée    ║"
+echo "╚════════════════════════════════════════════════════════════════════╝"
+
+OK='\033[0;32m✓\033[0m'; KO='\033[0;31m✗\033[0m'
+
+SERVERS_TSV="/opt/keybuzz-installer/inventory/servers.tsv"
+source /opt/keybuzz-installer/credentials/postgres.env
+
+PROXY_NODES=(haproxy-01 haproxy-02)
+DB_NODES=(db-master-01 db-slave-01 db-slave-02)
+
+echo ""
+echo "Configuration HAProxy avec double bind (localhost + IP privée)..."
+echo ""
+
+# Récupérer les IPs
+declare -A PROXY_IPS
+for node in "${PROXY_NODES[@]}"; do
+    ip=$(awk -F'\t' -v h="$node" '$2==h {print $3}' "$SERVERS_TSV")
+    PROXY_IPS[$node]=$ip
+done
+
+declare -A DB_IPS
+for node in "${DB_NODES[@]}"; do
+    ip=$(awk -F'\t' -v h="$node" '$2==h {print $3}' "$SERVERS_TSV")
+    DB_IPS[$node]=$ip
+done
+
+for proxy in "${PROXY_NODES[@]}"; do
+    PROXY_IP="${PROXY_IPS[$proxy]}"
+    echo "  Configuration $proxy ($PROXY_IP):"
+    
+    ssh root@"$PROXY_IP" bash -s "$PROXY_IP" "${DB_IPS[db-master-01]}" "${DB_IPS[db-slave-01]}" "${DB_IPS[db-slave-02]}" "$PATRONI_API_PASSWORD" <<'HAPROXY_CONFIG'
+PROXY_IP="$1"
+DB1_IP="$2"
+DB2_IP="$3"
+DB3_IP="$4"
+API_PASSWORD="$5"
+
+docker stop haproxy 2>/dev/null
+docker rm -f haproxy 2>/dev/null
+
+mkdir -p /opt/keybuzz/haproxy/{config,logs}
+
+# Configuration HAProxy avec double bind
+cat > /opt/keybuzz/haproxy/config/haproxy.cfg <<EOF
+global
+    log stdout local0
+    maxconn 2000
+    daemon
+
+defaults
+    log     global
+    mode    tcp
+    option  tcplog
+    option  dontlognull
+    timeout connect 5000
+    timeout client  300000
+    timeout server  300000
+    retries 3
+
+# Frontend écriture - double bind pour PgBouncer local
+frontend fe_pg_write
+    bind 127.0.0.1:5432
+    bind ${PROXY_IP}:5432
+    default_backend be_pg_master
+
+# Backend master - suit le leader Patroni
+backend be_pg_master
+    option httpchk GET /master
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+    server db1 ${DB1_IP}:5432 check port 8008
+    server db2 ${DB2_IP}:5432 check port 8008
+    server db3 ${DB3_IP}:5432 check port 8008
+
+# Frontend lecture - double bind pour PgBouncer local
+frontend fe_pg_read
+    bind 127.0.0.1:5433
+    bind ${PROXY_IP}:5433
+    default_backend be_pg_replicas
+
+# Backend replicas
+backend be_pg_replicas
+    balance roundrobin
+    option httpchk GET /replica
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2
+    server db1 ${DB1_IP}:5432 check port 8008
+    server db2 ${DB2_IP}:5432 check port 8008
+    server db3 ${DB3_IP}:5432 check port 8008
+
+# Stats
+listen stats
+    bind ${PROXY_IP}:8404
+    stats enable
+    stats uri /stats
+    stats refresh 10s
+    stats auth admin:${API_PASSWORD}
+EOF
+
+docker run -d \
+  --name haproxy \
+  --network host \
+  --restart unless-stopped \
+  -v /opt/keybuzz/haproxy/config/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro \
+  haproxy:2.8
+
+echo "    ✓ HAProxy avec double bind"
+HAPROXY_CONFIG
+done
+
+echo ""
+echo -e "$OK HAProxy configuré avec bind sur localhost ET IP privée"
+echo "  Permet à PgBouncer de se connecter via 127.0.0.1:5432"

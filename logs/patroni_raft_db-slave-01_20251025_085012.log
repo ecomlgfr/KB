@@ -1,0 +1,12 @@
+=== Préparation db-slave-01 ===
+  Structure créée
+bash: line 2: effective_cache_size:2865MB: command not found
+bash: line 3: work_mem:12MB: command not found
+bash: line 4: maintenance_work_mem:382MB: command not found
+bash: line 5: max_connections:100: command not found
+bash: line 6: max_wal_size:2GB: command not found
+bash: line 7: min_wal_size:512MB: command not found
+bash: line 8: max_worker_processes:2: command not found
+bash: line 9: max_parallel_workers:2: command not found
+bash: line 10: max_parallel_workers_per_gather:1: command not found
+bash: line 11: max_parallel_maintenance_workers:1: command not found

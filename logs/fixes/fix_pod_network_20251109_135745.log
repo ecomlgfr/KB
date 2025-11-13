@@ -1,0 +1,30 @@
+[2025-11-09 13:57:45] RedÃ©marrage des agents (workers)
+[2025-11-09 13:57:45] - systemctl restart k3s-agent sur 10.0.0.110
+[2025-11-09 13:57:56] - systemctl restart k3s-agent sur 10.0.0.111
+[2025-11-09 13:58:06] - systemctl restart k3s-agent sur 10.0.0.112
+[2025-11-09 13:58:16] - systemctl restart k3s-agent sur 10.0.0.113
+[2025-11-09 13:58:27] - systemctl restart k3s-agent sur 10.0.0.114
+[2025-11-09 13:58:37] RedÃ©marrage des serveurs (masters)
+[2025-11-09 13:58:37] - systemctl restart k3s sur 10.0.0.100
+[2025-11-09 13:58:57] - systemctl restart k3s sur 10.0.0.101
+[2025-11-09 13:59:09] - systemctl restart k3s sur 10.0.0.102
+[2025-11-09 13:59:26] Attente stabilisation (120s)
+[2025-11-09 14:01:26] Etat des nÅ“uds
+NAME            STATUS   ROLES                       AGE    VERSION
+k3s-master-01   Ready    control-plane,etcd,master   5d7h   v1.28.5+k3s1
+k3s-master-02   Ready    control-plane,etcd,master   5d7h   v1.28.5+k3s1
+k3s-master-03   Ready    control-plane,etcd,master   5d7h   v1.28.5+k3s1
+k3s-worker-01   Ready    <none>                      5d6h   v1.28.5+k3s1
+k3s-worker-02   Ready    <none>                      5d6h   v1.28.5+k3s1
+k3s-worker-03   Ready    <none>                      5d6h   v1.28.5+k3s1
+k3s-worker-04   Ready    <none>                      5d6h   v1.28.5+k3s1
+k3s-worker-05   Ready    <none>                      5d6h   v1.28.5+k3s1
+[2025-11-09 14:01:26] Test DNS (namespace connect)
+pod/dnsdiag created
+pod "dnsdiag" deleted from connect namespace
+[2025-11-09 14:01:34] Test HTTP connect-api (localhost)
+HTTP 200
+[2025-11-09 14:01:34] Test HTTP connect-api (service)
+HTTP 000
+command terminated with exit code 6
+[2025-11-09 14:01:54] Fin script

@@ -1,0 +1,118 @@
+
+═══ Configuration ═══
+  Master-01     : 10.0.0.100
+  Log           : /opt/keybuzz-installer/logs/k3s_bootstrap_addons.log
+
+Vérification du cluster...
+  [0;32mOK[0m Cluster opérationnel : 8 nœuds
+
+
+═══ Configuration ═══
+  Master-01     : 10.0.0.100
+  Log           : /opt/keybuzz-installer/logs/k3s_bootstrap_addons.log
+
+Vérification du cluster...
+  [0;32mOK[0m Cluster opérationnel : 8 nœuds
+
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/3 : Installation Metrics Server ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-11-04 08:02:47] Installation metrics-server...
+[2025-11-04 08:02:49] Attente démarrage metrics-server...
+[2025-11-04 08:02:59] Metrics-server Running
+[2025-11-04 08:02:59] Metrics-server opérationnel
+  [0;32mOK[0m Metrics-server installé
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/3 : Configuration UFW pour Ingress (NodePort) ═══
+═══════════════════════════════════════════════════════════════════
+
+Architecture Ingress NGINX prévue :
+  - Mode : DaemonSet + hostNetwork:true
+  - HTTP NodePort  : 31695 (mappé depuis port 80 des LBs)
+  - HTTPS NodePort : 32720 (mappé depuis port 443 des LBs)
+  - Load Balancers : lb-keybuzz-1 (10.0.0.5) + lb-keybuzz-2 (10.0.0.6)
+
+NOTE : L'installation de l'Ingress se fera via ./09_deploy_ingress_daemonset.sh
+
+Ouverture des ports NodePort sur les workers...
+
+  Configuration UFW sur 10.0.0.110...
+[2025-11-04 08:03:04] Ouverture ports NodePort pour Ingress...
+Rule added
+Rule added
+[2025-11-04 08:03:04] Ports 31695/32720 ouverts
+
+  Configuration UFW sur 10.0.0.111...
+[2025-11-04 08:03:06] Ouverture ports NodePort pour Ingress...
+Rule added
+Rule added
+[2025-11-04 08:03:06] Ports 31695/32720 ouverts
+
+  Configuration UFW sur 10.0.0.112...
+[2025-11-04 08:03:07] Ouverture ports NodePort pour Ingress...
+Rule added
+Rule added
+[2025-11-04 08:03:08] Ports 31695/32720 ouverts
+
+  Configuration UFW sur 10.0.0.113...
+[2025-11-04 08:03:09] Ouverture ports NodePort pour Ingress...
+Rule added
+Rule added
+[2025-11-04 08:03:10] Ports 31695/32720 ouverts
+
+  Configuration UFW sur 10.0.0.114...
+[2025-11-04 08:03:11] Ouverture ports NodePort pour Ingress...
+Rule added
+Rule added
+[2025-11-04 08:03:12] Ports 31695/32720 ouverts
+
+  [0;32mOK[0m Configuration UFW NodePort terminée
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/3 : Test avec deployment simple ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-11-04 08:03:15] Création namespace de test...
+[2025-11-04 08:03:16] Déploiement pod de test...
+[2025-11-04 08:03:16] Attente démarrage pods...
+[2025-11-04 08:03:26] Pods de test Running (2/2)
+[2025-11-04 08:03:27] Test HTTP via service...
+[2025-11-04 08:03:39] WARN : Service non accessible (peut nécessiter quelques secondes)
+  [0;32mOK[0m Deployment de test créé
+
+═══════════════════════════════════════════════════════════════════
+═══ VÉRIFICATION FINALE ═══
+═══════════════════════════════════════════════════════════════════
+
+État des addons :
+
+Pods système (kube-system) :
+NAME                                      READY   STATUS    RESTARTS   AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+coredns-6799fbcd5-wsf2j                   1/1     Running   0          69m   10.42.0.4   k3s-master-01   <none>           <none>
+local-path-provisioner-84db5d44d9-rxh64   1/1     Running   0          69m   10.42.0.3   k3s-master-01   <none>           <none>
+metrics-server-ff7d5589c-9zh7k            1/1     Running   0          56s   10.42.6.2   k3s-worker-04   <none>           <none>
+
+Pods test :
+NAME                          READY   STATUS    RESTARTS   AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+test-nginx-86cdf6c49c-q6dd2   1/1     Running   0          30s   10.42.5.2   k3s-worker-03   <none>           <none>
+test-nginx-86cdf6c49c-xrsrx   1/1     Running   0          30s   10.42.4.2   k3s-worker-02   <none>           <none>
+
+Services test :
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+test-nginx   ClusterIP   10.43.44.141   <none>        80/TCP    31s
+
+═══════════════════════════════════════════════════════════════════
+
+Résumé des addons installés :
+  - Metrics-server     : [0;32mOK[0m
+  - UFW NodePort       : [0;31mKO[0m
+  - Test deployment    : [0;31mKO[0m
+
+[0;31mKO[0m ERREURS DÉTECTÉES LORS DU BOOTSTRAP
+
+Vérifiez les logs :
+  tail -n 100 /opt/keybuzz-installer/logs/k3s_bootstrap_addons.log
+

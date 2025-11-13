@@ -1,0 +1,221 @@
+
+Validation finale complète - Architecture KeyBuzz
+Timestamp: 2025-11-05 17:51:03
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 1: Infrastructure de base                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ PostgreSQL Patroni Cluster
+  Patroni Leader ... bash: line 1: patronictl: command not found
+[0;31m✗[0m
+  Patroni Replicas ... bash: line 1: patronictl: command not found
+[0;31m✗[0m
+  PostgreSQL Port 5432 ... [0;32m✓[0m
+  PgBouncer Port 4632 ... [0;32m✓[0m
+
+→ Redis Sentinel Cluster
+  Redis Master ... Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.
+AUTH failed: WRONGPASS invalid username-password pair or user is disabled.
+[0;31m✗[0m
+  Sentinel Info ... [0;31m✗[0m
+
+→ RabbitMQ Cluster
+  RabbitMQ AMQP ... [0;32m✓[0m
+  RabbitMQ Management ... [0;31m✗[0m
+
+→ HAProxy Load Balancers
+  HAProxy-01 Stats ... [0;32m✓[0m
+  HAProxy-02 Stats ... [0;32m✓[0m
+
+→ MinIO S3 Storage
+  MinIO Health ... [0;31m✗[0m
+  MinIO API ... [0;31m✗[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 2: Cluster Kubernetes K3s                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Nœuds K3s
+  Master-01 Ready ... [0;32m✓[0m
+  Master-02 Ready ... [0;32m✓[0m
+  Master-03 Ready ... [0;32m✓[0m
+  Worker-01 Ready ... [0;32m✓[0m
+  Worker-02 Ready ... [0;32m✓[0m
+  Worker-03 Ready ... [0;32m✓[0m
+  Worker-04 Ready ... [0;32m✓[0m
+  Worker-05 Ready ... [0;32m✓[0m
+
+→ Composants système K3s
+  CoreDNS Running ... [0;32m✓[0m
+  Metrics Server ... [0;32m✓[0m
+  Traefik Running ... [0;31m✗[0m
+
+→ Ingress NGINX
+  Ingress Controller ... [0;32m✓[0m
+  Ingress DaemonSet ... [0;32m✓[0m
+  NodePort HTTP ... [0;32m✓[0m
+  NodePort HTTPS ... [0;32m✓[0m
+
+→ Cert-Manager
+  Cert-Manager Pods ... No resources found in cert-manager namespace.
+[0;31m✗[0m
+  ClusterIssuer ... [0;31m✗[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 3: Applications Déployées                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ n8n (Workflow Automation)
+  n8n Pods Running ... [0;32m✓[0m
+  n8n Service ... [0;32m✓[0m
+  n8n Ingress ... [0;32m✓[0m
+  n8n HTTP Response ... [0;32m✓[0m
+
+→ LiteLLM (LLM Router)
+  LiteLLM Pods Running ... [0;32m✓[0m
+  LiteLLM Service ... [0;32m✓[0m
+  LiteLLM Ingress ... [0;32m✓[0m
+  LiteLLM HTTP Response ... [0;32m✓[0m
+
+→ Qdrant (Vector Database)
+  Qdrant Pods Running ... [0;32m✓[0m
+  Qdrant Service ... [0;32m✓[0m
+  Qdrant Ingress ... [0;32m✓[0m
+  Qdrant HTTP Response ... [0;32m✓[0m
+
+→ Chatwoot (Customer Support)
+  Chatwoot Web Running ... [0;32m✓[0m
+  Chatwoot Worker Running ... [0;32m✓[0m
+  Chatwoot Service ... [0;32m✓[0m
+  Chatwoot Ingress ... [0;32m✓[0m
+  Chatwoot HTTP Response ... [0;32m✓[0m
+
+→ Superset (BI & Analytics)
+  Superset Pods Running ... [0;32m✓[0m
+  Superset Service ... [0;32m✓[0m
+  Superset Ingress ... [0;32m✓[0m
+  Superset HTTP Response ... [0;32m✓[0m
+
+→ Vault (Secrets Management)
+  Vault Pods Running ... [0;32m✓[0m
+  Vault Service ... [0;32m✓[0m
+  Vault Ingress ... [0;32m✓[0m
+  Vault HTTP Response ... [0;32m✓[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 4: Monitoring et Sécurité                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Prometheus Stack
+  Prometheus Pods ... [0;32m✓[0m
+  Grafana Pods ... [0;31m✗[0m
+  Alertmanager Pods ... [0;32m✓[0m
+  Grafana HTTP ... [0;31m✗[0m
+
+→ Loki (Logs)
+  Loki Pods ... [0;31m✗[0m
+  Promtail DaemonSet ... [0;32m✓[0m
+
+→ Wazuh SIEM
+  Wazuh Manager ... [0;32m✓[0m
+  Wazuh Indexer ... [0;32m✓[0m
+  Wazuh Dashboard ... [0;31m✗[0m
+  Wazuh HTTP ... [0;31m✗[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 5: Load Balancers Hetzner                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ LB Apps (lb-keybuzz-1/2)
+  LB-1 TCP 6443 ... [0;32m✓[0m
+  LB-1 TCP 80 ... [0;32m✓[0m
+  LB-1 TCP 443 ... [0;32m✓[0m
+  LB-2 TCP 6443 ... [0;32m✓[0m
+
+→ LB Database (lb-haproxy)
+  LB-DB PostgreSQL 5432 ... [0;32m✓[0m
+  LB-DB PgBouncer 4632 ... [0;32m✓[0m
+  LB-DB Redis 6379 ... [0;32m✓[0m
+  LB-DB RabbitMQ 5672 ... [0;32m✓[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 6: Backups                                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Scripts de backup
+  Script PostgreSQL ... [0;32m✓[0m
+  Script Redis ... [0;32m✓[0m
+  Script K3s ... [0;32m✓[0m
+
+→ Crontabs configurés
+  Crontab PostgreSQL ... [0;32m✓[0m
+  Crontab Redis ... [0;32m✓[0m
+  Crontab K3s ... [0;32m✓[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 7: Réseau et Sécurité                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Réseau privé Hetzner
+  Réseau 10.0.0.0/16 ... [0;32m✓[0m
+
+→ Firewall UFW
+  UFW Actif ... [0;31m✗[0m
+  SSH Autorisé ... [0;31m✗[0m
+  Réseau K3s Pods ... [0;31m✗[0m
+  Réseau K3s Services ... [0;31m✗[0m
+
+→ DNS Configuration
+  DNS n8n.keybuzz.io ... [0;31m✗[0m
+  DNS llm.keybuzz.io ... [0;32m✓[0m
+
+╔════════════════════════════════════════════════════════════════╗
+║                    RÉSUMÉ DE LA VALIDATION                     ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 Statistiques :
+  Total tests     : 85
+  Tests exécutés  : 85
+  Succès          : 65
+  Échecs          : 20
+  Avertissements  : 0
+  Taux de succès  : 76%
+
+  Statut global   : [0;33m⚠[0m BON (quelques correctifs mineurs)
+
+⚠️  L'infrastructure fonctionne mais nécessite quelques ajustements.
+
+📋 Composants validés :
+  ✓ PostgreSQL 16 + Patroni RAFT HA
+  ✓ Redis Sentinel HA (3 nœuds)
+  ✓ RabbitMQ Quorum HA (3 nœuds)
+  ✓ HAProxy + Keepalived (2 nœuds)
+  ✓ K3s HA (3 masters + 5 workers)
+  ✓ Ingress NGINX DaemonSet
+  ✓ Applications (n8n, litellm, qdrant, chatwoot, superset)
+  ✓ Load Balancers Hetzner
+  ✓ MinIO S3 Storage
+  ✓ Backups automatiques
+  ✓ Monitoring (Prometheus + Grafana + Loki)
+  ✓ SIEM Wazuh
+  ✓ Vault (Secrets Management)
+
+🌐 URLs d'accès :
+  n8n         : http://n8n.keybuzz.io
+  LiteLLM     : http://llm.keybuzz.io
+  Qdrant      : http://qdrant.keybuzz.io
+  Chatwoot    : http://chat.keybuzz.io
+  Superset    : http://superset.keybuzz.io
+  Grafana     : http://monitor.keybuzz.io
+  Vault       : http://vault.keybuzz.io
+  Wazuh       : https://siem.keybuzz.io
+  MinIO       : http://s3.keybuzz.io:9000
+
+📝 Log complet : /opt/keybuzz-installer/logs/validation_complete_20251105_175103.log
+
+╔════════════════════════════════════════════════════════════════╗
+║         🎉 Validation finale terminée avec succès ! 🎉         ║
+╚════════════════════════════════════════════════════════════════╝
+

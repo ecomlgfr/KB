@@ -1,0 +1,17 @@
+Création arborescence PostgreSQL...
+Note: servers.tsv absent localement (sera copié lors du déploiement)
+Volume déjà monté sur /opt/keybuzz/postgres/data
+Suppression lost+found existant...
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb         25G  8.0K   25G   1% /opt/keybuzz/postgres/data
+
+Arborescence prête:
+total 24
+drwxr-xr-x 6 root root            4096 Oct 17 20:39 .
+drwxr-xr-x 8 root root            4096 Oct 17 19:13 ..
+drwxr-xr-x 2 root root            4096 Oct 17 20:39 config
+drwxr-xr-x 2  999 systemd-journal 4096 Oct 17 20:39 data
+drwxr-xr-x 2 root root            4096 Oct 17 20:39 logs
+drwxr-xr-x 2 root root            4096 Oct 17 20:39 status
+
+Préparation stockage PostgreSQL terminée

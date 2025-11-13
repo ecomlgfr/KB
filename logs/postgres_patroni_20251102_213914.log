@@ -1,0 +1,144 @@
+
+═══ 1. Gestion des credentials ═══
+
+  Credentials existants conservés
+
+═══ 2. Configuration des nœuds ═══
+
+→ Configuration db-master-01 (10.0.0.120)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-01 (10.0.0.121)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-02 (10.0.0.122)
+  [0;32mOK[0m Configuration terminée
+
+═══ 3. Démarrage parallèle du cluster RAFT ═══
+
+[0;33m⚠[0m Avec RAFT, tous les nœuds doivent démarrer ensemble pour le quorum
+
+→ Lancement db-master-01 (10.0.0.120)...
+→ Lancement db-slave-01 (10.0.0.121)...
+→ Lancement db-slave-02 (10.0.0.122)...
+
+  Attente établissement du quorum RAFT (60s)...
+
+═══ 4. Vérification du quorum et élection du leader ═══
+
+  Tentative 1/10...
+  Pas de leader encore, attente 10s...
+  Tentative 2/10...
+  Pas de leader encore, attente 10s...
+  Tentative 3/10...
+  Pas de leader encore, attente 10s...
+  Tentative 4/10...
+  Pas de leader encore, attente 10s...
+  Tentative 5/10...
+  Pas de leader encore, attente 10s...
+  Tentative 6/10...
+  Pas de leader encore, attente 10s...
+  Tentative 7/10...
+  Pas de leader encore, attente 10s...
+  Tentative 8/10...
+  Pas de leader encore, attente 10s...
+  Tentative 9/10...
+  Pas de leader encore, attente 10s...
+  Tentative 10/10...
+[0;31mKO[0m Aucun leader élu après 100 secondes
+
+Logs des nœuds:
+
+=== db-master-01 ===
+  File "/usr/lib/python3/dist-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "10.0.0.120", port 5432 failed: FATAL:  could not open file "global/pg_filenode.map": Input/output error
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1288, in get_postgresql_status
+    row = self.query(stmt.format(postgresql.wal_name, postgresql.lsn_name,
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 postgresql.wal_flush), retry=retry)[0]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1221, in query
+    return self.server.query(sql, *params)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1413, in query
+    raise PostgresConnectionException('connection problems') from exc
+patroni.exceptions.PostgresConnectionException: connection problems
+2025-11-02 21:42:05.218 UTC [27] PANIC:  could not open file "pg_wal/000000030000000000000009": Input/output error
+2025-11-02 21:42:05.471 UTC [23] LOG:  startup process (PID 27) was terminated by signal 6: Aborted
+2025-11-02 21:42:05.471 UTC [23] LOG:  terminating any other active server processes
+2025-11-02 21:42:05.472 UTC [23] LOG:  shutting down due to startup process failure
+2025-11-02 21:42:05.484 UTC [23] LOG:  database system is shut down
+2025-11-02 21:42:05,685 INFO: Lock owner: None; I am db-master-01
+2025-11-02 21:42:05,688 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:15,685 INFO: Lock owner: None; I am db-master-01
+2025-11-02 21:42:15,687 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:25,685 INFO: Lock owner: None; I am db-master-01
+2025-11-02 21:42:25,687 INFO: waiting for leader to bootstrap
+
+=== db-slave-01 ===
+2025-11-02 21:40:04,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:04,223 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:14,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:14,223 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:24,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:24,222 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:34,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:34,222 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:44,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:44,223 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:54,220 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:40:54,225 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:04,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:04,223 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:14,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:14,222 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:24,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:24,224 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:34,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:34,222 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:44,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:44,223 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:54,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:41:54,221 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:04,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:42:04,221 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:14,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:42:14,222 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:24,219 INFO: Lock owner: None; I am db-slave-01
+2025-11-02 21:42:24,223 INFO: waiting for leader to bootstrap
+
+=== db-slave-02 ===
+2025-11-02 21:40:04,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:04,264 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:14,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:14,265 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:24,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:24,265 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:34,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:34,265 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:44,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:44,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:40:54,239 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:40:54,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:04,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:04,264 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:14,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:14,265 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:24,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:24,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:34,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:34,265 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:44,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:44,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:41:54,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:41:54,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:04,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:42:04,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:14,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:42:14,266 INFO: waiting for leader to bootstrap
+2025-11-02 21:42:24,238 INFO: Lock owner: None; I am db-slave-02
+2025-11-02 21:42:24,266 INFO: waiting for leader to bootstrap

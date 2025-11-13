@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"n8n"},"name":"n8n","namespace":"n8n"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"n8n"}},"template":{"metadata":{"labels":{"app":"n8n"}},"spec":{"containers":[{"envFrom":[{"secretRef":{"name":"n8n-config"}}],"image":"n8nio/n8n:latest","livenessProbe":{"httpGet":{"path":"/","port":5678},"initialDelaySeconds":60,"periodSeconds":30,"timeoutSeconds":10},"name":"n8n","ports":[{"containerPort":5678,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/","port":5678},"initialDelaySeconds":30,"periodSeconds":10,"timeoutSeconds":5},"resources":{"limits":{"cpu":"1000m","memory":"2Gi"},"requests":{"cpu":"250m","memory":"512Mi"}},"volumeMounts":[{"mountPath":"/home/node/.n8n","name":"data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"n8n-data"}}]}}}}
+  creationTimestamp: "2025-10-31T22:55:21Z"
+  generation: 1
+  labels:
+    app: n8n
+  name: n8n
+  namespace: n8n
+  resourceVersion: "337152"
+  uid: c2b9fe26-0e73-4dd4-91d2-b216d0968c95
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: n8n
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: n8n
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: n8n-config
+        image: n8nio/n8n:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 5678
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: n8n
+        ports:
+        - containerPort: 5678
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 5678
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /home/node/.n8n
+          name: data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: n8n-data
+status:
+  availableReplicas: 2
+  conditions:
+  - lastTransitionTime: "2025-10-31T22:55:21Z"
+    lastUpdateTime: "2025-10-31T22:56:01Z"
+    message: ReplicaSet "n8n-c758d9bd4" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2025-11-01T11:50:47Z"
+    lastUpdateTime: "2025-11-01T11:50:47Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 2
+  replicas: 2
+  updatedReplicas: 2

@@ -1,0 +1,5 @@
+credentials/
+*.key
+*.pem
+*.crt
+*.env

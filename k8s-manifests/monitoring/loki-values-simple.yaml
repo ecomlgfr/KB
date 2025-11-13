@@ -1,0 +1,28 @@
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: filesystem
+
+singleBinary:
+  replicas: 1
+  # DÉSACTIVER LA PERSISTENCE
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+test:
+  enabled: false
+
+monitoring:
+  selfMonitoring:
+    enabled: false
+  lokiCanary:
+    enabled: false

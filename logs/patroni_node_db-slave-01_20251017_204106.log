@@ -1,0 +1,32 @@
+Copie servers.tsv en local...
+Tuning PostgreSQL pour 3 GB RAM, 2 CPU:
+  shared_buffers: 768MB
+  effective_cache_size: 2304MB
+  work_mem: 24MB
+  max_connections: 100
+
+Démarrage Patroni...
+time="2025-10-17T20:41:08Z" level=warning msg="The \"DATA\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"CFG\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"LOGS\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:41:08Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+invalid spec: :/var/lib/postgresql/data: empty section between colons
+Vérification santé Patroni...
+Attente health check... (5/30)
+Attente health check... (10/30)
+Attente health check... (15/30)
+Attente health check... (20/30)
+Attente health check... (25/30)
+Attente health check... (30/30)
+ERREUR: Timeout health check Patroni
+time="2025-10-17T20:42:18Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"IP_LOCAL\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"DATA\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"CFG\" variable is not set. Defaulting to a blank string."
+time="2025-10-17T20:42:18Z" level=warning msg="The \"LOGS\" variable is not set. Defaulting to a blank string."
+invalid spec: :/var/lib/postgresql/data: empty section between colons

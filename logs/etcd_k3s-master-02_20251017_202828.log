@@ -1,0 +1,15 @@
+Copie servers.tsv local...
+Recherche device pour etcd data...
+Device trouvé: /dev/sda
+Formatage ext4...
+mount: /opt/keybuzz/etcd/data: /dev/sda already mounted or mount point busy.
+       dmesg(1) may have more information after failed mount system call.
+Volume etcd monté et configuré
+time="2025-10-17T20:28:36Z" level=warning msg="The \"DATA\" variable is not set. Defaulting to a blank string."
+invalid spec: :/etcd-data: empty section between colons
+Démarrage etcd...
+time="2025-10-17T20:28:36Z" level=warning msg="The \"DATA\" variable is not set. Defaulting to a blank string."
+invalid spec: :/etcd-data: empty section between colons
+time="2025-10-17T20:28:41Z" level=warning msg="The \"DATA\" variable is not set. Defaulting to a blank string."
+invalid spec: :/etcd-data: empty section between colons
+etcd failed to start

@@ -1,0 +1,46 @@
+
+═══ 1. Gestion des credentials ═══
+
+  Credentials existants conservés
+
+═══ 2. Configuration des nœuds ═══
+
+→ Configuration db-master-01 (10.0.0.120)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-01 (10.0.0.121)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-02 (10.0.0.122)
+  [0;32mOK[0m Configuration terminée
+
+═══ 3. Démarrage parallèle du cluster RAFT ═══
+
+[0;33m⚠[0m Avec RAFT, tous les nœuds doivent démarrer ensemble pour le quorum
+
+→ Lancement db-master-01 (10.0.0.120)...
+→ Lancement db-slave-01 (10.0.0.121)...
+→ Lancement db-slave-02 (10.0.0.122)...
+
+  Attente établissement du quorum RAFT (60s)...
+
+═══ 4. Vérification du quorum et élection du leader ═══
+
+  Tentative 1/10...
+  Pas de leader encore, attente 10s...
+  Tentative 2/10...
+  Pas de leader encore, attente 10s...
+  Tentative 3/10...
+  [0;32mOK[0m Leader trouvé: db-slave-02 (10.0.0.122)
+
+═══ 5. Création des bases et utilisateurs ═══
+
+  [0;32mOK[0m
+
+═══ 6. Vérification finale du cluster ═══
+
+  db-master-01 (10.0.0.120): [0;31mKO[0m Non prêt
+  db-slave-01 (10.0.0.121): [0;31mKO[0m Non prêt
+  db-slave-02 (10.0.0.122): [0;32mOK[0m Leader
+
+═══════════════════════════════════════════════════════════════════
+[0;31mKO[0m CLUSTER NON OPÉRATIONNEL (1/3 nœuds)
+═══════════════════════════════════════════════════════════════════

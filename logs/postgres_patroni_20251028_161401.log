@@ -1,0 +1,144 @@
+
+═══ 1. Gestion des credentials ═══
+
+  Credentials existants conservés
+
+═══ 2. Configuration des nœuds ═══
+
+→ Configuration db-master-01 (10.0.0.120)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-01 (10.0.0.121)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-02 (10.0.0.122)
+  [0;32mOK[0m Configuration terminée
+
+═══ 3. Démarrage parallèle du cluster RAFT ═══
+
+[0;33m⚠[0m Avec RAFT, tous les nœuds doivent démarrer ensemble pour le quorum
+
+→ Lancement db-master-01 (10.0.0.120)...
+→ Lancement db-slave-01 (10.0.0.121)...
+→ Lancement db-slave-02 (10.0.0.122)...
+
+  Attente établissement du quorum RAFT (60s)...
+
+═══ 4. Vérification du quorum et élection du leader ═══
+
+  Tentative 1/10...
+  Pas de leader encore, attente 10s...
+  Tentative 2/10...
+  Pas de leader encore, attente 10s...
+  Tentative 3/10...
+  Pas de leader encore, attente 10s...
+  Tentative 4/10...
+  Pas de leader encore, attente 10s...
+  Tentative 5/10...
+  Pas de leader encore, attente 10s...
+  Tentative 6/10...
+  Pas de leader encore, attente 10s...
+  Tentative 7/10...
+  Pas de leader encore, attente 10s...
+  Tentative 8/10...
+  Pas de leader encore, attente 10s...
+  Tentative 9/10...
+  Pas de leader encore, attente 10s...
+  Tentative 10/10...
+[0;31mKO[0m Aucun leader élu après 100 secondes
+
+Logs des nœuds:
+
+=== db-master-01 ===
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 213, in _load_config_file
+    config = self._load_config_path(self.config_file)
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 202, in _load_config_path
+    config = yaml.safe_load(f)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 125, in safe_load
+    return load(stream, SafeLoader)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 81, in load
+    return loader.get_single_data()
+           ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/constructor.py", line 49, in get_single_data
+    node = self.get_single_node()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 36, in get_single_node
+    document = self.compose_document()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 55, in compose_document
+    node = self.compose_node(None, None)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 84, in compose_node
+    node = self.compose_mapping_node(anchor)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 127, in compose_mapping_node
+    while not self.check_event(MappingEndEvent):
+              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 98, in check_event
+    self.current_event = self.state()
+                         ~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 438, in parse_block_mapping_key
+    raise ParserError("while parsing a block mapping", self.marks[-1],
+            "expected <block end>, but found %r" % token.id, token.start_mark)
+yaml.parser.ParserError: while parsing a block mapping
+  in "/etc/patroni/patroni.yml", line 1, column 1
+expected <block end>, but found '-'
+  in "/etc/patroni/patroni.yml", line 16, column 1
+
+=== db-slave-01 ===
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 213, in _load_config_file
+    config = self._load_config_path(self.config_file)
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 202, in _load_config_path
+    config = yaml.safe_load(f)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 125, in safe_load
+    return load(stream, SafeLoader)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 81, in load
+    return loader.get_single_data()
+           ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/constructor.py", line 49, in get_single_data
+    node = self.get_single_node()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 36, in get_single_node
+    document = self.compose_document()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 55, in compose_document
+    node = self.compose_node(None, None)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 84, in compose_node
+    node = self.compose_mapping_node(anchor)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 127, in compose_mapping_node
+    while not self.check_event(MappingEndEvent):
+              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 98, in check_event
+    self.current_event = self.state()
+                         ~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 438, in parse_block_mapping_key
+    raise ParserError("while parsing a block mapping", self.marks[-1],
+            "expected <block end>, but found %r" % token.id, token.start_mark)
+yaml.parser.ParserError: while parsing a block mapping
+  in "/etc/patroni/patroni.yml", line 1, column 1
+expected <block end>, but found '-'
+  in "/etc/patroni/patroni.yml", line 16, column 1
+
+=== db-slave-02 ===
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 213, in _load_config_file
+    config = self._load_config_path(self.config_file)
+  File "/usr/local/lib/python3.13/dist-packages/patroni/config.py", line 202, in _load_config_path
+    config = yaml.safe_load(f)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 125, in safe_load
+    return load(stream, SafeLoader)
+  File "/usr/lib/python3/dist-packages/yaml/__init__.py", line 81, in load
+    return loader.get_single_data()
+           ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/constructor.py", line 49, in get_single_data
+    node = self.get_single_node()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 36, in get_single_node
+    document = self.compose_document()
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 55, in compose_document
+    node = self.compose_node(None, None)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 84, in compose_node
+    node = self.compose_mapping_node(anchor)
+  File "/usr/lib/python3/dist-packages/yaml/composer.py", line 127, in compose_mapping_node
+    while not self.check_event(MappingEndEvent):
+              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 98, in check_event
+    self.current_event = self.state()
+                         ~~~~~~~~~~^^
+  File "/usr/lib/python3/dist-packages/yaml/parser.py", line 438, in parse_block_mapping_key
+    raise ParserError("while parsing a block mapping", self.marks[-1],
+            "expected <block end>, but found %r" % token.id, token.start_mark)
+yaml.parser.ParserError: while parsing a block mapping
+  in "/etc/patroni/patroni.yml", line 1, column 1
+expected <block end>, but found '-'
+  in "/etc/patroni/patroni.yml", line 16, column 1

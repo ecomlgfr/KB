@@ -1,0 +1,112 @@
+
+Déploiement Superset DaemonSet - Architecture KeyBuzz
+Timestamp: 2025-11-02 15:31:09
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Credentials Redis ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Architecture validée :
+  ✓ PostgreSQL : 10.0.0.10:5432 (via LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (via LB Hetzner → HAProxy → Sentinel)
+
+Continuer le déploiement Superset DaemonSet ? (yes/NO) : 
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Nettoyage des ressources existantes                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+deployment.apps "superset" deleted from superset namespace
+  (pas de daemonset)
+  (pas de job init)
+  (pas de job admin)
+Attente suppression (10s)...
+[0;32mOK[0m Nettoyage terminé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Création namespace, secrets et configuration         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m Namespace superset créé
+secret/superset-secrets configured
+[0;32mOK[0m Secret superset-secrets créé
+configmap/superset-config configured
+[0;32mOK[0m ConfigMap superset-config créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Initialisation base de données                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+job.batch/superset-init-db created
+job.batch/superset-create-admin created
+Attente init DB (120s max)...
+[0;33mWARN[0m Init DB prend plus de temps...
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x77cd626e8e50>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x77cd626e9180>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x77cd626e9330>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x77cd626e94e0>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x77cd626e9690>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+
+Attente create admin (90s max)...
+[0;33mWARN[0m Create admin prend plus de temps...
+error: timed out waiting for the condition
+[0;32mOK[0m Init DB terminée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Déploiement DaemonSet Superset                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+daemonset.apps/superset created
+service/superset configured
+ingress.networking.k8s.io/superset configured
+[0;32mOK[0m DaemonSet déployé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Attente démarrage pods (120s)                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+État des pods Superset :
+NAME                     READY   STATUS    RESTARTS      AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+superset-65dw7           1/1     Running   0             2m      10.0.0.101   k3s-master-02   <none>           <none>
+superset-7fbqx           1/1     Running   0             2m      10.0.0.111   k3s-worker-02   <none>           <none>
+superset-7wkxk           1/1     Running   0             2m      10.0.0.110   k3s-worker-01   <none>           <none>
+superset-init-db-rhcqw   1/1     Running   2 (51s ago)   5m51s   10.0.0.114   k3s-worker-05   <none>           <none>
+superset-kbk4z           1/1     Running   0             2m      10.0.0.100   k3s-master-01   <none>           <none>
+superset-rzxzx           1/1     Running   0             2m      10.0.0.102   k3s-master-03   <none>           <none>
+superset-xfqk5           1/1     Running   1 (58s ago)   2m      10.0.0.113   k3s-worker-04   <none>           <none>
+superset-zsmgj           1/1     Running   0             2m      10.0.0.112   k3s-worker-03   <none>           <none>
+superset-zx87b           1/1     Running   0             2m      10.0.0.114   k3s-worker-05   <none>           <none>
+
+État du service :
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+superset   NodePort   10.43.40.140   <none>        8088:30808/TCP   5h25m
+
+État de l'Ingress :
+NAME       CLASS   HOSTS                 ADDRESS     PORTS   AGE
+superset   nginx   superset.keybuzz.io   localhost   80      46h
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m SUPERSET DAEMONSET DÉPLOYÉ
+═══════════════════════════════════════════════════════════════════
+
+Architecture :
+  ✓ Type       : DaemonSet avec hostNetwork (comme n8n/litellm/qdrant)
+  ✓ Pods       : 1 pod par nœud (8 nœuds = 8 pods)
+  ✓ Port       : 8088 (hostPort sur chaque nœud)
+  ✓ PostgreSQL : 10.0.0.10:5432
+  ✓ Redis      : 10.0.0.10:6379
+
+URL d'accès : http://superset.keybuzz.io
+
+Credentials :
+  Username : admin
+  Password : Admin123!
+  Email    : admin@keybuzz.io
+
+Prochaine étape :
+  ./14_test_all_apps.sh
+

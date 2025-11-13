@@ -1,0 +1,130 @@
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Worker-01         : 10.0.0.110
+  Log               : /opt/keybuzz-installer/logs/apps_final_tests.log
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/5 : État du cluster K3s ═══
+═══════════════════════════════════════════════════════════════════
+
+Nœuds du cluster :
+NAME            STATUS   ROLES                       AGE   VERSION        INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+k3s-master-01   Ready    control-plane,etcd,master   18h   v1.28.5+k3s1   10.0.0.100    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-master-02   Ready    control-plane,etcd,master   18h   v1.28.5+k3s1   10.0.0.101    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-master-03   Ready    control-plane,etcd,master   18h   v1.28.5+k3s1   10.0.0.102    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-01   Ready    <none>                      18h   v1.28.5+k3s1   10.0.0.110    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-02   Ready    <none>                      18h   v1.28.5+k3s1   10.0.0.111    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-03   Ready    <none>                      18h   v1.28.5+k3s1   10.0.0.112    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-04   Ready    <none>                      18h   v1.28.5+k3s1   10.0.0.113    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-05   Ready    <none>                      18h   v1.28.5+k3s1   10.0.0.114    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+
+Composants système :
+NAME                                      READY   STATUS    RESTARTS   AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+coredns-6799fbcd5-jcdc2                   1/1     Running   0          18h   10.42.0.4   k3s-master-01   <none>           <none>
+local-path-provisioner-84db5d44d9-vrljg   1/1     Running   0          18h   10.42.0.2   k3s-master-01   <none>           <none>
+metrics-server-ff7d5589c-2cnz7            1/1     Running   0          17h   10.42.7.2   k3s-worker-05   <none>           <none>
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/5 : État des pods applicatifs ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Namespace: n8n
+  ✓ 2/2 pods Running
+
+→ Namespace: chatwoot
+  ✓ 4/4 pods Running
+
+→ Namespace: litellm
+  ✓ 2/2 pods Running
+
+→ Namespace: qdrant
+  ✓ 1/1 pods Running
+
+→ Namespace: superset
+  ✓ 2/2 pods Running
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/5 : Tests HTTP via Ingress (NodePort) ═══
+═══════════════════════════════════════════════════════════════════
+
+NodePort HTTP : 31695
+
+  Test n8n.keybuzz.io ... [0;33mWARN[0m (HTTP 000)
+  Test chat.keybuzz.io ... [0;33mWARN[0m (HTTP 000)
+  Test llm.keybuzz.io ... [0;33mWARN[0m (HTTP 000)
+  Test qdrant.keybuzz.io ... [0;33mWARN[0m (HTTP 000)
+  Test superset.keybuzz.io ... [0;33mWARN[0m (HTTP 000)
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/5 : Vérification des PVC (Persistent Volume Claims) ═══
+═══════════════════════════════════════════════════════════════════
+
+PVC créés :
+NAMESPACE   NAME               STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+chatwoot    chatwoot-storage   Bound    pvc-2393a1be-7117-4c0f-9b32-133d409fc5e4   20Gi       RWO            local-path     16h
+n8n         n8n-data           Bound    pvc-02aada5d-3334-4693-81e7-a0b37467a7fe   10Gi       RWO            local-path     11h
+qdrant      qdrant-storage     Bound    pvc-128f2703-af23-4158-883d-c6b883b4329d   50Gi       RWO            local-path     16h
+
+Résumé PVC par namespace :
+  n8n : 1/1 Bound
+  chatwoot : 1/1 Bound
+  qdrant : 1/1 Bound
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 5/5 : Synthèse et recommandations ═══
+═══════════════════════════════════════════════════════════════════
+
+Résumé :
+  - Nœuds K3s : 8 (3 masters + 5 workers)
+  - Applications déployées : 5
+  - Pods non-Running : 0
+
+[0;32mOK[0m Tous les pods sont Running !
+
+Recommandations :
+  1. Configurer le Load Balancer Hetzner pour router vers NodePort 31695
+  2. Configurer les DNS (n8n.keybuzz.io, chat.keybuzz.io, etc.)
+  3. Configurer cert-manager pour les certificats TLS (si installé)
+  4. Sauvegarder les secrets et PVC régulièrement
+  5. Surveiller les ressources avec 'kubectl top nodes' et 'kubectl top pods -A'
+
+Commandes utiles :
+  # Dashboard Kubernetes (optionnel)
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+
+  # Prometheus & Grafana (monitoring)
+  helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+
+  # Afficher les logs d'une application
+  kubectl logs -n n8n -l app=n8n --tail=50
+
+  # Redémarrer une application
+  kubectl rollout restart deployment/n8n -n n8n
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m TESTS D'ACCEPTATION TERMINÉS
+═══════════════════════════════════════════════════════════════════
+
+Applications testées :
+  ✓ n8n        - Workflow automation
+  ✓ Chatwoot   - Customer support
+  ✓ LiteLLM    - LLM Router
+  ✓ Qdrant     - Vector database
+  ✓ Superset   - Business Intelligence
+
+Prochaines étapes :
+  1. Configurer les DNS publics
+  2. Configurer le Load Balancer Hetzner
+  3. Déployer le monitoring (Prometheus/Grafana)
+  4. Configurer les sauvegardes automatiques
+  5. Mettre en place le SIEM (Wazuh)
+
+Documentation :
+  - n8n         : https://docs.n8n.io
+  - Chatwoot    : https://www.chatwoot.com/docs
+  - LiteLLM     : https://docs.litellm.ai
+  - Qdrant      : https://qdrant.tech/documentation
+  - Superset    : https://superset.apache.org/docs
+

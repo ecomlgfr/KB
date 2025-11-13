@@ -1,0 +1,150 @@
+
+Déploiement Superset - Architecture KeyBuzz
+Timestamp: 2025-11-02 10:11:52
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Credentials Redis ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Vérification des services backend (via LB 10.0.0.10) :
+  → PostgreSQL (10.0.0.10:5432) ... [0;32mOK[0m
+  → Redis (10.0.0.10:6379) ... [0;32mOK[0m
+
+Architecture validée :
+  ✓ PostgreSQL : 10.0.0.10:5432 (via LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (via LB Hetzner → HAProxy → Sentinel)
+
+Continuer le déploiement Superset ? (yes/NO) : 
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Création namespace et secrets                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m Namespace superset créé
+
+Création du secret Superset...
+secret/superset-secrets created
+[0;32mOK[0m Secret superset-secrets créé
+
+Création du ConfigMap superset-config...
+configmap/superset-config created
+[0;32mOK[0m ConfigMap superset-config créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Déploiement Superset (Init DB + Deployment)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+job.batch/superset-init-db created
+job.batch/superset-create-admin created
+deployment.apps/superset created
+service/superset created
+ingress.networking.k8s.io/superset configured
+[0;32mOK[0m Ressources Superset créées
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Attente init DB et démarrage pods                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Attente du job init-db (90s max)...
+[0;33mWARN[0m Init DB prend plus de temps, vérification des logs...
+  File "/app/.venv/lib/python3.10/site-packages/superset/initialization/__init__.py", line 466, in init_app
+    self.setup_db()
+  File "/app/.venv/lib/python3.10/site-packages/superset/initialization/__init__.py", line 662, in setup_db
+    pessimistic_connection_handling(db.engine)
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 998, in engine
+    return self.get_engine()
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1017, in get_engine
+    return connector.get_engine()
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 594, in get_engine
+    self._engine = rv = self._sa.create_engine(sa_url, options)
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1027, in create_engine
+    return sqlalchemy.create_engine(sa_url, **engine_opts)
+  File "<string>", line 2, in create_engine
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/util/deprecations.py", line 375, in warned
+    return fn(*args, **kwargs)
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 544, in create_engine
+    dbapi = dialect_cls.dbapi(**dbapi_args)
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py", line 811, in dbapi
+    import psycopg2
+ModuleNotFoundError: No module named 'psycopg2'
+
+Attente du job create-admin (60s max)...
+[0;33mWARN[0m Create admin prend plus de temps, vérification des logs...
+  File "/app/.venv/lib/python3.10/site-packages/superset/initialization/__init__.py", line 466, in init_app
+    self.setup_db()
+  File "/app/.venv/lib/python3.10/site-packages/superset/initialization/__init__.py", line 662, in setup_db
+    pessimistic_connection_handling(db.engine)
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 998, in engine
+    return self.get_engine()
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1017, in get_engine
+    return connector.get_engine()
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 594, in get_engine
+    self._engine = rv = self._sa.create_engine(sa_url, options)
+  File "/app/.venv/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1027, in create_engine
+    return sqlalchemy.create_engine(sa_url, **engine_opts)
+  File "<string>", line 2, in create_engine
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/util/deprecations.py", line 375, in warned
+    return fn(*args, **kwargs)
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 544, in create_engine
+    dbapi = dialect_cls.dbapi(**dbapi_args)
+  File "/app/.venv/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py", line 811, in dbapi
+    import psycopg2
+ModuleNotFoundError: No module named 'psycopg2'
+
+Attente des pods Superset (60s max)...
+[0;33mWARN[0m Pods pas encore prêts
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ FINAL                                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+État des jobs :
+NAME                    COMPLETIONS   DURATION   AGE
+superset-create-admin   0/1           3m31s      3m31s
+superset-init-db        0/1           3m31s      3m31s
+
+État des pods Superset :
+NAME                          READY   STATUS             RESTARTS      AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+superset-5bb8f5bc6b-hfzj6     0/1     CrashLoopBackOff   2 (21s ago)   3m31s   10.42.6.25   k3s-worker-04   <none>           <none>
+superset-5bb8f5bc6b-jbrr8     0/1     CrashLoopBackOff   2 (13s ago)   3m31s   10.42.4.22   k3s-worker-02   <none>           <none>
+superset-create-admin-nhpqc   0/1     CrashLoopBackOff   4 (23s ago)   3m31s   10.42.6.24   k3s-worker-04   <none>           <none>
+superset-init-db-wlzfj        0/1     CrashLoopBackOff   4 (66s ago)   3m31s   10.42.4.21   k3s-worker-02   <none>           <none>
+
+État du service :
+NAME       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+superset   ClusterIP   10.43.40.140   <none>        8088/TCP   3m31s
+
+État de l'Ingress :
+NAME       CLASS   HOSTS                 ADDRESS     PORTS   AGE
+superset   nginx   superset.keybuzz.io   localhost   80      41h
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m SUPERSET DÉPLOYÉ
+═══════════════════════════════════════════════════════════════════
+
+URL d'accès : http://superset.keybuzz.io
+
+⚠️  IMPORTANT - Configuration DNS requise :
+  superset.keybuzz.io  A  49.13.42.76      TTL 60
+  superset.keybuzz.io  A  138.199.132.240  TTL 60
+
+Credentials :
+  Username : admin
+  Password : Admin123!
+  Email    : admin@keybuzz.io
+
+Logs utiles :
+  kubectl logs -n superset -l app=superset --tail=50
+  kubectl logs -n superset job/superset-init-db
+  kubectl logs -n superset job/superset-create-admin
+
+Architecture :
+  ✓ PostgreSQL : 10.0.0.10:5432 (LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (LB Hetzner → HAProxy → Sentinel)
+
+Prochaine étape :
+  ./14_test_all_apps.sh
+

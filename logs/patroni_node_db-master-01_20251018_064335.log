@@ -1,0 +1,79 @@
+Tuning PostgreSQL pour 7 GB RAM, 2 CPU:
+  shared_buffers: 1792MB
+  effective_cache_size: 5376MB
+  work_mem: 56MB
+  max_connections: 100
+
+Préparation Dockerfile Patroni...
+Untagged: patroni-pg16:local
+Deleted: sha256:d8ee10fd3a342a59f1674784c82078825d16177a5814e61eb5f36e7d6afb6dd7
+Build image Patroni locale...
+#9 exporting layers
+#9 exporting layers 2.3s done
+#9 writing image sha256:dc6c455d01f658738fafadc5806987651a2b38c55ab819b70e25c126b225a0e8 done
+#9 naming to docker.io/library/patroni-pg16:local done
+#9 DONE 2.3s
+Image patroni-pg16:local construite
+Démarrage Patroni...
+ Container patroni  Creating
+ Container patroni  Created
+ Container patroni  Starting
+ Container patroni  Started
+Vérification santé Patroni...
+Attente health check... (5/30)
+Attente health check... (10/30)
+Attente health check... (15/30)
+Attente health check... (20/30)
+Attente health check... (25/30)
+Attente health check... (30/30)
+ERREUR: Timeout health check Patroni
+patroni  | 2025-10-18 06:44:31,131 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:31,131 INFO: waiting on etcd
+patroni  | 2025-10-18 06:44:36,134 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:36,137 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:36,139 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:36,139 INFO: waiting on etcd
+patroni  | 2025-10-18 06:44:41,143 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:41,145 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:41,147 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:41,148 INFO: waiting on etcd
+patroni  | 2025-10-18 06:44:46,151 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:46,154 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:46,156 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:46,156 INFO: waiting on etcd
+patroni  | 2025-10-18 06:44:51,160 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:51,162 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:51,164 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:51,165 INFO: waiting on etcd
+patroni  | 2025-10-18 06:44:56,168 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:56,171 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:56,173 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:44:56,173 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:01,177 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:01,179 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:01,181 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:01,182 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:06,185 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:06,188 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:06,190 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:06,190 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:11,194 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:11,197 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:11,199 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:11,199 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:16,203 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:16,206 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:16,208 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:16,208 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:21,212 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:21,215 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:21,217 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:21,217 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:26,220 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:26,223 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:26,226 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:26,226 INFO: waiting on etcd
+patroni  | 2025-10-18 06:45:31,229 ERROR: Failed to get list of machines from http://10.0.0.102:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:31,232 ERROR: Failed to get list of machines from http://10.0.0.101:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:31,235 ERROR: Failed to get list of machines from http://10.0.0.100:2379/v2: EtcdException('Bad response : 404 page not found\n')
+patroni  | 2025-10-18 06:45:31,236 INFO: waiting on etcd

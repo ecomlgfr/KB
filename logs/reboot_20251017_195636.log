@@ -1,0 +1,63 @@
+
+[1;33m⚠[0m 43 serveurs vont redémarrer après vérification
+[1;33m⚠[0m Vérifications: SSH + Docker + structure /opt/keybuzz
+
+
+[0;32m✓[0m Démarrage redémarrage vérifié...
+
+k3s-master-01: OK (redémarrage lancé)
+k3s-worker-01: OK (redémarrage lancé)
+k3s-worker-03: OK (redémarrage lancé)
+k3s-worker-02: OK (redémarrage lancé)
+k3s-master-02: OK (redémarrage lancé)
+k3s-worker-04: OK (redémarrage lancé)
+k3s-master-03: OK (redémarrage lancé)
+db-master-01: OK (redémarrage lancé)
+db-slave-01: OK (redémarrage lancé)
+k3s-worker-05: OK (redémarrage lancé)
+redis-01: OK (redémarrage lancé)
+redis-03: OK (redémarrage lancé)
+queue-01: OK (redémarrage lancé)
+redis-02: OK (redémarrage lancé)
+queue-03: OK (redémarrage lancé)
+temporal-db-01: OK (redémarrage lancé)
+queue-02: OK (redémarrage lancé)
+connect-01: OK (redémarrage lancé)
+analytics-db-01: OK (redémarrage lancé)
+db-slave-02: OK (redémarrage lancé)
+crm-01: OK (redémarrage lancé)
+api-gateway-01: OK (redémarrage lancé)
+minio-01: OK (redémarrage lancé)
+vector-db-01: OK (redémarrage lancé)
+litellm-01: OK (redémarrage lancé)
+analytics-01: OK (redémarrage lancé)
+etl-01: OK (redémarrage lancé)
+temporal-01: OK (redémarrage lancé)
+connect-02: OK (redémarrage lancé)
+baserow-01: OK (redémarrage lancé)
+monitor-01: OK (redémarrage lancé)
+ml-platform-01: OK (redémarrage lancé)
+backup-01: OK (redémarrage lancé)
+nocodb-01: OK (redémarrage lancé)
+vault-01: OK (redémarrage lancé)
+mail-mx-01: OK (redémarrage lancé)
+siem-01: OK (redémarrage lancé)
+mail-mx-02: OK (redémarrage lancé)
+mail-core-01: OK (redémarrage lancé)
+builder-01: OK (redémarrage lancé)
+haproxy-01: OK (redémarrage lancé)
+haproxy-02: OK (redémarrage lancé)
+install-01: OK (redémarrage lancé)
+
+══════════════════════════════════════════════════════════════════
+RÉSUMÉ:
+  Total:      43
+  Redémarrés: 43
+  Échecs:     0
+
+[0;32m✓[0m TOUS LES SERVEURS REDÉMARRÉS
+
+[1;33m⚠[0m Attendre ~2 minutes pour stabilisation réseau
+
+Test connectivité après redémarrage:
+  ./DIAG_NETWORK_CURRENT.sh

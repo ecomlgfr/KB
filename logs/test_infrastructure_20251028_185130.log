@@ -1,0 +1,201 @@
+
+🔍 Tests complets de l'infrastructure KeyBuzz
+Timestamp: 2025-10-28 18:51:30
+
+
+═══════════════════════════════════════════════════════════════════
+  TEST 1: Connectivité SSH vers tous les nœuds
+═══════════════════════════════════════════════════════════════════
+  SSH db-master-01 (10.0.0.120)                                \033[0;32m✓ OK\033[0m
+  SSH db-slave-01 (10.0.0.121)                                 \033[0;32m✓ OK\033[0m
+  SSH db-slave-02 (10.0.0.122)                                 \033[0;32m✓ OK\033[0m
+  SSH haproxy-01 (10.0.0.11)                                   \033[0;32m✓ OK\033[0m
+  SSH haproxy-02 (10.0.0.12)                                   \033[0;32m✓ OK\033[0m
+  SSH redis-01 (10.0.0.123)                                    \033[0;32m✓ OK\033[0m
+  SSH redis-02 (10.0.0.124)                                    \033[0;32m✓ OK\033[0m
+  SSH redis-03 (10.0.0.125)                                    \033[0;32m✓ OK\033[0m
+  SSH rabbitmq-01 (IP non trouvée dans servers.tsv)           \033[0;31m✗ KO\033[0m
+  SSH rabbitmq-02 (IP non trouvée dans servers.tsv)           \033[0;31m✗ KO\033[0m
+  SSH rabbitmq-03 (IP non trouvée dans servers.tsv)           \033[0;31m✗ KO\033[0m
+  SSH k3s-master-01 (10.0.0.100)                               \033[0;32m✓ OK\033[0m
+  SSH k3s-master-02 (10.0.0.101)                               \033[0;32m✓ OK\033[0m
+  SSH k3s-master-03 (10.0.0.102)                               \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 2: PostgreSQL Cluster (Patroni)
+═══════════════════════════════════════════════════════════════════
+  Patroni container running on db-master-01                    \033[0;32m✓ OK\033[0m
+  Patroni container running on db-slave-01                     \033[0;32m✓ OK\033[0m
+  Patroni container running on db-slave-02                     \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Patroni Cluster Status:
+  Patroni cluster status (pas de leader détecté)             \033[0;31m✗ KO\033[0m
+
+[0;36mℹ INFO[0m Test connexions PostgreSQL directes:
+  PostgreSQL connexion directe db-master-01 (10.0.0.120:5432)  \033[0;32m✓ OK\033[0m
+  PostgreSQL connexion directe db-slave-01 (10.0.0.121:5432)   \033[0;32m✓ OK\033[0m
+  PostgreSQL connexion directe db-slave-02 (10.0.0.122:5432)   \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Réplication PostgreSQL:
+  PostgreSQL streaming replicas: 2/2                           \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 3: HAProxy & PgBouncer (Proxies DB)
+═══════════════════════════════════════════════════════════════════
+
+[0;36mℹ INFO[0m Tests sur haproxy-01 (10.0.0.11):
+  HAProxy container running on haproxy-01                      \033[0;32m✓ OK\033[0m
+  PgBouncer container on haproxy-01                            \033[0;31m✗ KO\033[0m
+  HAProxy stats page (10.0.0.11:8404)                          \033[0;32m✓ OK\033[0m
+  HAProxy PostgreSQL write port (10.0.0.11:5432)               \033[0;32m✓ OK\033[0m
+  HAProxy PostgreSQL read port (10.0.0.11:5433)                \033[0;32m✓ OK\033[0m
+  PgBouncer port (10.0.0.11:6432)                              \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Tests sur haproxy-02 (10.0.0.12):
+  HAProxy container running on haproxy-02                      \033[0;32m✓ OK\033[0m
+  PgBouncer container on haproxy-02                            \033[0;31m✗ KO\033[0m
+  HAProxy stats page (10.0.0.12:8404)                          \033[0;32m✓ OK\033[0m
+  HAProxy PostgreSQL write port (10.0.0.12:5432)               \033[0;32m✓ OK\033[0m
+  HAProxy PostgreSQL read port (10.0.0.12:5433)                \033[0;32m✓ OK\033[0m
+  PgBouncer port (10.0.0.12:6432)                              \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Tests VIP Database (10.0.0.10):
+  VIP DB HAProxy write (10.0.0.10:5432)                        \033[0;32m✓ OK\033[0m
+  VIP DB SQL write test (10.0.0.10:5432)                       \033[0;32m✓ OK\033[0m
+  VIP DB HAProxy read (10.0.0.10:5433)                         \033[0;32m✓ OK\033[0m
+  VIP DB PgBouncer (10.0.0.10:6432)                            \033[0;32m✓ OK\033[0m
+  VIP DB SQL via PgBouncer (10.0.0.10:6432)                    \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Keepalived VIP Status:
+  [0;36mℹ INFO[0m VIP non active sur haproxy-01 (BACKUP)
+  [0;36mℹ INFO[0m VIP non active sur haproxy-02 (BACKUP)
+
+═══════════════════════════════════════════════════════════════════
+  TEST 4: Redis Cluster + Sentinel
+═══════════════════════════════════════════════════════════════════
+  Redis container running on redis-01                          \033[0;32m✓ OK\033[0m
+  Redis PING on redis-01                                       \033[0;32m✓ OK\033[0m
+  Redis container running on redis-02                          \033[0;32m✓ OK\033[0m
+  Redis PING on redis-02                                       \033[0;32m✓ OK\033[0m
+  Redis container running on redis-03                          \033[0;32m✓ OK\033[0m
+  Redis PING on redis-03                                       \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Redis Sentinel Status:
+  Sentinel master detected: 10.0.0.123                         \033[0;32m✓ OK\033[0m
+  Sentinel nodes: 3/3                                          \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m HAProxy Redis (TCP 6379):
+  HAProxy Redis port (10.0.0.11:6379)                          \033[0;32m✓ OK\033[0m
+  HAProxy Redis port (10.0.0.12:6379)                          \033[0;32m✓ OK\033[0m
+  VIP Redis (10.0.0.10:6379)                                   \033[0;32m✓ OK\033[0m
+  VIP Redis write test                                         \033[0;32m✓ OK\033[0m
+  VIP Redis read test                                          \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 5: RabbitMQ Cluster
+═══════════════════════════════════════════════════════════════════
+
+[0;36mℹ INFO[0m RabbitMQ Cluster Status:
+
+[0;36mℹ INFO[0m HAProxy RabbitMQ:
+  HAProxy RabbitMQ AMQP (10.0.0.11:5672)                       \033[0;32m✓ OK\033[0m
+  HAProxy RabbitMQ Management (10.0.0.11:15672)                \033[0;32m✓ OK\033[0m
+  HAProxy RabbitMQ AMQP (10.0.0.12:5672)                       \033[0;32m✓ OK\033[0m
+  HAProxy RabbitMQ Management (10.0.0.12:15672)                \033[0;32m✓ OK\033[0m
+  VIP RabbitMQ AMQP (10.0.0.10:5672)                           \033[0;32m✓ OK\033[0m
+  VIP RabbitMQ Management (10.0.0.10:15672)                    \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 6: K3s Kubernetes Cluster
+═══════════════════════════════════════════════════════════════════
+  K3s service on k3s-master-01 (Status: inactive
+inactive)     \033[0;31m✗ KO\033[0m
+  K3s service on k3s-master-02 (Status: inactive
+inactive)     \033[0;31m✗ KO\033[0m
+  K3s service on k3s-master-03 (Status: inactive
+inactive)     \033[0;31m✗ KO\033[0m
+
+[0;36mℹ INFO[0m K3s Nodes Status:
+./test_infrastructure_complete.sh: line 495: [: 0
+0: integer expression expected
+  K3s nodes ready: 0
+0/0                                       \033[0;31m✗ KO\033[0m
+./test_infrastructure_complete.sh: line 505: [: 0
+0: integer expression expected
+  K3s system pods running: 0
+0                                 \033[0;31m✗ KO\033[0m
+
+[0;36mℹ INFO[0m HAProxy K3s API (port 6443):
+  HAProxy K3s API (10.0.0.11:6443)                             \033[0;31m✗ KO\033[0m
+  HAProxy K3s API (10.0.0.12:6443)                             \033[0;31m✗ KO\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 7: Applications (n8n, Chatwoot, etc.)
+═══════════════════════════════════════════════════════════════════
+./test_infrastructure_complete.sh: line 539: [: 0
+0: integer expression expected
+  [0;36mℹ INFO[0m n8n: Non déployé ou en cours de démarrage
+./test_infrastructure_complete.sh: line 549: [: 0
+0: integer expression expected
+  [0;36mℹ INFO[0m Chatwoot: Non déployé ou en cours de démarrage
+
+[0;36mℹ INFO[0m Test connexion applicative n8n → PostgreSQL:
+  Simulation connexion app n8n → DB (via PgBouncer)          \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 8: Volumes et Stockage
+═══════════════════════════════════════════════════════════════════
+  Volumes montés sur db-master-01 (1 volumes)                 \033[0;32m✓ OK\033[0m
+  Volumes montés sur db-slave-01 (1 volumes)                  \033[0;32m✓ OK\033[0m
+  Volumes montés sur db-slave-02 (1 volumes)                  \033[0;32m✓ OK\033[0m
+  Volumes montés sur haproxy-01 (1 volumes)                   \033[0;32m✓ OK\033[0m
+  Volumes montés sur haproxy-02 (1 volumes)                   \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Espace disque sur volumes:
+  Espace disque db-master-01: 6% utilisé                      \033[0;32m✓ OK\033[0m
+  Espace disque haproxy-01: 6% utilisé                        \033[0;32m✓ OK\033[0m
+  Espace disque redis-01: 7% utilisé                          \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 9: Sécurité et Firewall
+═══════════════════════════════════════════════════════════════════
+  UFW actif sur db-master-01                                   \033[0;32m✓ OK\033[0m
+  UFW actif sur haproxy-01                                     \033[0;32m✓ OK\033[0m
+  UFW actif sur redis-01                                       \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Authentification SSH:
+  SSH password authentication status unclear                   \033[0;31m✗ KO\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  TEST 10: Performance et Latence
+═══════════════════════════════════════════════════════════════════
+
+[0;36mℹ INFO[0m Latence réseau (ping):
+  Latence db-master-01 → haproxy-01: 1.552ms                 \033[0;32m✓ OK\033[0m
+
+[0;36mℹ INFO[0m Test de charge PostgreSQL (10 connexions rapides):
+  PostgreSQL load test: 10/10 connexions réussies             \033[0;32m✓ OK\033[0m
+
+═══════════════════════════════════════════════════════════════════
+  RÉSUMÉ DES TESTS
+═══════════════════════════════════════════════════════════════════
+
+  Total tests exécutés : 80
+  [0;32m✓ OK[0m Tests réussis    : 66
+  [0;31m✗ KO[0m Tests échoués    : 14
+
+[0;33m⚠ WARN[0m Infrastructure ACCEPTABLE (82% de réussite)
+
+⚠️  Quelques problèmes mineurs détectés, mais l'infrastructure fonctionne.
+
+═══════════════════════════════════════════════════════════════════
+  📄 Log complet: /opt/keybuzz-installer/logs/test_infrastructure_20251028_185130.log
+═══════════════════════════════════════════════════════════════════
+
+Dernières lignes du log :
+  SSH password authentication status unclear                   \033[0;31m✗ KO\033[0m
+  Latence db-master-01 → haproxy-01: 1.552ms                 \033[0;32m✓ OK\033[0m
+  PostgreSQL load test: 10/10 connexions réussies             \033[0;32m✓ OK\033[0m
+  [0;32m✓ OK[0m Tests réussis    : 66
+  [0;31m✗ KO[0m Tests échoués    : 14
+[0;33m⚠ WARN[0m Infrastructure ACCEPTABLE (82% de réussite)

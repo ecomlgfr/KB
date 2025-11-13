@@ -1,0 +1,90 @@
+# kube-prometheus-stack - config simplifiée
+defaultRules:
+  create: true
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    replicas: 1
+    storage: {}
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+grafana:
+  enabled: true
+  adminPassword: "KeyBuzz2025!"
+  # DÉSACTIVER LA PERSISTENCE (cause du crash)
+  persistence:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - monitor.keybuzz.io
+    path: /
+    pathType: Prefix
+  # Simplifier les datasources
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus.monitoring:9090
+          isDefault: true
+          access: proxy
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    replicas: 1
+    retention: 7d
+    # DÉSACTIVER LA PERSISTENCE
+    storageSpec: {}
+    resources:
+      requests:
+        cpu: 200m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    # Scrapes de base uniquement
+    additionalScrapeConfigs: []
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Composants optionnels
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+# Désactiver ce qui n'est pas supporté
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false

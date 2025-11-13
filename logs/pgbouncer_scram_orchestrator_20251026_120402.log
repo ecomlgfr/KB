@@ -1,0 +1,3 @@
+[0;32mOK[0m Leader Patroni: 10.0.0.120
+bash: line 1: psql: command not found
+[0;31mKO[0m Échec psql sur le leader (auth ou droits). Voir log.

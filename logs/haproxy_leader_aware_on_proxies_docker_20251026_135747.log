@@ -1,0 +1,5 @@
+[NOTICE]   (1) : haproxy version is 2.8.16-3a5d368
+[NOTICE]   (1) : path to executable is /usr/local/sbin/haproxy
+[ALERT]    (1) : config : parsing [/cfg:47]: Missing LF on last line, file might have been truncated at position 29.
+[ALERT]    (1) : config : Error(s) found in configuration file : /cfg
+[ALERT]    (1) : config : Fatal errors found in configuration.

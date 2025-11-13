@@ -1,0 +1,146 @@
+Copie servers.tsv local...
+Recherche device pour etcd data...
+Aucun volume libre trouvé, utilisation stockage système
+time="2025-10-17T20:35:59Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Démarrage etcd...
+time="2025-10-17T20:35:59Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ etcd Pulling 
+ fc6336cdd860 Pulling fs layer 
+ 960043b8858c Pulling fs layer 
+ 5c984a731132 Pulling fs layer 
+ 0f8b424aa0b9 Pulling fs layer 
+ d557676654e5 Pulling fs layer 
+ c8022d07192e Pulling fs layer 
+ d858cbc252ad Pulling fs layer 
+ 1069fc2daed1 Pulling fs layer 
+ b40161cd83fc Pulling fs layer 
+ 5318d93a3a65 Pulling fs layer 
+ 307c1adadb60 Pulling fs layer 
+ 9fe54a7f7b2a Pulling fs layer 
+ 9162746f7e54 Pulling fs layer 
+ e758a19533de Pulling fs layer 
+ e89457bb3799 Pulling fs layer 
+ 614c5bef1f6d Pulling fs layer 
+ b40161cd83fc Waiting 
+ 5318d93a3a65 Waiting 
+ 307c1adadb60 Waiting 
+ 9fe54a7f7b2a Waiting 
+ 9162746f7e54 Waiting 
+ e758a19533de Waiting 
+ e89457bb3799 Waiting 
+ 614c5bef1f6d Waiting 
+ 0f8b424aa0b9 Waiting 
+ d557676654e5 Waiting 
+ c8022d07192e Waiting 
+ d858cbc252ad Waiting 
+ 1069fc2daed1 Waiting 
+ 960043b8858c Downloading [========>                                          ]   3.42kB/20.32kB
+ 960043b8858c Download complete 
+ fc6336cdd860 Downloading [==>                                                ]  3.428kB/83.99kB
+ fc6336cdd860 Downloading [==================================================>]  83.99kB/83.99kB
+ fc6336cdd860 Download complete 
+ fc6336cdd860 Extracting [===================>                               ]  32.77kB/83.99kB
+ fc6336cdd860 Extracting [==================================================>]  83.99kB/83.99kB
+ fc6336cdd860 Extracting [==================================================>]  83.99kB/83.99kB
+ fc6336cdd860 Pull complete 
+ 960043b8858c Extracting [==================================================>]  20.32kB/20.32kB
+ 960043b8858c Extracting [==================================================>]  20.32kB/20.32kB
+ 5c984a731132 Downloading [=>                                                 ]   15.7kB/634.2kB
+ 960043b8858c Pull complete 
+ 5c984a731132 Downloading [==================================================>]  634.2kB/634.2kB
+ 5c984a731132 Download complete 
+ 5c984a731132 Extracting [==>                                                ]  32.77kB/634.2kB
+ 5c984a731132 Extracting [===============================>                   ]  393.2kB/634.2kB
+ 5c984a731132 Extracting [===========================================>       ]  557.1kB/634.2kB
+ d557676654e5 Downloading [==================================================>]     193B/193B
+ d557676654e5 Verifying Checksum 
+ d557676654e5 Download complete 
+ 5c984a731132 Extracting [==================================================>]  634.2kB/634.2kB
+ c8022d07192e Downloading [==================================================>]     130B/130B
+ c8022d07192e Verifying Checksum 
+ c8022d07192e Download complete 
+ 5c984a731132 Extracting [==================================================>]  634.2kB/634.2kB
+ 0f8b424aa0b9 Downloading [==================================================>]      75B/75B
+ 0f8b424aa0b9 Verifying Checksum 
+ 0f8b424aa0b9 Download complete 
+ 5c984a731132 Pull complete 
+ 0f8b424aa0b9 Extracting [==================================================>]      75B/75B
+ 0f8b424aa0b9 Extracting [==================================================>]      75B/75B
+ 0f8b424aa0b9 Pull complete 
+ d557676654e5 Extracting [==================================================>]     193B/193B
+ d557676654e5 Extracting [==================================================>]     193B/193B
+ d557676654e5 Pull complete 
+ c8022d07192e Extracting [==================================================>]     130B/130B
+ c8022d07192e Extracting [==================================================>]     130B/130B
+ c8022d07192e Pull complete 
+ b40161cd83fc Downloading [==================================================>]     382B/382B
+ b40161cd83fc Verifying Checksum 
+ b40161cd83fc Download complete 
+ d858cbc252ad Downloading [==================================================>]     173B/173B
+ d858cbc252ad Verifying Checksum 
+ d858cbc252ad Download complete 
+ d858cbc252ad Extracting [==================================================>]     173B/173B
+ d858cbc252ad Extracting [==================================================>]     173B/173B
+ 1069fc2daed1 Downloading [==================================================>]      97B/97B
+ 1069fc2daed1 Verifying Checksum 
+ 1069fc2daed1 Download complete 
+ d858cbc252ad Pull complete 
+ 1069fc2daed1 Extracting [==================================================>]      97B/97B
+ 1069fc2daed1 Extracting [==================================================>]      97B/97B
+ 1069fc2daed1 Pull complete 
+ b40161cd83fc Extracting [==================================================>]     382B/382B
+ b40161cd83fc Extracting [==================================================>]     382B/382B
+ b40161cd83fc Pull complete 
+ 5318d93a3a65 Downloading [==================================================>]     327B/327B
+ 5318d93a3a65 Verifying Checksum 
+ 5318d93a3a65 Download complete 
+ 5318d93a3a65 Extracting [==================================================>]     327B/327B
+ 5318d93a3a65 Extracting [==================================================>]     327B/327B
+ 5318d93a3a65 Pull complete 
+ 307c1adadb60 Downloading [=>                                                 ]  3.415kB/122.1kB
+ 307c1adadb60 Downloading [==================================================>]  122.1kB/122.1kB
+ 307c1adadb60 Verifying Checksum 
+ 307c1adadb60 Download complete 
+ 307c1adadb60 Extracting [=============>                                     ]  32.77kB/122.1kB
+ 307c1adadb60 Extracting [==================================================>]  122.1kB/122.1kB
+ 307c1adadb60 Pull complete 
+ 9fe54a7f7b2a Downloading [>                                                  ]  90.37kB/8.499MB
+ 9fe54a7f7b2a Verifying Checksum 
+ 9fe54a7f7b2a Download complete 
+ 9fe54a7f7b2a Extracting [>                                                  ]   98.3kB/8.499MB
+ 9fe54a7f7b2a Extracting [===============================>                   ]  5.407MB/8.499MB
+ 9fe54a7f7b2a Extracting [==================================================>]  8.499MB/8.499MB
+ 9fe54a7f7b2a Pull complete 
+ 9162746f7e54 Downloading [>                                                  ]   66.4kB/6.508MB
+ e758a19533de Downloading [>                                                  ]  66.47kB/5.392MB
+ 9162746f7e54 Verifying Checksum 
+ 9162746f7e54 Download complete 
+ 9162746f7e54 Extracting [>                                                  ]  65.54kB/6.508MB
+ e758a19533de Verifying Checksum 
+ e758a19533de Download complete 
+ 9162746f7e54 Extracting [==========================================>        ]  5.505MB/6.508MB
+ 9162746f7e54 Extracting [==================================================>]  6.508MB/6.508MB
+ 9162746f7e54 Pull complete 
+ e758a19533de Extracting [>                                                  ]  65.54kB/5.392MB
+ e89457bb3799 Downloading [==================================================>]     111B/111B
+ e89457bb3799 Verifying Checksum 
+ e89457bb3799 Download complete 
+ e758a19533de Extracting [==================================================>]  5.392MB/5.392MB
+ e758a19533de Pull complete 
+ e89457bb3799 Extracting [==================================================>]     111B/111B
+ e89457bb3799 Extracting [==================================================>]     111B/111B
+ e89457bb3799 Pull complete 
+ 614c5bef1f6d Downloading [==================================================>]     130B/130B
+ 614c5bef1f6d Verifying Checksum 
+ 614c5bef1f6d Download complete 
+ 614c5bef1f6d Extracting [==================================================>]     130B/130B
+ 614c5bef1f6d Extracting [==================================================>]     130B/130B
+ 614c5bef1f6d Pull complete 
+ etcd Pulled 
+ Container etcd  Creating
+ Container etcd  Created
+ Container etcd  Starting
+ Container etcd  Started
+time="2025-10-17T20:36:10Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+etcd démarré
+etcd healthy

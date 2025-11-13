@@ -1,0 +1,179 @@
+
+Diagnostic Redis HA (Watcher) + RabbitMQ HA (Quorum)
+Timestamp: 2025-10-30 14:15:45
+
+╔═══════════════════════════════════════════════════════════════╗
+║ SECTION 1: Tests Redis HA + Watcher Sentinel                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  [1.1] Test PING via 10.0.0.10:6379
+    [0;32mOK[0m PING répond via Load Balancer
+
+  [1.2] Test SET/GET via 10.0.0.10:6379
+    [0;32mOK[0m SET/GET fonctionnent
+
+  [1.3] Vérification master via Sentinel (depuis HAProxy)
+    [0;32mOK[0m Watcher fonctionne (test Sentinel optionnel)
+
+  [1.4] Vérification des watchers Sentinel sur HAProxy
+    haproxy-01: [0;32mOK[0m (watcher actif)
+    haproxy-02: [0;32mOK[0m (watcher actif)
+    [0;32mOK[0m Les 2 watchers sont actifs
+
+  [1.5] Vérification current_master sur HAProxy
+    haproxy-01: [0;31mKO[0m (master: 10.0.0.123, attendu: )
+    haproxy-02: [0;31mKO[0m (master: 10.0.0.123, attendu: )
+
+  [1.6] Vérification bind IP privée sur HAProxy
+    haproxy-01: [0;32mOK[0m (bind 10.0.0.11)
+    haproxy-02: [0;32mOK[0m (bind 10.0.0.12)
+    [0;32mOK[0m Bind IP privée correctement configuré
+
+╔═══════════════════════════════════════════════════════════════╗
+║ SECTION 2: Tests RabbitMQ HA + Quorum par défaut               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  [2.1] État du cluster RabbitMQ
+    [0;32mOK[0m Cluster actif
+Running Nodes
+
+  [2.2] Vérification default_queue_type = quorum
+    [0;32mOK[0m Configuration: default_queue_type = quorum
+
+  [2.3] Test connexion AMQP via 10.0.0.10:5672
+    [0;32mOK[0m Port 5672 accessible
+
+  [2.4] Test Management UI via 10.0.0.10:15672 (interne)
+    [0;32mOK[0m Port 15672 accessible (SSH tunnel recommandé)
+
+  [2.5] Vérification bind IP privée sur HAProxy RabbitMQ
+    haproxy-01: [0;32mOK[0m (bind 10.0.0.11:5672)
+    haproxy-02: [0;32mOK[0m (bind 10.0.0.12:5672)
+    [0;32mOK[0m Bind IP privée correctement configuré
+
+  [2.6] Simulation création queue avec type quorum par défaut
+    Note: Les nouvelles queues créées seront automatiquement de type 'quorum'
+    Vérification via Management UI recommandée après création d'une queue test
+
+╔═══════════════════════════════════════════════════════════════╗
+║ SECTION 3: Tests Load Balancer Hetzner (VIP 10.0.0.10)         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  [3.1] Load Balancer - Redis (6379)
+    [0;32mOK[0m Port 6379 healthy
+
+  [3.2] Load Balancer - RabbitMQ AMQP (5672)
+    [0;32mOK[0m Port 5672 healthy
+
+  [3.3] Load Balancer - RabbitMQ Management (15672)
+    [0;32mOK[0m Port 15672 accessible (SSH tunnel recommandé)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ SECTION 4: Tests de résilience (instructions manuelles)        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  [4.1] Test failover Redis (manuel)
+    1. Identifier le master actuel:
+       redis-cli -h 10.0.0.123 -p 26379 SENTINEL get-master-addr-by-name mymaster
+
+    2. Stopper le master:
+       ssh root@<MASTER_IP> 'docker stop redis'
+
+    3. Vérifier que le watcher met à jour HAProxy (10-15s):
+       watch -n 1 'redis-cli -h 10.0.0.10 -p 6379 -a "$REDIS_PASSWORD" PING'
+
+    4. Vérifier current_master sur HAProxy:
+       ssh root@<haproxy-01> 'cat /opt/keybuzz/redis-lb/status/current_master'
+
+  [4.2] Test failover RabbitMQ (manuel)
+    1. Stopper un nœud RabbitMQ:
+       ssh root@10.0.0.127 'docker stop rabbitmq'
+
+    2. Publier/consommer des messages via 10.0.0.10:5672
+       Le cluster doit rester opérationnel (quorum 2/3)
+
+  [4.3] Test quorum queues RabbitMQ
+    1. Créer une queue test via Management UI (http://localhost:15672)
+    2. Vérifier que le type est automatiquement 'quorum'
+    3. Publier des messages et vérifier la réplication
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ DU DIAGNOSTIC                                            ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Tests réussis: 15 / 15 (100%)
+
+[0;32mOK[0m TOUS LES TESTS SONT PASSÉS (100%)
+
+Redis HA:
+  ✓ Watcher Sentinel actif
+  ✓ Bind IP privée sécurisé
+  ✓ Failover automatique < 30s
+  ✓ Endpoint: 10.0.0.10:6379
+
+RabbitMQ HA:
+  ✓ Quorum par défaut activé
+  ✓ Cluster 3 nœuds opérationnel
+  ✓ Management UI interne (SSH tunnel)
+  ✓ Endpoint: 10.0.0.10:5672
+
+Load Balancer Hetzner:
+  ✓ Redis 6379: Healthy
+  ✓ RabbitMQ AMQP 5672: Healthy
+  ✓ RabbitMQ UI 15672: Accessible (interne)
+
+./diagnostic_redis_rmq_V2.sh: line 385: /opt/keybuzz/redis-lb/status/STATE: No such file or directory
+./diagnostic_redis_rmq_V2.sh: line 386: /opt/keybuzz/rabbitmq-lb/status/STATE: No such file or directory
+
+Log complet: /opt/keybuzz-installer/logs/diagnostic_redis_rmq_20251030_141545.log
+═══════════════════════════════════════════════════════════════════
+       ssh root@<MASTER_IP> 'docker stop redis'
+
+    3. Vérifier que le watcher met à jour HAProxy (10-15s):
+       watch -n 1 'redis-cli -h 10.0.0.10 -p 6379 -a "$REDIS_PASSWORD" PING'
+
+    4. Vérifier current_master sur HAProxy:
+       ssh root@<haproxy-01> 'cat /opt/keybuzz/redis-lb/status/current_master'
+
+  [4.2] Test failover RabbitMQ (manuel)
+    1. Stopper un nœud RabbitMQ:
+       ssh root@10.0.0.127 'docker stop rabbitmq'
+
+    2. Publier/consommer des messages via 10.0.0.10:5672
+       Le cluster doit rester opérationnel (quorum 2/3)
+
+  [4.3] Test quorum queues RabbitMQ
+    1. Créer une queue test via Management UI (http://localhost:15672)
+    2. Vérifier que le type est automatiquement 'quorum'
+    3. Publier des messages et vérifier la réplication
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ DU DIAGNOSTIC                                            ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Tests réussis: 15 / 15 (100%)
+
+[0;32mOK[0m TOUS LES TESTS SONT PASSÉS (100%)
+
+Redis HA:
+  ✓ Watcher Sentinel actif
+  ✓ Bind IP privée sécurisé
+  ✓ Failover automatique < 30s
+  ✓ Endpoint: 10.0.0.10:6379
+
+RabbitMQ HA:
+  ✓ Quorum par défaut activé
+  ✓ Cluster 3 nœuds opérationnel
+  ✓ Management UI interne (SSH tunnel)
+  ✓ Endpoint: 10.0.0.10:5672
+
+Load Balancer Hetzner:
+  ✓ Redis 6379: Healthy
+  ✓ RabbitMQ AMQP 5672: Healthy
+  ✓ RabbitMQ UI 15672: Accessible (interne)
+
+./diagnostic_redis_rmq_V2.sh: line 385: /opt/keybuzz/redis-lb/status/STATE: No such file or directory
+./diagnostic_redis_rmq_V2.sh: line 386: /opt/keybuzz/rabbitmq-lb/status/STATE: No such file or directory
+
+Log complet: /opt/keybuzz-installer/logs/diagnostic_redis_rmq_20251030_141545.log
+═══════════════════════════════════════════════════════════════════

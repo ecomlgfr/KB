@@ -1,0 +1,79 @@
+# Airbyte OSS values
+global:
+  database:
+    type: external
+    host: 10.0.0.10
+    port: 6432
+    database: airbyte
+    user: airbyte
+    password: NEhobUmaJGdR7TL2MCXRB853
+
+webapp:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  nodeSelector:
+    role: apps
+
+worker:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+  nodeSelector:
+    role: background
+
+server:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+temporal:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: etl.keybuzz.io
+      paths:
+        - path: /
+          pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+
+# Logs
+logs:
+  persistence:
+    enabled: true
+    size: 20Gi
+
+# Minio (internal pour Airbyte state)
+minio:
+  enabled: false  # On utilise MinIO externe
+
+# External storage (MinIO KeyBuzz)
+# Configuré via UI après déploiement

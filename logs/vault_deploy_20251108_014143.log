@@ -1,0 +1,120 @@
+
+Déploiement Vault - Architecture KeyBuzz
+Timestamp: 2025-11-08 01:41:44
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Configuration :
+  PostgreSQL : 10.0.0.10:5432 (LB → HAProxy → Patroni)
+  Port Vault : 8200
+  Backend    : PostgreSQL (HA)
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Préparation base PostgreSQL                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Création base et user Vault...
+[0;32mOK[0m Connexion PostgreSQL OK
+DO
+GRANT
+You are now connected to database "vault" as user "postgres".
+ALTER SCHEMA
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+[0;32mOK[0m Base vault créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Création namespace                                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m Namespace vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Création secrets                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Error from server (Forbidden): error when creating "STDIN": secrets "vault-secrets" is forbidden: unable to create new content in namespace vault because it is being terminated
+[0;32mOK[0m Secrets Vault créés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Déploiement Vault DaemonSet                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Error from server (Forbidden): error when creating "STDIN": configmaps "vault-config" is forbidden: unable to create new content in namespace vault because it is being terminated
+Error from server (Forbidden): error when creating "STDIN": daemonsets.apps "vault" is forbidden: unable to create new content in namespace vault because it is being terminated
+Error from server (Forbidden): error when creating "STDIN": services "vault" is forbidden: unable to create new content in namespace vault because it is being terminated
+Error from server (NotFound): configmaps "vault-config" not found
+Error from server (NotFound): configmaps "vault-config" not found
+[0;32mOK[0m Vault DaemonSet déployé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Création Ingress                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Error from server (Forbidden): error when creating "STDIN": ingresses.networking.k8s.io "vault" is forbidden: unable to create new content in namespace vault because it is being terminated
+[0;32mOK[0m Ingress vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Attente démarrage (60s)                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════
+═══ Vérification ═══
+═══════════════════════════════════════════════════════════════════
+
+Pods Vault :
+No resources found in vault namespace.
+
+Services :
+No resources found in vault namespace.
+
+Ingress :
+No resources found in vault namespace.
+
+DaemonSet :
+No resources found in vault namespace.
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                    ✅ Vault déployé avec succès                ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 Configuration :
+  URL externe : http://vault.keybuzz.io
+  URL interne : http://vault.vault.svc:8200
+  NodePort    : 30820 (HTTP) / 30821 (Cluster)
+
+🔧 Backend :
+  Type        : PostgreSQL (HA)
+  Connexion   : 10.0.0.10:5432/vault
+
+⚠️  IMPORTANT - Initialisation Vault :
+
+1️⃣  Initialiser Vault (PREMIÈRE FOIS UNIQUEMENT) :
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator init
+
+  ⚠️  Sauvegarder les clés de déverrouillage et le root token !
+
+2️⃣  Déverrouiller Vault (après chaque redémarrage, 3 clés minimum) :
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key1>
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key2>
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key3>
+
+3️⃣  Se connecter :
+  export VAULT_ADDR=http://vault.keybuzz.io
+  vault login <root_token>
+
+Prochaine étape :
+  ./13_deploy_monitoring_stack.sh (si pas déjà fait)
+  ./19_deploy_wazuh_siem.sh
+

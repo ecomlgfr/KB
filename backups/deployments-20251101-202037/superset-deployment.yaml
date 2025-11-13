@@ -1,0 +1,152 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"superset","namespace":"superset"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"superset"}},"template":{"metadata":{"labels":{"app":"superset"}},"spec":{"containers":[{"command":["/bin/sh","-c","gunicorn \\\n  -w 4 \\\n  -k gthread \\\n  --threads 20 \\\n  --timeout 120 \\\n  -b 0.0.0.0:8088 \\\n  --limit-request-line 0 \\\n  --limit-request-field_size 0 \\\n  'superset.app:create_app()'\n"],"env":[{"name":"SUPERSET_PORT","value":"8088"}],"envFrom":[{"secretRef":{"name":"superset-config"}}],"image":"apache/superset:latest","livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/health","port":8088},"initialDelaySeconds":180,"periodSeconds":30,"timeoutSeconds":10},"name":"superset","ports":[{"containerPort":8088,"name":"http"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":8088},"initialDelaySeconds":120,"periodSeconds":10,"timeoutSeconds":5},"resources":{"limits":{"cpu":"2000m","memory":"4Gi"},"requests":{"cpu":"500m","memory":"1Gi"}}}],"initContainers":[{"command":["/bin/sh","-c","superset db upgrade\nsuperset init\n"],"env":[{"name":"SUPERSET_PORT","value":"8088"}],"envFrom":[{"secretRef":{"name":"superset-config"}}],"image":"apache/superset:latest","name":"init-db"},{"command":["/bin/sh","-c","superset fab create-admin \\\n  --username admin \\\n  --firstname Admin \\\n  --lastname User \\\n  --email admin@keybuzz.io \\\n  --password admin || true\n"],"env":[{"name":"SUPERSET_PORT","value":"8088"}],"envFrom":[{"secretRef":{"name":"superset-config"}}],"image":"apache/superset:latest","name":"init-admin"}]}}}}
+  creationTimestamp: "2025-10-31T23:55:29Z"
+  generation: 1
+  name: superset
+  namespace: superset
+  resourceVersion: "337119"
+  uid: 5b494805-3915-4176-9fc8-e06ad918a911
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: superset
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: superset
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          gunicorn \
+            -w 4 \
+            -k gthread \
+            --threads 20 \
+            --timeout 120 \
+            -b 0.0.0.0:8088 \
+            --limit-request-line 0 \
+            --limit-request-field_size 0 \
+            'superset.app:create_app()'
+        env:
+        - name: SUPERSET_PORT
+          value: "8088"
+        envFrom:
+        - secretRef:
+            name: superset-config
+        image: apache/superset:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 8088
+            scheme: HTTP
+          initialDelaySeconds: 180
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: superset
+        ports:
+        - containerPort: 8088
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8088
+            scheme: HTTP
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          superset db upgrade
+          superset init
+        env:
+        - name: SUPERSET_PORT
+          value: "8088"
+        envFrom:
+        - secretRef:
+            name: superset-config
+        image: apache/superset:latest
+        imagePullPolicy: Always
+        name: init-db
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          superset fab create-admin \
+            --username admin \
+            --firstname Admin \
+            --lastname User \
+            --email admin@keybuzz.io \
+            --password admin || true
+        env:
+        - name: SUPERSET_PORT
+          value: "8088"
+        envFrom:
+        - secretRef:
+            name: superset-config
+        image: apache/superset:latest
+        imagePullPolicy: Always
+        name: init-admin
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 2
+  conditions:
+  - lastTransitionTime: "2025-10-31T23:55:29Z"
+    lastUpdateTime: "2025-10-31T23:59:29Z"
+    message: ReplicaSet "superset-5f5fc6ff48" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2025-11-01T11:50:41Z"
+    lastUpdateTime: "2025-11-01T11:50:41Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  readyReplicas: 2
+  replicas: 2
+  updatedReplicas: 2

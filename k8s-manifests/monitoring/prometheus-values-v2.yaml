@@ -1,0 +1,135 @@
+# kube-prometheus-stack values V2 - CORRIGÉ datasource unique
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    # Pas de volumeClaimTemplate pour éviter PVC pending
+    storageSpec: {}
+    
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+    
+    # Scrape des services externes
+    additionalScrapeConfigs:
+      # Scrape Patroni
+      - job_name: 'patroni'
+        static_configs:
+          - targets:
+            - '10.0.0.120:8008'  # db-master-01
+            - '10.0.0.121:8008'  # db-slave-01
+            - '10.0.0.122:8008'  # db-slave-02
+      
+      # Scrape HAProxy
+      - job_name: 'haproxy'
+        static_configs:
+          - targets:
+            - '10.0.0.11:8404'   # haproxy-01
+            - '10.0.0.12:8405'   # haproxy-02
+      
+      # Scrape Redis Sentinel
+      - job_name: 'redis-sentinel'
+        static_configs:
+          - targets:
+            - '10.0.0.123:26379' # redis-01
+            - '10.0.0.124:26379' # redis-02
+            - '10.0.0.125:26379' # redis-03
+      
+      # Scrape RabbitMQ
+      - job_name: 'rabbitmq'
+        static_configs:
+          - targets:
+            - '10.0.0.126:15692' # queue-01
+            - '10.0.0.127:15692' # queue-02
+            - '10.0.0.128:15692' # queue-03
+
+grafana:
+  enabled: true
+  adminPassword: "KeyBuzz2025!"
+  
+  # Persistence
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  
+  # Ingress
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - monitor.keybuzz.io
+    path: /
+    pathType: Prefix
+  
+  # CRITICAL: Configuration datasource UNIQUE - une seule datasource par défaut
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+          access: proxy
+          isDefault: true
+          editable: true
+  
+  # Désactiver les sidecars de provisionning auto pour éviter conflits
+  sidecar:
+    datasources:
+      enabled: false
+    dashboards:
+      enabled: true
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Node exporter
+nodeExporter:
+  enabled: true
+
+# kube-state-metrics
+kubeStateMetrics:
+  enabled: true
+
+# Désactiver ce qui n'est pas nécessaire
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

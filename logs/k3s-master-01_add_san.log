@@ -1,0 +1,57 @@
+[2025-11-03 22:31:11] Vérification K3s...
+[2025-11-03 22:31:11] Modification du service k3s...
+[2025-11-03 22:31:11] SAN ajouté au service systemd
+[2025-11-03 22:31:11] Rechargement systemd...
+[2025-11-03 22:31:11] Suppression des certificats existants...
+[2025-11-03 22:31:11] Redémarrage K3s...
+[2025-11-03 22:32:12] ERREUR : K3s n'a pas redémarré
+Nov 03 22:32:04 k3s-master-01 systemd[1]: k3s.service: Unit process 9539 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:04 k3s-master-01 systemd[1]: k3s.service: Unit process 9544 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:04 k3s-master-01 systemd[1]: k3s.service: Unit process 9549 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:04 k3s-master-01 systemd[1]: Failed to start k3s.service - Lightweight Kubernetes.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Scheduled restart job, restart counter is at 11.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9539 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9544 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9549 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: Starting k3s.service - Lightweight Kubernetes...
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9539 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9544 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Found left-over process 9549 (containerd-shim) in control group while starting unit. Ignoring.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: This usually indicates unclean termination of a previous run, or service implementation deficiencies.
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: Incorrect Usage. flag provided but not defined: -tls-san
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: NAME:
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    k3s - Kubernetes, but small and simple
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: USAGE:
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    k3s [global options] command [command options] [arguments...]
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: VERSION:
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    v1.28.5+k3s1 (5b2d1271)
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: COMMANDS:
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    server           Run management server
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    agent            Run node agent
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    kubectl          Run kubectl
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    crictl           Run crictl
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    ctr              Run ctr
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    check-config     Run config check
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    token            Manage bootstrap tokens
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    etcd-snapshot
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    secrets-encrypt  Control secrets encryption and keys rotation
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    certificate      Manage K3s certificates
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    completion       Install shell completion script
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    help, h          Shows a list of commands or help for one command
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: GLOBAL OPTIONS:
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    --debug                     (logging) Turn on debug logs [$K3S_DEBUG]
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    --data-dir value, -d value  (data) Folder to hold state (default: /var/lib/rancher/k3s or ${HOME}/.rancher/k3s if not root)
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    --help, -h                  show help
+Nov 03 22:32:09 k3s-master-01 k3s[13496]:    --version, -v               print the version
+Nov 03 22:32:09 k3s-master-01 k3s[13496]: time="2025-11-03T22:32:09Z" level=fatal msg="flag provided but not defined: -tls-san"
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Main process exited, code=exited, status=1/FAILURE
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Failed with result 'exit-code'.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Unit process 9539 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Unit process 9544 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: k3s.service: Unit process 9549 (containerd-shim) remains running after unit stopped.
+Nov 03 22:32:09 k3s-master-01 systemd[1]: Failed to start k3s.service - Lightweight Kubernetes.

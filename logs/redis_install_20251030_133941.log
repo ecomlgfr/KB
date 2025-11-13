@@ -1,0 +1,288 @@
+
+Installation Redis HA - Architecture complète (IP privée + Watcher)
+Timestamp: 2025-10-30 13:39:41
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Redis trouvés: 3
+  Serveurs HAProxy trouvés: 2
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Chargement des credentials existants...
+  Hash du mot de passe: e692a9301269609a...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs Redis                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de redis-01 (10.0.0.123)...
+redis
+sentinel
+redis
+sentinel
+    ✓ Structure créée
+  Préparation de redis-02 (10.0.0.124)...
+redis
+sentinel
+redis
+sentinel
+    ✓ Structure créée
+  Préparation de redis-03 (10.0.0.125)...
+redis
+sentinel
+redis
+sentinel
+    ✓ Structure créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement Redis + Sentinel                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement de redis-01 comme master initial...
+Unable to find image 'redis:7-alpine' locally
+7-alpine: Pulling from library/redis
+f637881d1138: Already exists
+39cb007b6d10: Pulling fs layer
+fcf08622f74c: Pulling fs layer
+516a54ddb544: Pulling fs layer
+7f2a16ba242b: Pulling fs layer
+3881684f3863: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+491cac7f2e45: Pulling fs layer
+7f2a16ba242b: Waiting
+3881684f3863: Waiting
+4f4fb700ef54: Waiting
+491cac7f2e45: Waiting
+516a54ddb544: Download complete
+39cb007b6d10: Verifying Checksum
+39cb007b6d10: Download complete
+39cb007b6d10: Pull complete
+fcf08622f74c: Verifying Checksum
+fcf08622f74c: Download complete
+fcf08622f74c: Pull complete
+516a54ddb544: Pull complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+3881684f3863: Verifying Checksum
+3881684f3863: Download complete
+7f2a16ba242b: Verifying Checksum
+7f2a16ba242b: Download complete
+7f2a16ba242b: Pull complete
+3881684f3863: Pull complete
+4f4fb700ef54: Pull complete
+491cac7f2e45: Verifying Checksum
+491cac7f2e45: Download complete
+491cac7f2e45: Pull complete
+Digest: sha256:3b73847e72874be07e6657b129a94761662b79bc0f679273757d4218573b2a98
+Status: Downloaded newer image for redis:7-alpine
+84373e18089e241f13752f25147f146938d64abd106e0aa25affa120cf5d23fd
+dd5b47a297be0f1df91d6ac5a2180176e85e20a09239092a7a2c040cdfa8d63e
+    ✓ Redis Master + Sentinel démarrés
+  Déploiement de redis-02 comme replica...
+Unable to find image 'redis:7-alpine' locally
+7-alpine: Pulling from library/redis
+f637881d1138: Already exists
+39cb007b6d10: Pulling fs layer
+fcf08622f74c: Pulling fs layer
+516a54ddb544: Pulling fs layer
+7f2a16ba242b: Pulling fs layer
+3881684f3863: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+491cac7f2e45: Pulling fs layer
+7f2a16ba242b: Waiting
+3881684f3863: Waiting
+4f4fb700ef54: Waiting
+491cac7f2e45: Waiting
+fcf08622f74c: Verifying Checksum
+fcf08622f74c: Download complete
+39cb007b6d10: Download complete
+39cb007b6d10: Pull complete
+516a54ddb544: Verifying Checksum
+516a54ddb544: Download complete
+fcf08622f74c: Pull complete
+516a54ddb544: Pull complete
+3881684f3863: Verifying Checksum
+3881684f3863: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+7f2a16ba242b: Download complete
+491cac7f2e45: Verifying Checksum
+491cac7f2e45: Download complete
+7f2a16ba242b: Pull complete
+3881684f3863: Pull complete
+4f4fb700ef54: Pull complete
+491cac7f2e45: Pull complete
+Digest: sha256:3b73847e72874be07e6657b129a94761662b79bc0f679273757d4218573b2a98
+Status: Downloaded newer image for redis:7-alpine
+c7dc397da412ef1008fd562ee4bda39ae08f600395a56781ff97b1dcecb4d9c0
+c3be8536a64b9b07bdb7b3abd6b4d2cac61d3e516c48276b4e90952ca13f8f10
+    ✓ Redis Replica + Sentinel démarrés
+  Déploiement de redis-03 comme replica...
+Unable to find image 'redis:7-alpine' locally
+7-alpine: Pulling from library/redis
+f637881d1138: Already exists
+39cb007b6d10: Pulling fs layer
+fcf08622f74c: Pulling fs layer
+516a54ddb544: Pulling fs layer
+7f2a16ba242b: Pulling fs layer
+3881684f3863: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+491cac7f2e45: Pulling fs layer
+7f2a16ba242b: Waiting
+3881684f3863: Waiting
+4f4fb700ef54: Waiting
+491cac7f2e45: Waiting
+39cb007b6d10: Verifying Checksum
+39cb007b6d10: Download complete
+fcf08622f74c: Verifying Checksum
+fcf08622f74c: Download complete
+516a54ddb544: Verifying Checksum
+516a54ddb544: Download complete
+39cb007b6d10: Pull complete
+fcf08622f74c: Pull complete
+516a54ddb544: Pull complete
+3881684f3863: Verifying Checksum
+3881684f3863: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+7f2a16ba242b: Download complete
+7f2a16ba242b: Pull complete
+3881684f3863: Pull complete
+491cac7f2e45: Verifying Checksum
+491cac7f2e45: Download complete
+4f4fb700ef54: Pull complete
+491cac7f2e45: Pull complete
+Digest: sha256:3b73847e72874be07e6657b129a94761662b79bc0f679273757d4218573b2a98
+Status: Downloaded newer image for redis:7-alpine
+6276eaf1ea825abbf1fe64c54703aae5359ebeca02dd17936e67495a656a6361
+5e0adb31f5cdd549ae2a6c311c35663b5f0cf2b0941d5b0125f2076c0dc20766
+    ✓ Redis Replica + Sentinel démarrés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Vérification du cluster Redis                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Master actuel détecté: 10.0.0.123
+
+  Test de connexion Redis:
+    redis-01: [0;31mKO[0m
+    redis-02: [0;31mKO[0m
+    redis-03: [0;31mKO[0m
+
+  Test des Sentinels:
+    redis-01: [0;31mKO[0m
+    redis-02: [0;31mKO[0m
+    redis-03: [0;31mKO[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Load Balancer avec Watcher Sentinel (PATCHÉ)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration haproxy-01 (10.0.0.11) avec watcher...
+haproxy-redis
+haproxy-redis
+4b90a05a80d8f1fae4fb156349cf902a8fb3e4d45f57b126a8392045d236d6ae
+Unable to find image 'alpine:3.20' locally
+3.20: Pulling from library/alpine
+5311e7f182d0: Pulling fs layer
+5311e7f182d0: Verifying Checksum
+5311e7f182d0: Download complete
+5311e7f182d0: Pull complete
+Digest: sha256:765942a4039992336de8dd5db680586e1a206607dd06170ff0a37267a9e01958
+Status: Downloaded newer image for alpine:3.20
+1d9fd55d0ec7f7a24619fb54e5290be160cc11f04a1420d7dd2da41ad6137c7b
+    ✓ HAProxy + Watcher configurés sur IP 159.69.159.32:6379
+  Configuration haproxy-02 (10.0.0.12) avec watcher...
+haproxy-redis
+haproxy-redis
+ab4d9446d7b40bb06a8a04998057d95187163516fab4733cd34c7e93ccf760c9
+Unable to find image 'alpine:3.20' locally
+3.20: Pulling from library/alpine
+5311e7f182d0: Pulling fs layer
+5311e7f182d0: Verifying Checksum
+5311e7f182d0: Download complete
+5311e7f182d0: Pull complete
+Digest: sha256:765942a4039992336de8dd5db680586e1a206607dd06170ff0a37267a9e01958
+Status: Downloaded newer image for alpine:3.20
+d22bdc507f57f87860c18608a96fa2e9604687d9f398dcd82ad56d0f14f2926f
+    ✓ HAProxy + Watcher configurés sur IP 91.98.164.223:6379
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Tests finaux + Failover                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01: [0;31mKO[0m
+    haproxy-02: [0;31mKO[0m
+
+  Test via Load Balancer Hetzner (10.0.0.10:6379):
+    PING: [0;31mKO[0m
+    SET/GET: [0;31mKO[0m
+
+  Test de failover automatique (simulation):
+    1. Détection du master actuel...
+       Master: 
+    2. Pour tester le failover manuellement:
+       ssh root@ 'docker stop redis'
+       Attendre 10-15s puis vérifier que le watcher a mis à jour HAProxy
+       Vérifier: redis-cli -h 10.0.0.10 -p 6379 -a "$REDIS_PASSWORD" PING
+
+═══════════════════════════════════════════════════════════════════
+[0;31mKO[0m Installation incomplète
+Vérifier les logs: /opt/keybuzz-installer/logs/redis_install_20251030_133941.log
+═══════════════════════════════════════════════════════════════════
+4b90a05a80d8f1fae4fb156349cf902a8fb3e4d45f57b126a8392045d236d6ae
+Unable to find image 'alpine:3.20' locally
+3.20: Pulling from library/alpine
+5311e7f182d0: Pulling fs layer
+5311e7f182d0: Verifying Checksum
+5311e7f182d0: Download complete
+5311e7f182d0: Pull complete
+Digest: sha256:765942a4039992336de8dd5db680586e1a206607dd06170ff0a37267a9e01958
+Status: Downloaded newer image for alpine:3.20
+1d9fd55d0ec7f7a24619fb54e5290be160cc11f04a1420d7dd2da41ad6137c7b
+    ✓ HAProxy + Watcher configurés sur IP 159.69.159.32:6379
+  Configuration haproxy-02 (10.0.0.12) avec watcher...
+haproxy-redis
+haproxy-redis
+ab4d9446d7b40bb06a8a04998057d95187163516fab4733cd34c7e93ccf760c9
+Unable to find image 'alpine:3.20' locally
+3.20: Pulling from library/alpine
+5311e7f182d0: Pulling fs layer
+5311e7f182d0: Verifying Checksum
+5311e7f182d0: Download complete
+5311e7f182d0: Pull complete
+Digest: sha256:765942a4039992336de8dd5db680586e1a206607dd06170ff0a37267a9e01958
+Status: Downloaded newer image for alpine:3.20
+d22bdc507f57f87860c18608a96fa2e9604687d9f398dcd82ad56d0f14f2926f
+    ✓ HAProxy + Watcher configurés sur IP 91.98.164.223:6379
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Tests finaux + Failover                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01: [0;31mKO[0m
+    haproxy-02: [0;31mKO[0m
+
+  Test via Load Balancer Hetzner (10.0.0.10:6379):
+    PING: [0;31mKO[0m
+    SET/GET: [0;31mKO[0m
+
+  Test de failover automatique (simulation):
+    1. Détection du master actuel...
+       Master: 
+    2. Pour tester le failover manuellement:
+       ssh root@ 'docker stop redis'
+       Attendre 10-15s puis vérifier que le watcher a mis à jour HAProxy
+       Vérifier: redis-cli -h 10.0.0.10 -p 6379 -a "$REDIS_PASSWORD" PING
+
+═══════════════════════════════════════════════════════════════════
+[0;31mKO[0m Installation incomplète
+Vérifier les logs: /opt/keybuzz-installer/logs/redis_install_20251030_133941.log
+═══════════════════════════════════════════════════════════════════

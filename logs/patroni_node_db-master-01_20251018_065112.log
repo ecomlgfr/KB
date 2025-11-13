@@ -1,0 +1,16 @@
+Tuning PostgreSQL pour 7 GB RAM, 2 CPU:
+  shared_buffers: 1792MB
+  effective_cache_size: 5376MB
+  work_mem: 56MB
+  max_connections: 100
+
+Préparation Dockerfile Patroni...
+Untagged: patroni-pg16:local
+Deleted: sha256:dc6c455d01f658738fafadc5806987651a2b38c55ab819b70e25c126b225a0e8
+Build image Patroni locale...
+   7 | >>> RUN pip3 install --break-system-packages     patroni==3.3.2     python-etcd3     psycopg2-binary
+   8 |     
+   9 |     RUN mkdir -p /var/lib/postgresql/data /var/run/postgresql /logs &&     chown -R postgres:postgres /var/lib/postgresql /var/run/postgresql /logs
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c pip3 install --break-system-packages     patroni==3.3.2     python-etcd3     psycopg2-binary" did not complete successfully: exit code: 1
+ERREUR: Build image failed

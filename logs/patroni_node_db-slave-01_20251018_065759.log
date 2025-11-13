@@ -1,0 +1,77 @@
+Tuning PostgreSQL pour 3 GB RAM, 2 CPU:
+  shared_buffers: 768MB
+  effective_cache_size: 2304MB
+  work_mem: 24MB
+  max_connections: 100
+
+Préparation Dockerfile Patroni...
+Build image Patroni locale...
+#9 exporting layers
+#9 exporting layers 4.6s done
+#9 writing image sha256:5013245640e3a8d0fc708eb105d72721dfd04f83940acc2066f891fdbd910725 done
+#9 naming to docker.io/library/patroni-pg16:local done
+#9 DONE 4.6s
+Image patroni-pg16:local construite
+Démarrage Patroni...
+ Container patroni  Creating
+ Container patroni  Created
+ Container patroni  Starting
+ Container patroni  Started
+Vérification santé Patroni...
+Attente health check... (5/30)
+Attente health check... (10/30)
+Attente health check... (15/30)
+Attente health check... (20/30)
+Attente health check... (25/30)
+Attente health check... (30/30)
+ERREUR: Timeout health check Patroni
+patroni  | patroni.exceptions.PatroniFatalException: Can not find suitable configuration of distributed configuration store
+patroni  | Available implementations: kubernetes
+patroni  | 2025-10-18 06:59:28,257 INFO: Failed to import patroni.dcs.consul
+patroni  | 2025-10-18 06:59:28,259 INFO: Failed to import patroni.dcs.etcd
+patroni  | 2025-10-18 06:59:28,260 INFO: Failed to import patroni.dcs.etcd3
+patroni  | 2025-10-18 06:59:28,261 INFO: Failed to import patroni.dcs.exhibitor
+patroni  | 2025-10-18 06:59:28,265 INFO: Failed to import patroni.dcs.raft
+patroni  | 2025-10-18 06:59:28,265 INFO: Failed to import patroni.dcs.zookeeper
+patroni  | Process Process-1:
+patroni  | Traceback (most recent call last):
+patroni  |   File "/usr/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
+patroni  |     self.run()
+patroni  |   File "/usr/lib/python3.11/multiprocessing/process.py", line 108, in run
+patroni  |     self._target(*self._args, **self._kwargs)
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/__main__.py", line 232, in patroni_main
+patroni  |     abstract_main(Patroni, configfile)
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/daemon.py", line 172, in abstract_main
+patroni  |     controller = cls(config)
+patroni  |                  ^^^^^^^^^^^
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/__main__.py", line 63, in __init__
+patroni  |     self.dcs = get_dcs(self.config)
+patroni  |                ^^^^^^^^^^^^^^^^^^^^
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/dcs/__init__.py", line 141, in get_dcs
+patroni  |     raise PatroniFatalException("Can not find suitable configuration of distributed configuration store\n"
+patroni  | patroni.exceptions.PatroniFatalException: Can not find suitable configuration of distributed configuration store
+patroni  | Available implementations: kubernetes
+patroni  | 2025-10-18 06:59:54,596 INFO: Failed to import patroni.dcs.consul
+patroni  | 2025-10-18 06:59:54,597 INFO: Failed to import patroni.dcs.etcd
+patroni  | 2025-10-18 06:59:54,599 INFO: Failed to import patroni.dcs.etcd3
+patroni  | 2025-10-18 06:59:54,601 INFO: Failed to import patroni.dcs.exhibitor
+patroni  | 2025-10-18 06:59:54,605 INFO: Failed to import patroni.dcs.raft
+patroni  | 2025-10-18 06:59:54,606 INFO: Failed to import patroni.dcs.zookeeper
+patroni  | Process Process-1:
+patroni  | Traceback (most recent call last):
+patroni  |   File "/usr/lib/python3.11/multiprocessing/process.py", line 314, in _bootstrap
+patroni  |     self.run()
+patroni  |   File "/usr/lib/python3.11/multiprocessing/process.py", line 108, in run
+patroni  |     self._target(*self._args, **self._kwargs)
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/__main__.py", line 232, in patroni_main
+patroni  |     abstract_main(Patroni, configfile)
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/daemon.py", line 172, in abstract_main
+patroni  |     controller = cls(config)
+patroni  |                  ^^^^^^^^^^^
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/__main__.py", line 63, in __init__
+patroni  |     self.dcs = get_dcs(self.config)
+patroni  |                ^^^^^^^^^^^^^^^^^^^^
+patroni  |   File "/usr/local/lib/python3.11/dist-packages/patroni/dcs/__init__.py", line 141, in get_dcs
+patroni  |     raise PatroniFatalException("Can not find suitable configuration of distributed configuration store\n"
+patroni  | patroni.exceptions.PatroniFatalException: Can not find suitable configuration of distributed configuration store
+patroni  | Available implementations: kubernetes

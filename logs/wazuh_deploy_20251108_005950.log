@@ -1,0 +1,150 @@
+
+Déploiement Wazuh SIEM - Architecture KeyBuzz
+Timestamp: 2025-11-08 00:59:50
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Cluster K3s ... [0;32mOK[0m
+
+⚠️  NOTE IMPORTANTE :
+  Wazuh est une solution SIEM complexe qui nécessite :
+  - 3 composants : Manager, Indexer (Elasticsearch), Dashboard
+  - Ressources importantes (RAM/CPU/Stockage)
+  - Configuration des agents sur chaque serveur
+
+Configuration :
+  Manager Port    : 1514 (événements), 1515 (enrollment), 55000 (API)
+  Indexer Port    : 9200
+  Dashboard Port  : 443
+  URL externe     : https://siem.keybuzz.io
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Création namespace                                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+namespace/wazuh created
+[0;32mOK[0m Namespace wazuh créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Création secrets                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+secret/wazuh-secrets created
+[0;32mOK[0m Secrets Wazuh créés
+[0;32mOK[0m Credentials sauvegardés dans /opt/keybuzz-installer/credentials/wazuh.env
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement Wazuh Indexer                            ║
+╚═══════════════════════════════════════════════════════════════╝
+
+statefulset.apps/wazuh-indexer created
+service/wazuh-indexer created
+[0;32mOK[0m Wazuh Indexer déployé
+Attente démarrage Indexer (90s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Déploiement Wazuh Manager                            ║
+╚═══════════════════════════════════════════════════════════════╝
+
+daemonset.apps/wazuh-manager created
+configmap/wazuh-manager-conf created
+service/wazuh-manager created
+[0;32mOK[0m Wazuh Manager déployé
+Attente démarrage Manager (60s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Déploiement Wazuh Dashboard                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+service/wazuh-dashboard created
+The DaemonSet "wazuh-dashboard" is invalid: spec.template.spec.containers[0].ports[0].hostPort: Invalid value: 8443: must match `containerPort` when `hostNetwork` is true
+[0;32mOK[0m Wazuh Dashboard déployé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Création Ingress                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+ingress.networking.k8s.io/wazuh created
+[0;32mOK[0m Ingress Wazuh créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Attente et vérification (90s)                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════
+═══ Vérification ═══
+═══════════════════════════════════════════════════════════════════
+
+Pods Wazuh :
+NAME                  READY   STATUS             RESTARTS      AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+wazuh-indexer-0       0/1     Running            1 (56s ago)   4m      10.42.3.34   k3s-worker-01   <none>           <none>
+wazuh-manager-6h79f   1/1     Running            4 (46s ago)   2m30s   10.0.0.101   k3s-master-02   <none>           <none>
+wazuh-manager-c2zqg   1/1     Running            4 (44s ago)   2m30s   10.0.0.111   k3s-worker-02   <none>           <none>
+wazuh-manager-dcfdx   0/1     CrashLoopBackOff   3 (44s ago)   2m30s   10.0.0.100   k3s-master-01   <none>           <none>
+wazuh-manager-hq9jv   1/1     Running            4 (50s ago)   2m30s   10.0.0.110   k3s-worker-01   <none>           <none>
+wazuh-manager-m24hg   0/1     CrashLoopBackOff   3 (27s ago)   2m30s   10.0.0.113   k3s-worker-04   <none>           <none>
+wazuh-manager-qqpxx   1/1     Running            4 (47s ago)   2m30s   10.0.0.112   k3s-worker-03   <none>           <none>
+wazuh-manager-ss4pn   1/1     Running            4 (45s ago)   2m30s   10.0.0.114   k3s-worker-05   <none>           <none>
+wazuh-manager-xbxw2   0/1     CrashLoopBackOff   3 (42s ago)   2m30s   10.0.0.102   k3s-master-03   <none>           <none>
+
+Services :
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                                         AGE
+wazuh-dashboard   NodePort    10.43.230.57   <none>        443:30443/TCP                                   90s
+wazuh-indexer     ClusterIP   10.43.245.86   <none>        9200/TCP,9300/TCP                               4m1s
+wazuh-manager     NodePort    10.43.181.66   <none>        1514:31514/UDP,1515:31515/TCP,55000:30550/TCP   2m30s
+
+Ingress :
+NAME    CLASS   HOSTS             ADDRESS     PORTS   AGE
+wazuh   nginx   siem.keybuzz.io   localhost   80      91s
+
+StatefulSets :
+NAME            READY   AGE
+wazuh-indexer   0/1     4m2s
+
+DaemonSets :
+NAME            DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+wazuh-manager   8         8         5       8            5           <none>          2m31s
+
+
+╔════════════════════════════════════════════════════════════════╗
+║             ✅ Wazuh SIEM déployé avec succès                  ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 Accès :
+  Dashboard URL : https://siem.keybuzz.io
+  Username      : admin
+  Password      : 5PnZ2SL1aBNUXLHgKEOmM76y
+
+🔧 API :
+  URL           : https://wazuh-manager.wazuh.svc:55000
+  Username      : wazuh-wui
+  Password      : DWeApyN4L119xPlSa6Kz9pfi
+
+📡 Agents :
+  Manager IP    : <worker_node_ip>
+  Events Port   : 31514 (UDP)
+  Enroll Port   : 31515 (TCP)
+
+⚠️  INSTALLATION DES AGENTS :
+
+Sur chaque serveur à monitorer, installer l'agent :
+
+  # Ubuntu/Debian
+  curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg
+  echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee -a /etc/apt/sources.list.d/wazuh.list
+  apt-get update
+  WAZUH_MANAGER='<worker_node_ip>' apt-get install wazuh-agent
+  systemctl daemon-reload
+  systemctl enable wazuh-agent
+  systemctl start wazuh-agent
+
+📚 Documentation :
+  https://documentation.wazuh.com/
+
+Prochaine étape :
+  ./20_configure_backups.sh (à créer)
+

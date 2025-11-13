@@ -1,0 +1,131 @@
+
+Déploiement Vault - Architecture KeyBuzz
+Timestamp: 2025-11-08 01:43:35
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Configuration :
+  PostgreSQL : 10.0.0.10:5432 (LB → HAProxy → Patroni)
+  Port Vault : 8200
+  Backend    : PostgreSQL (HA)
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Préparation base PostgreSQL                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Création base et user Vault...
+[0;32mOK[0m Connexion PostgreSQL OK
+DO
+GRANT
+You are now connected to database "vault" as user "postgres".
+ALTER SCHEMA
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+[0;32mOK[0m Base vault créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Création namespace                                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+namespace/vault created
+[0;32mOK[0m Namespace vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Création secrets                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+secret/vault-secrets created
+[0;32mOK[0m Secrets Vault créés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Déploiement Vault DaemonSet                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+configmap/vault-config created
+daemonset.apps/vault created
+service/vault created
+Error from server (BadRequest): error decoding patch: invalid character '\n' in string literal
+[0;32mOK[0m Vault DaemonSet déployé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Création Ingress                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+ingress.networking.k8s.io/vault created
+[0;32mOK[0m Ingress vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Attente démarrage (60s)                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════
+═══ Vérification ═══
+═══════════════════════════════════════════════════════════════════
+
+Pods Vault :
+NAME          READY   STATUS             RESTARTS      AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+vault-22vtw   0/1     CrashLoopBackOff   3 (5s ago)    60s   10.0.0.110   k3s-worker-01   <none>           <none>
+vault-cz5h2   0/1     CrashLoopBackOff   3 (16s ago)   60s   10.0.0.114   k3s-worker-05   <none>           <none>
+vault-kb7b6   0/1     CrashLoopBackOff   3 (15s ago)   60s   10.0.0.101   k3s-master-02   <none>           <none>
+vault-pb8st   0/1     CrashLoopBackOff   3 (14s ago)   60s   10.0.0.113   k3s-worker-04   <none>           <none>
+vault-sdmjm   0/1     CrashLoopBackOff   3 (15s ago)   60s   10.0.0.100   k3s-master-01   <none>           <none>
+vault-slnkp   0/1     CrashLoopBackOff   3 (5s ago)    60s   10.0.0.102   k3s-master-03   <none>           <none>
+vault-ww75x   0/1     CrashLoopBackOff   3 (6s ago)    60s   10.0.0.111   k3s-worker-02   <none>           <none>
+vault-xcw7m   0/1     CrashLoopBackOff   3 (14s ago)   60s   10.0.0.112   k3s-worker-03   <none>           <none>
+
+Services :
+NAME    TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE
+vault   NodePort   10.43.152.140   <none>        8200:30820/TCP,8201:30821/TCP   60s
+
+Ingress :
+NAME    CLASS   HOSTS              ADDRESS     PORTS   AGE
+vault   nginx   vault.keybuzz.io   localhost   80      61s
+
+DaemonSet :
+NAME    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+vault   8         8         0       8            0           <none>          61s
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                    ✅ Vault déployé avec succès                ║
+╚════════════════════════════════════════════════════════════════╝
+
+📊 Configuration :
+  URL externe : http://vault.keybuzz.io
+  URL interne : http://vault.vault.svc:8200
+  NodePort    : 30820 (HTTP) / 30821 (Cluster)
+
+🔧 Backend :
+  Type        : PostgreSQL (HA)
+  Connexion   : 10.0.0.10:5432/vault
+
+⚠️  IMPORTANT - Initialisation Vault :
+
+1️⃣  Initialiser Vault (PREMIÈRE FOIS UNIQUEMENT) :
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator init
+
+  ⚠️  Sauvegarder les clés de déverrouillage et le root token !
+
+2️⃣  Déverrouiller Vault (après chaque redémarrage, 3 clés minimum) :
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key1>
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key2>
+  kubectl exec -n vault $(kubectl get pods -n vault -l app=vault -o jsonpath='{.items[0].metadata.name}') -- vault operator unseal <key3>
+
+3️⃣  Se connecter :
+  export VAULT_ADDR=http://vault.keybuzz.io
+  vault login <root_token>
+
+Prochaine étape :
+  ./13_deploy_monitoring_stack.sh (si pas déjà fait)
+  ./19_deploy_wazuh_siem.sh
+

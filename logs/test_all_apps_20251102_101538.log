@@ -1,0 +1,206 @@
+
+Test complet des applications - Architecture KeyBuzz
+Timestamp: 2025-11-02 10:15:38
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 1: Vérification cluster K3s                             ║
+╚═══════════════════════════════════════════════════════════════╝
+
+État du cluster :
+NAME            STATUS   ROLES                       AGE   VERSION        INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+k3s-master-01   Ready    control-plane,etcd,master   43h   v1.28.5+k3s1   10.0.0.100    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-master-02   Ready    control-plane,etcd,master   43h   v1.28.5+k3s1   10.0.0.101    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-master-03   Ready    control-plane,etcd,master   43h   v1.28.5+k3s1   10.0.0.102    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-01   Ready    <none>                      43h   v1.28.5+k3s1   10.0.0.110    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-02   Ready    <none>                      43h   v1.28.5+k3s1   10.0.0.111    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-03   Ready    <none>                      43h   v1.28.5+k3s1   10.0.0.112    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-04   Ready    <none>                      43h   v1.28.5+k3s1   10.0.0.113    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+k3s-worker-05   Ready    <none>                      43h   v1.28.5+k3s1   10.0.0.114    <none>        Ubuntu 24.04.3 LTS   6.8.0-71-generic   containerd://1.7.11-k3s2
+
+État des pods (tous namespaces) :
+NAMESPACE       NAME                                      READY   STATUS             RESTARTS      AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+cert-manager    cert-manager-7d75f47cc5-979hz             1/1     Running            0             42h     10.42.3.3    k3s-worker-01   <none>           <none>
+cert-manager    cert-manager-cainjector-c778d44d8-dtg2d   1/1     Running            0             42h     10.42.6.2    k3s-worker-04   <none>           <none>
+cert-manager    cert-manager-webhook-55d76f97bb-2r2cs     1/1     Running            0             42h     10.42.5.3    k3s-worker-03   <none>           <none>
+chatwoot        chatwoot-db-migrate-ndcfm                 0/1     CrashLoopBackOff   5 (98s ago)   6m3s    10.42.4.20   k3s-worker-02   <none>           <none>
+chatwoot        chatwoot-web-7c4f44fddd-ctzqq             1/1     Running            0             34h     10.42.2.5    k3s-master-03   <none>           <none>
+chatwoot        chatwoot-web-7c4f44fddd-phr59             1/1     Running            0             34h     10.42.1.6    k3s-master-02   <none>           <none>
+chatwoot        chatwoot-worker-7b75fc8ccf-cw2k6          1/1     Running            0             34h     10.42.7.11   k3s-worker-05   <none>           <none>
+chatwoot        chatwoot-worker-7b75fc8ccf-khljv          1/1     Running            0             34h     10.42.3.36   k3s-worker-01   <none>           <none>
+ingress-nginx   ingress-nginx-admission-create-r5dw4      0/1     Completed          0             42h     <none>       k3s-worker-01   <none>           <none>
+ingress-nginx   ingress-nginx-admission-patch-v4phc       0/1     Completed          1             42h     <none>       k3s-worker-03   <none>           <none>
+ingress-nginx   ingress-nginx-controller-5hxfl            1/1     Running            0             21h     10.42.6.19   k3s-worker-04   <none>           <none>
+ingress-nginx   ingress-nginx-controller-87vvx            1/1     Running            0             21h     10.42.7.12   k3s-worker-05   <none>           <none>
+ingress-nginx   ingress-nginx-controller-gfdrt            1/1     Running            0             21h     10.42.5.9    k3s-worker-03   <none>           <none>
+ingress-nginx   ingress-nginx-controller-pgj7j            1/1     Running            0             21h     10.42.4.15   k3s-worker-02   <none>           <none>
+ingress-nginx   ingress-nginx-controller-rqcd6            1/1     Running            0             21h     10.42.3.40   k3s-worker-01   <none>           <none>
+litellm         litellm-2bqnj                             1/1     Running            0             12h     10.0.0.114   k3s-worker-05   <none>           <none>
+litellm         litellm-7nhx6                             1/1     Running            0             12h     10.0.0.101   k3s-master-02   <none>           <none>
+litellm         litellm-95gsn                             1/1     Running            0             12h     10.0.0.113   k3s-worker-04   <none>           <none>
+litellm         litellm-f4hwf                             1/1     Running            0             12h     10.0.0.112   k3s-worker-03   <none>           <none>
+litellm         litellm-g2tqz                             1/1     Running            0             12h     10.0.0.111   k3s-worker-02   <none>           <none>
+litellm         litellm-lzqf8                             1/1     Running            0             12h     10.0.0.102   k3s-master-03   <none>           <none>
+litellm         litellm-vqrhb                             1/1     Running            0             12h     10.0.0.100   k3s-master-01   <none>           <none>
+litellm         litellm-wrsg9                             1/1     Running            0             12h     10.0.0.110   k3s-worker-01   <none>           <none>
+n8n             n8n-7ms5w                                 1/1     Running            0             12h     10.0.0.111   k3s-worker-02   <none>           <none>
+n8n             n8n-9ch8q                                 1/1     Running            0             12h     10.0.0.102   k3s-master-03   <none>           <none>
+n8n             n8n-blkjb                                 1/1     Running            0             12h     10.0.0.114   k3s-worker-05   <none>           <none>
+n8n             n8n-mjslw                                 1/1     Running            0             12h     10.0.0.110   k3s-worker-01   <none>           <none>
+n8n             n8n-p98jz                                 1/1     Running            0             12h     10.0.0.101   k3s-master-02   <none>           <none>
+n8n             n8n-r9ct7                                 1/1     Running            0             12h     10.0.0.100   k3s-master-01   <none>           <none>
+n8n             n8n-rggck                                 1/1     Running            0             12h     10.0.0.112   k3s-worker-03   <none>           <none>
+n8n             n8n-zt79f                                 1/1     Running            0             12h     10.0.0.113   k3s-worker-04   <none>           <none>
+qdrant          qdrant-0                                  1/1     Running            0             41h     10.42.5.6    k3s-worker-03   <none>           <none>
+qdrant          qdrant-5lk9z                              1/1     Running            0             12h     10.0.0.102   k3s-master-03   <none>           <none>
+qdrant          qdrant-6lmbk                              1/1     Running            0             12h     10.0.0.112   k3s-worker-03   <none>           <none>
+qdrant          qdrant-c8fkt                              1/1     Running            0             12h     10.0.0.111   k3s-worker-02   <none>           <none>
+qdrant          qdrant-d4jnw                              1/1     Running            0             12h     10.0.0.100   k3s-master-01   <none>           <none>
+qdrant          qdrant-ffp57                              1/1     Running            0             12h     10.0.0.113   k3s-worker-04   <none>           <none>
+qdrant          qdrant-k4khn                              1/1     Running            0             12h     10.0.0.114   k3s-worker-05   <none>           <none>
+qdrant          qdrant-lt28m                              1/1     Running            0             12h     10.0.0.110   k3s-worker-01   <none>           <none>
+qdrant          qdrant-m2m7r                              1/1     Running            0             12h     10.0.0.101   k3s-master-02   <none>           <none>
+superset        superset-5bb8f5bc6b-hfzj6                 0/1     Running            3 (31s ago)   3m41s   10.42.6.25   k3s-worker-04   <none>           <none>
+superset        superset-5bb8f5bc6b-jbrr8                 0/1     CrashLoopBackOff   2 (23s ago)   3m41s   10.42.4.22   k3s-worker-02   <none>           <none>
+superset        superset-create-admin-nhpqc               0/1     CrashLoopBackOff   4 (33s ago)   3m41s   10.42.6.24   k3s-worker-04   <none>           <none>
+superset        superset-init-db-wlzfj                    0/1     CrashLoopBackOff   4 (76s ago)   3m41s   10.42.4.21   k3s-worker-02   <none>           <none>
+test-k3s        test-nginx-86cdf6c49c-5rz88               1/1     Running            0             42h     10.42.5.4    k3s-worker-03   <none>           <none>
+test-k3s        test-nginx-86cdf6c49c-77nsl               1/1     Running            0             42h     10.42.2.2    k3s-master-03   <none>           <none>
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 2: Vérification Ingress NGINX                           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+DaemonSet Ingress NGINX :
+NAME                       DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+ingress-nginx-controller   5         5         5       5            5           <none>          21h
+
+Services Ingress :
+NAME                                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+ingress-nginx-controller             NodePort    10.43.96.199    <none>        80:31695/TCP,443:32720/TCP   42h
+ingress-nginx-controller-admission   ClusterIP   10.43.255.101   <none>        443/TCP                      42h
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 3: Vérification Applications                            ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[n8n]
+NAME        READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+n8n-7ms5w   1/1     Running   0          12h   10.0.0.111   k3s-worker-02   <none>           <none>
+n8n-9ch8q   1/1     Running   0          12h   10.0.0.102   k3s-master-03   <none>           <none>
+n8n-blkjb   1/1     Running   0          12h   10.0.0.114   k3s-worker-05   <none>           <none>
+n8n-mjslw   1/1     Running   0          12h   10.0.0.110   k3s-worker-01   <none>           <none>
+n8n-p98jz   1/1     Running   0          12h   10.0.0.101   k3s-master-02   <none>           <none>
+n8n-r9ct7   1/1     Running   0          12h   10.0.0.100   k3s-master-01   <none>           <none>
+n8n-rggck   1/1     Running   0          12h   10.0.0.112   k3s-worker-03   <none>           <none>
+n8n-zt79f   1/1     Running   0          12h   10.0.0.113   k3s-worker-04   <none>           <none>
+  → Test n8n (http://n8n.keybuzz.io) ... [0;31mKO[0m (HTTP 000)
+
+[LiteLLM]
+NAME            READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+litellm-2bqnj   1/1     Running   0          12h   10.0.0.114   k3s-worker-05   <none>           <none>
+litellm-7nhx6   1/1     Running   0          12h   10.0.0.101   k3s-master-02   <none>           <none>
+litellm-95gsn   1/1     Running   0          12h   10.0.0.113   k3s-worker-04   <none>           <none>
+litellm-f4hwf   1/1     Running   0          12h   10.0.0.112   k3s-worker-03   <none>           <none>
+litellm-g2tqz   1/1     Running   0          12h   10.0.0.111   k3s-worker-02   <none>           <none>
+litellm-lzqf8   1/1     Running   0          12h   10.0.0.102   k3s-master-03   <none>           <none>
+litellm-vqrhb   1/1     Running   0          12h   10.0.0.100   k3s-master-01   <none>           <none>
+litellm-wrsg9   1/1     Running   0          12h   10.0.0.110   k3s-worker-01   <none>           <none>
+  → Test litellm (http://llm.keybuzz.io) ... [0;32mOK[0m (HTTP 200)
+
+[Qdrant]
+NAME           READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+qdrant-0       1/1     Running   0          41h   10.42.5.6    k3s-worker-03   <none>           <none>
+qdrant-5lk9z   1/1     Running   0          12h   10.0.0.102   k3s-master-03   <none>           <none>
+qdrant-6lmbk   1/1     Running   0          12h   10.0.0.112   k3s-worker-03   <none>           <none>
+qdrant-c8fkt   1/1     Running   0          12h   10.0.0.111   k3s-worker-02   <none>           <none>
+qdrant-d4jnw   1/1     Running   0          12h   10.0.0.100   k3s-master-01   <none>           <none>
+qdrant-ffp57   1/1     Running   0          12h   10.0.0.113   k3s-worker-04   <none>           <none>
+qdrant-k4khn   1/1     Running   0          12h   10.0.0.114   k3s-worker-05   <none>           <none>
+qdrant-lt28m   1/1     Running   0          12h   10.0.0.110   k3s-worker-01   <none>           <none>
+qdrant-m2m7r   1/1     Running   0          12h   10.0.0.101   k3s-master-02   <none>           <none>
+  → Test qdrant (http://qdrant.keybuzz.io) ... [0;32mOK[0m (HTTP 200)
+
+[Chatwoot]
+NAME                               READY   STATUS             RESTARTS       AGE    IP           NODE            NOMINATED NODE   READINESS GATES
+chatwoot-db-migrate-ndcfm          0/1     CrashLoopBackOff   5 (104s ago)   6m9s   10.42.4.20   k3s-worker-02   <none>           <none>
+chatwoot-web-7c4f44fddd-ctzqq      1/1     Running            0              34h    10.42.2.5    k3s-master-03   <none>           <none>
+chatwoot-web-7c4f44fddd-phr59      1/1     Running            0              34h    10.42.1.6    k3s-master-02   <none>           <none>
+chatwoot-worker-7b75fc8ccf-cw2k6   1/1     Running            0              34h    10.42.7.11   k3s-worker-05   <none>           <none>
+chatwoot-worker-7b75fc8ccf-khljv   1/1     Running            0              34h    10.42.3.36   k3s-worker-01   <none>           <none>
+  → Test chatwoot (http://chat.keybuzz.io) ... [0;31mKO[0m (HTTP 503)
+
+[Superset]
+NAME                          READY   STATUS             RESTARTS      AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+superset-5bb8f5bc6b-hfzj6     0/1     Running            3 (37s ago)   3m47s   10.42.6.25   k3s-worker-04   <none>           <none>
+superset-5bb8f5bc6b-jbrr8     0/1     Running            3 (29s ago)   3m47s   10.42.4.22   k3s-worker-02   <none>           <none>
+superset-create-admin-nhpqc   0/1     CrashLoopBackOff   4 (39s ago)   3m47s   10.42.6.24   k3s-worker-04   <none>           <none>
+superset-init-db-wlzfj        0/1     CrashLoopBackOff   4 (82s ago)   3m47s   10.42.4.21   k3s-worker-02   <none>           <none>
+  → Test superset (http://superset.keybuzz.io) ... [0;31mKO[0m (HTTP 503)
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 4: État des Ingress                                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+NAMESPACE   NAME       CLASS   HOSTS                 ADDRESS     PORTS   AGE
+chatwoot    chatwoot   nginx   chat.keybuzz.io       localhost   80      41h
+litellm     litellm    nginx   llm.keybuzz.io        localhost   80      41h
+n8n         n8n        nginx   n8n.keybuzz.io        localhost   80      41h
+qdrant      qdrant     nginx   qdrant.keybuzz.io     localhost   80      41h
+superset    superset   nginx   superset.keybuzz.io   localhost   80      41h
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ PARTIE 5: Vérification Services Backend (LB 10.0.0.10)        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  → PostgreSQL (10.0.0.10:5432) ... [0;32mOK[0m
+  → Redis (10.0.0.10:6379) ... [0;32mOK[0m
+  → RabbitMQ (10.0.0.10:5672) ... [0;32mOK[0m
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ FINAL                                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════
+  Tests réussis : 2 / 5
+  Score         : 40 %
+═══════════════════════════════════════════════════════════════════
+
+[0;31mKO[0m CERTAINES APPLICATIONS ONT DES PROBLÈMES
+
+Actions de dépannage :
+
+1. Vérifier les pods :
+   kubectl get pods -A
+
+2. Vérifier les logs d'une app :
+   kubectl logs -n <namespace> <pod-name> --tail=50
+
+3. Vérifier l'Ingress :
+   kubectl describe ingress -n <namespace>
+
+4. Test depuis un worker :
+   IP_WORKER=10.0.0.110
+   curl -H "Host: <domain>" http://$IP_WORKER:31695/
+
+5. Vérifier les Load Balancers Hetzner :
+   Console Hetzner → Load Balancers
+   Vérifier que les targets sont Healthy
+
+
+Architecture validée :
+  ✓ LB API K3s     : 49.13.42.76 / 138.199.132.240 → TCP 6443
+  ✓ LB Apps HTTP   : 49.13.42.76 / 138.199.132.240 → TCP 31695
+  ✓ LB Apps HTTPS  : 49.13.42.76 / 138.199.132.240 → TCP 32720
+  ✓ LB Backend DB  : 10.0.0.10 → HAProxy → Patroni (5432)
+  ✓ LB Backend RDS : 10.0.0.10 → HAProxy → Sentinel (6379)
+  ✓ LB Backend MQ  : 10.0.0.10 → HAProxy → RabbitMQ (5672)
+
+Infrastructure KeyBuzz Hetzner - Production Ready !
+
+Log complet : /opt/keybuzz-installer/logs/test_all_apps_20251102_101538.log
+

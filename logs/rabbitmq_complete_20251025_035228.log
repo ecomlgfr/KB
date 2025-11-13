@@ -1,0 +1,557 @@
+
+Installation RabbitMQ Quorum Cluster HA (3 nœuds)
+Timestamp: 2025-10-25 03:52:28
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Queue trouvés: 3
+  Serveurs HAProxy trouvés: 2
+  queue-01: 10.0.0.126
+  queue-02: 10.0.0.127
+  queue-03: 10.0.0.128
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Génération de nouveaux credentials...
+  Credentials générés et sécurisés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs Queue                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de queue-01 (10.0.0.126)...
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+  Préparation de queue-02 (10.0.0.127)...
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+  Préparation de queue-03 (10.0.0.128)...
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement RabbitMQ sur chaque nœud                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement sur queue-01 (10.0.0.126)...
+time="2025-10-25T03:52:34Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ rabbitmq Pulling 
+ 2d35ebdb57d9 Pulling fs layer 
+ 145a908b23a3 Pulling fs layer 
+ 8e2faa32a814 Pulling fs layer 
+ 99baa691242b Pulling fs layer 
+ 511a07cd0e3b Pulling fs layer 
+ 15e4457fe933 Pulling fs layer 
+ 164fc4fdd620 Pulling fs layer 
+ 17a970c33d8f Pulling fs layer 
+ 17209073a16d Pulling fs layer 
+ ff1eac940fb8 Pulling fs layer 
+ 15e4457fe933 Waiting 
+ 164fc4fdd620 Waiting 
+ 17a970c33d8f Waiting 
+ 17209073a16d Waiting 
+ ff1eac940fb8 Waiting 
+ 99baa691242b Waiting 
+ 511a07cd0e3b Waiting 
+ 2d35ebdb57d9 Downloading [>                                                  ]  38.31kB/3.802MB
+ 8e2faa32a814 Downloading [>                                                  ]  80.13kB/7.599MB
+ 145a908b23a3 Downloading [>                                                  ]  413.7kB/39.74MB
+ 2d35ebdb57d9 Downloading [==================================================>]  3.802MB/3.802MB
+ 2d35ebdb57d9 Verifying Checksum 
+ 2d35ebdb57d9 Download complete 
+ 2d35ebdb57d9 Extracting [>                                                  ]  65.54kB/3.802MB
+ 8e2faa32a814 Verifying Checksum 
+ 8e2faa32a814 Download complete 
+ 145a908b23a3 Downloading [=============>                                     ]  10.95MB/39.74MB
+ 2d35ebdb57d9 Extracting [===============================================>   ]  3.604MB/3.802MB
+ 2d35ebdb57d9 Extracting [==================================================>]  3.802MB/3.802MB
+ 2d35ebdb57d9 Pull complete 
+ 145a908b23a3 Downloading [===========================>                       ]  21.52MB/39.74MB
+ 145a908b23a3 Downloading [======================================>            ]  30.44MB/39.74MB
+ 145a908b23a3 Verifying Checksum 
+ 145a908b23a3 Download complete 
+ 145a908b23a3 Extracting [>                                                  ]    426kB/39.74MB
+ 99baa691242b Downloading [>                                                  ]  24.64kB/2.374MB
+ 99baa691242b Verifying Checksum 
+ 99baa691242b Download complete 
+ 511a07cd0e3b Downloading [>                                                  ]  188.2kB/18.76MB
+ 145a908b23a3 Extracting [========>                                          ]  6.816MB/39.74MB
+ 511a07cd0e3b Downloading [========================>                          ]  9.126MB/18.76MB
+ 145a908b23a3 Extracting [==================>                                ]  14.48MB/39.74MB
+ 511a07cd0e3b Verifying Checksum 
+ 511a07cd0e3b Download complete 
+ 145a908b23a3 Extracting [==========================>                        ]   21.3MB/39.74MB
+ 145a908b23a3 Extracting [===================================>               ]  28.11MB/39.74MB
+ 15e4457fe933 Downloading [==================================================>]     189B/189B
+ 15e4457fe933 Verifying Checksum 
+ 15e4457fe933 Download complete 
+ 164fc4fdd620 Downloading [==================================================>]     109B/109B
+ 164fc4fdd620 Verifying Checksum 
+ 164fc4fdd620 Download complete 
+ 145a908b23a3 Extracting [=============================================>     ]  35.78MB/39.74MB
+ 145a908b23a3 Extracting [==================================================>]  39.74MB/39.74MB
+ 145a908b23a3 Pull complete 
+ 8e2faa32a814 Extracting [>                                                  ]   98.3kB/7.599MB
+ 8e2faa32a814 Extracting [=============================>                     ]  4.424MB/7.599MB
+ 17a970c33d8f Downloading [==================================================>]     616B/616B
+ 17a970c33d8f Verifying Checksum 
+ 17a970c33d8f Download complete 
+ 8e2faa32a814 Extracting [==================================================>]  7.599MB/7.599MB
+ 8e2faa32a814 Pull complete 
+ 99baa691242b Extracting [>                                                  ]  32.77kB/2.374MB
+ 99baa691242b Extracting [==================================================>]  2.374MB/2.374MB
+ 17209073a16d Downloading [==================================================>]     827B/827B
+ 17209073a16d Verifying Checksum 
+ 17209073a16d Download complete 
+ 99baa691242b Pull complete 
+ 511a07cd0e3b Extracting [>                                                  ]  196.6kB/18.76MB
+ ff1eac940fb8 Downloading [>                                                  ]  139.5kB/13.71MB
+ 511a07cd0e3b Extracting [====================>                              ]  7.668MB/18.76MB
+ ff1eac940fb8 Downloading [=====================>                             ]  5.775MB/13.71MB
+ 511a07cd0e3b Extracting [==============================>                    ]   11.4MB/18.76MB
+ ff1eac940fb8 Downloading [==============================================>    ]  12.71MB/13.71MB
+ 511a07cd0e3b Extracting [======================================>            ]  14.55MB/18.76MB
+ ff1eac940fb8 Verifying Checksum 
+ ff1eac940fb8 Download complete 
+ 511a07cd0e3b Extracting [=============================================>     ]  16.91MB/18.76MB
+ 511a07cd0e3b Extracting [==================================================>]  18.76MB/18.76MB
+ 511a07cd0e3b Pull complete 
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Pull complete 
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Pull complete 
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Pull complete 
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Pull complete 
+ ff1eac940fb8 Extracting [>                                                  ]  163.8kB/13.71MB
+ ff1eac940fb8 Extracting [==================>                                ]  5.079MB/13.71MB
+ ff1eac940fb8 Extracting [=========================>                         ]  6.881MB/13.71MB
+ ff1eac940fb8 Extracting [======================================>            ]  10.49MB/13.71MB
+ ff1eac940fb8 Extracting [================================================>  ]  13.27MB/13.71MB
+ ff1eac940fb8 Extracting [==================================================>]  13.71MB/13.71MB
+ ff1eac940fb8 Pull complete 
+ rabbitmq Pulled 
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+  Déploiement sur queue-02 (10.0.0.127)...
+time="2025-10-25T03:52:44Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ rabbitmq Pulling 
+ 2d35ebdb57d9 Pulling fs layer 
+ 145a908b23a3 Pulling fs layer 
+ 8e2faa32a814 Pulling fs layer 
+ 99baa691242b Pulling fs layer 
+ 511a07cd0e3b Pulling fs layer 
+ 15e4457fe933 Pulling fs layer 
+ 164fc4fdd620 Pulling fs layer 
+ 17a970c33d8f Pulling fs layer 
+ 17209073a16d Pulling fs layer 
+ ff1eac940fb8 Pulling fs layer 
+ 99baa691242b Waiting 
+ 511a07cd0e3b Waiting 
+ 15e4457fe933 Waiting 
+ 164fc4fdd620 Waiting 
+ 17a970c33d8f Waiting 
+ 17209073a16d Waiting 
+ ff1eac940fb8 Waiting 
+ 8e2faa32a814 Downloading [>                                                  ]  80.13kB/7.599MB
+ 2d35ebdb57d9 Downloading [>                                                  ]  38.33kB/3.802MB
+ 145a908b23a3 Downloading [>                                                  ]  405.5kB/39.74MB
+ 2d35ebdb57d9 Verifying Checksum 
+ 2d35ebdb57d9 Download complete 
+ 2d35ebdb57d9 Extracting [>                                                  ]  65.54kB/3.802MB
+ 8e2faa32a814 Verifying Checksum 
+ 8e2faa32a814 Download complete 
+ 145a908b23a3 Downloading [===========>                                       ]  9.368MB/39.74MB
+ 2d35ebdb57d9 Extracting [==================>                                ]  1.376MB/3.802MB
+ 2d35ebdb57d9 Extracting [==================================================>]  3.802MB/3.802MB
+ 145a908b23a3 Downloading [=====================>                             ]  17.08MB/39.74MB
+ 2d35ebdb57d9 Pull complete 
+ 145a908b23a3 Downloading [===============================>                   ]  24.79MB/39.74MB
+ 145a908b23a3 Downloading [=========================================>         ]  32.94MB/39.74MB
+ 99baa691242b Downloading [>                                                  ]  24.22kB/2.374MB
+ 99baa691242b Verifying Checksum 
+ 99baa691242b Download complete 
+ 145a908b23a3 Verifying Checksum 
+ 145a908b23a3 Download complete 
+ 511a07cd0e3b Downloading [>                                                  ]  188.8kB/18.76MB
+ 145a908b23a3 Extracting [>                                                  ]    426kB/39.74MB
+ 511a07cd0e3b Downloading [============================>                      ]  10.66MB/18.76MB
+ 145a908b23a3 Extracting [======>                                            ]  5.538MB/39.74MB
+ 511a07cd0e3b Downloading [============================================>      ]  16.74MB/18.76MB
+ 511a07cd0e3b Verifying Checksum 
+ 511a07cd0e3b Download complete 
+ 145a908b23a3 Extracting [===============>                                   ]  11.93MB/39.74MB
+ 145a908b23a3 Extracting [======================>                            ]  17.89MB/39.74MB
+ 15e4457fe933 Downloading [==================================================>]     189B/189B
+ 15e4457fe933 Verifying Checksum 
+ 15e4457fe933 Download complete 
+ 145a908b23a3 Extracting [================================>                  ]  25.56MB/39.74MB
+ 164fc4fdd620 Downloading [==================================================>]     109B/109B
+ 164fc4fdd620 Verifying Checksum 
+ 164fc4fdd620 Download complete 
+ 145a908b23a3 Extracting [========================================>          ]  31.95MB/39.74MB
+ 145a908b23a3 Extracting [=================================================> ]  39.62MB/39.74MB
+ 145a908b23a3 Extracting [==================================================>]  39.74MB/39.74MB
+ 145a908b23a3 Pull complete 
+ 17a970c33d8f Downloading [==================================================>]     616B/616B
+ 17a970c33d8f Verifying Checksum 
+ 17a970c33d8f Download complete 
+ 8e2faa32a814 Extracting [>                                                  ]   98.3kB/7.599MB
+ 8e2faa32a814 Extracting [=============================>                     ]  4.424MB/7.599MB
+ 8e2faa32a814 Extracting [==================================================>]  7.599MB/7.599MB
+ 8e2faa32a814 Pull complete 
+ 17209073a16d Downloading [==================================================>]     827B/827B
+ 17209073a16d Verifying Checksum 
+ 17209073a16d Download complete 
+ 99baa691242b Extracting [>                                                  ]  32.77kB/2.374MB
+ 99baa691242b Extracting [==================================================>]  2.374MB/2.374MB
+ ff1eac940fb8 Downloading [>                                                  ]  139.4kB/13.71MB
+ 99baa691242b Pull complete 
+ 511a07cd0e3b Extracting [>                                                  ]  196.6kB/18.76MB
+ ff1eac940fb8 Downloading [=================================>                 ]  9.142MB/13.71MB
+ ff1eac940fb8 Verifying Checksum 
+ ff1eac940fb8 Download complete 
+ 511a07cd0e3b Extracting [=============>                                     ]  4.915MB/18.76MB
+ 511a07cd0e3b Extracting [==========================>                        ]   9.83MB/18.76MB
+ 511a07cd0e3b Extracting [======================================>            ]  14.55MB/18.76MB
+ 511a07cd0e3b Extracting [=============================================>     ]   17.1MB/18.76MB
+ 511a07cd0e3b Extracting [==================================================>]  18.76MB/18.76MB
+ 511a07cd0e3b Pull complete 
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Pull complete 
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Pull complete 
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Pull complete 
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Pull complete 
+ ff1eac940fb8 Extracting [>                                                  ]  163.8kB/13.71MB
+ ff1eac940fb8 Extracting [=============>                                     ]  3.768MB/13.71MB
+ ff1eac940fb8 Extracting [=========================>                         ]  6.881MB/13.71MB
+ ff1eac940fb8 Extracting [=====================================>             ]  10.16MB/13.71MB
+ ff1eac940fb8 Extracting [============================================>      ]  12.12MB/13.71MB
+ ff1eac940fb8 Extracting [==================================================>]  13.71MB/13.71MB
+ ff1eac940fb8 Pull complete 
+ rabbitmq Pulled 
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+  Déploiement sur queue-03 (10.0.0.128)...
+time="2025-10-25T03:52:55Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ rabbitmq Pulling 
+ 2d35ebdb57d9 Pulling fs layer 
+ 145a908b23a3 Pulling fs layer 
+ 8e2faa32a814 Pulling fs layer 
+ 99baa691242b Pulling fs layer 
+ 511a07cd0e3b Pulling fs layer 
+ 15e4457fe933 Pulling fs layer 
+ 164fc4fdd620 Pulling fs layer 
+ 17a970c33d8f Pulling fs layer 
+ 17209073a16d Pulling fs layer 
+ ff1eac940fb8 Pulling fs layer 
+ 99baa691242b Waiting 
+ 511a07cd0e3b Waiting 
+ 15e4457fe933 Waiting 
+ 164fc4fdd620 Waiting 
+ 17209073a16d Waiting 
+ ff1eac940fb8 Waiting 
+ 17a970c33d8f Waiting 
+ 8e2faa32a814 Downloading [>                                                  ]  78.22kB/7.599MB
+ 145a908b23a3 Downloading [>                                                  ]  405.5kB/39.74MB
+ 2d35ebdb57d9 Downloading [>                                                  ]  38.33kB/3.802MB
+ 2d35ebdb57d9 Verifying Checksum 
+ 2d35ebdb57d9 Download complete 
+ 2d35ebdb57d9 Extracting [>                                                  ]  65.54kB/3.802MB
+ 8e2faa32a814 Downloading [=========================================>         ]  6.361MB/7.599MB
+ 145a908b23a3 Downloading [=========>                                         ]  7.741MB/39.74MB
+ 8e2faa32a814 Verifying Checksum 
+ 8e2faa32a814 Download complete 
+ 2d35ebdb57d9 Extracting [=================>                                 ]  1.311MB/3.802MB
+ 145a908b23a3 Downloading [=================>                                 ]  14.25MB/39.74MB
+ 2d35ebdb57d9 Extracting [===========================================>       ]  3.277MB/3.802MB
+ 2d35ebdb57d9 Extracting [==================================================>]  3.802MB/3.802MB
+ 145a908b23a3 Downloading [============================>                      ]  22.39MB/39.74MB
+ 2d35ebdb57d9 Pull complete 
+ 145a908b23a3 Downloading [====================================>              ]  29.29MB/39.74MB
+ 99baa691242b Downloading [>                                                  ]  24.64kB/2.374MB
+ 145a908b23a3 Downloading [==============================================>    ]  37.01MB/39.74MB
+ 99baa691242b Verifying Checksum 
+ 99baa691242b Download complete 
+ 145a908b23a3 Download complete 
+ 511a07cd0e3b Downloading [>                                                  ]  189.1kB/18.76MB
+ 145a908b23a3 Extracting [>                                                  ]    426kB/39.74MB
+ 511a07cd0e3b Downloading [=====================>                             ]  8.126MB/18.76MB
+ 145a908b23a3 Extracting [====>                                              ]  3.834MB/39.74MB
+ 511a07cd0e3b Downloading [=========================================>         ]  15.62MB/18.76MB
+ 511a07cd0e3b Verifying Checksum 
+ 511a07cd0e3b Download complete 
+ 145a908b23a3 Extracting [===============>                                   ]  12.35MB/39.74MB
+ 145a908b23a3 Extracting [========================>                          ]   19.6MB/39.74MB
+ 15e4457fe933 Downloading [==================================================>]     189B/189B
+ 15e4457fe933 Verifying Checksum 
+ 15e4457fe933 Download complete 
+ 145a908b23a3 Extracting [===================================>               ]  28.54MB/39.74MB
+ 164fc4fdd620 Downloading [==================================================>]     109B/109B
+ 164fc4fdd620 Verifying Checksum 
+ 164fc4fdd620 Download complete 
+ 145a908b23a3 Extracting [===============================================>   ]  37.91MB/39.74MB
+ 145a908b23a3 Extracting [==================================================>]  39.74MB/39.74MB
+ 145a908b23a3 Pull complete 
+ 8e2faa32a814 Extracting [>                                                  ]   98.3kB/7.599MB
+ 17a970c33d8f Downloading [==================================================>]     616B/616B
+ 17a970c33d8f Verifying Checksum 
+ 17a970c33d8f Download complete 
+ 8e2faa32a814 Extracting [=========================>                         ]  3.932MB/7.599MB
+ 8e2faa32a814 Extracting [==================================================>]  7.599MB/7.599MB
+ 8e2faa32a814 Pull complete 
+ 99baa691242b Extracting [>                                                  ]  32.77kB/2.374MB
+ 17209073a16d Downloading [==================================================>]     827B/827B
+ 17209073a16d Verifying Checksum 
+ 17209073a16d Download complete 
+ 99baa691242b Extracting [==================================================>]  2.374MB/2.374MB
+ ff1eac940fb8 Downloading [>                                                  ]  139.5kB/13.71MB
+ 99baa691242b Pull complete 
+ 511a07cd0e3b Extracting [>                                                  ]  196.6kB/18.76MB
+ ff1eac940fb8 Downloading [===================================>               ]   9.65MB/13.71MB
+ ff1eac940fb8 Verifying Checksum 
+ ff1eac940fb8 Download complete 
+ 511a07cd0e3b Extracting [=============>                                     ]  4.915MB/18.76MB
+ 511a07cd0e3b Extracting [===========================>                       ]  10.22MB/18.76MB
+ 511a07cd0e3b Extracting [=======================================>           ]  14.94MB/18.76MB
+ 511a07cd0e3b Extracting [==============================================>    ]   17.5MB/18.76MB
+ 511a07cd0e3b Extracting [==================================================>]  18.76MB/18.76MB
+ 511a07cd0e3b Pull complete 
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Extracting [==================================================>]     189B/189B
+ 15e4457fe933 Pull complete 
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Extracting [==================================================>]     109B/109B
+ 164fc4fdd620 Pull complete 
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Extracting [==================================================>]     616B/616B
+ 17a970c33d8f Pull complete 
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Extracting [==================================================>]     827B/827B
+ 17209073a16d Pull complete 
+ ff1eac940fb8 Extracting [>                                                  ]  163.8kB/13.71MB
+ ff1eac940fb8 Extracting [===========>                                       ]  3.113MB/13.71MB
+ ff1eac940fb8 Extracting [=====================>                             ]  5.898MB/13.71MB
+ ff1eac940fb8 Extracting [=========================>                         ]  6.881MB/13.71MB
+ ff1eac940fb8 Extracting [===================================>               ]   9.83MB/13.71MB
+ ff1eac940fb8 Extracting [===============================================>   ]  12.94MB/13.71MB
+ ff1eac940fb8 Extracting [==================================================>]  13.71MB/13.71MB
+ ff1eac940fb8 Pull complete 
+ rabbitmq Pulled 
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+
+  Attente de stabilisation (20s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Formation du cluster RabbitMQ                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  État initial de queue-01...
+Cluster status of node rabbit@queue-01 ...
+Cluster name: rabbit@queue-01
+rabbit@queue-01
+Running Nodes
+rabbit@queue-01
+rabbit@queue-01: RabbitMQ 3.13.7 on Erlang 26.2.5.15
+Node: rabbit@queue-01, available CPU cores: 2
+Node: rabbit@queue-01, status: not under maintenance
+Node: rabbit@queue-01, interface: [::], port: 15672, protocol: http, purpose: HTTP API
+Node: rabbit@queue-01, interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
+Node: rabbit@queue-01, interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
+Node: rabbit@queue-01, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
+
+  Ajout de queue-02 au cluster...
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Oct 25 03:52:30 AM UTC 2025
+
+  System load:  0.07              Processes:             142
+  Usage of /:   5.6% of 37.23GB   Users logged in:       0
+  Memory usage: 14%               IPv4 address for eth0: 91.98.167.159
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:9e02::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+26 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Stopping rabbit application on node rabbit@queue-02 ...
+Resetting node rabbit@queue-02 ...
+Clustering node rabbit@queue-02 with rabbit@queue-01
+Starting node rabbit@queue-02 ...
+    ✓ queue-02 a rejoint le cluster
+
+  Ajout de queue-03 au cluster...
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Oct 25 03:53:40 AM UTC 2025
+
+  System load:  0.3               Processes:             155
+  Usage of /:   6.1% of 37.23GB   Users logged in:       0
+  Memory usage: 22%               IPv4 address for eth0: 91.98.68.35
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1a:b50c::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+26 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Stopping rabbit application on node rabbit@queue-03 ...
+Resetting node rabbit@queue-03 ...
+Clustering node rabbit@queue-03 with rabbit@queue-01
+Starting node rabbit@queue-03 ...
+    ✓ queue-03 a rejoint le cluster
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Configuration des politiques HA                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Oct 25 03:54:02 AM UTC 2025
+
+  System load:  0.04              Processes:             160
+  Usage of /:   6.0% of 37.23GB   Users logged in:       0
+  Memory usage: 21%               IPv4 address for eth0: 23.88.105.16
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1c:20de::1
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+26 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Setting policy "ha-all" for pattern ".*" to "{"ha-mode":"all","ha-sync-mode":"automatic"}" with priority "0" for vhost "/" ...
+Setting policy "quorum-queues" for pattern "^quorum\." to "{"queue-type":"quorum"}" with priority "1" for vhost "/" ...
+Error:
+Validation failed
+
+[{<<"queue-type">>,<<"quorum">>}] are not recognised policy settings
+
+    ✓ Politiques HA configurées
+
+  État final du cluster:
+Running Nodes
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Configuration Load Balancer sur HAProxy               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+1a533fc5bbbd87d5b24e0ae54600567100c8e7d9770ecca8802e29539b56c149
+    ✓ HAProxy RabbitMQ démarré
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Rule added
+Rule added (v6)
+Firewall reloaded
+  Configuration de haproxy-02 (10.0.0.12)...
+3d44379b1a300d9d88b668117895505664c8a0613c893dc2787e696f68ba8989
+    ✓ HAProxy RabbitMQ démarré
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Rule added
+Rule added (v6)
+Firewall reloaded
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test des nœuds RabbitMQ:
+    queue-01 AMQP (5672): [0;32mOK[0m
+    queue-02 AMQP (5672): [0;32mOK[0m
+    queue-03 AMQP (5672): [0;32mOK[0m
+
+  Test des HAProxy:
+    haproxy-01 AMQP (5672): [0;32mOK[0m
+    haproxy-01 Management (15672): [0;32mOK[0m
+    haproxy-02 AMQP (5672): [0;32mOK[0m
+    haproxy-02 Management (15672): [0;32mOK[0m
+
+  Test via Load Balancer VIP (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management (15672): [0;32mOK[0m
+
+  Test authentification Management UI:
+    [0;32mOK[0m Authentification réussie (HTTP 200)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672
+  • User: admin
+  • Cookie Erlang: 933db44067007b1b...
+
+Pour tester:
+  Management UI: http://10.0.0.10:15672
+  Login: admin
+  Password: [voir /opt/keybuzz-installer/credentials/rabbitmq.env]
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════

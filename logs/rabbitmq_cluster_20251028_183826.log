@@ -1,0 +1,102 @@
+
+Déploiement RabbitMQ Cluster (3 nœuds)
+Timestamp: 2025-10-28 18:38:26
+
+Configuration du cluster:
+  queue-01 (seed): 10.0.0.126
+  queue-02: 10.0.0.127
+  queue-03: 10.0.0.128
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Déploiement des conteneurs RabbitMQ                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement sur queue-01 (10.0.0.126)...
+time="2025-10-28T18:38:27Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Network rabbitmq_default  Creating
+ Network rabbitmq_default  Created
+ Container rabbitmq  Creating
+ Container rabbitmq  Error response from daemon: invalid IP address in add-host: ""
+Error response from daemon: invalid IP address in add-host: ""
+    ✓ Container démarré
+    ✗ queue-01: Problème de démarrage
+  Déploiement sur queue-02 (10.0.0.127)...
+time="2025-10-28T18:38:33Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Network rabbitmq_default  Creating
+ Network rabbitmq_default  Created
+ Container rabbitmq  Creating
+ Container rabbitmq  Error response from daemon: invalid IP address in add-host: ""
+Error response from daemon: invalid IP address in add-host: ""
+    ✓ Container démarré
+    ✗ queue-02: Problème de démarrage
+  Déploiement sur queue-03 (10.0.0.128)...
+time="2025-10-28T18:38:39Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Network rabbitmq_default  Creating
+ Network rabbitmq_default  Created
+ Container rabbitmq  Creating
+ Container rabbitmq  Error response from daemon: invalid IP address in add-host: ""
+Error response from daemon: invalid IP address in add-host: ""
+    ✓ Container démarré
+    ✗ queue-03: Problème de démarrage
+
+  Attente de stabilisation (20s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Formation du cluster                                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Ajout de queue-02 au cluster...
+    ✗ Échec de jonction
+  Ajout de queue-03 au cluster...
+    ✗ Échec de jonction
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Configuration des politiques HA                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration des quorum queues par défaut...
+Error response from daemon: No such container: rabbitmq
+Error response from daemon: No such container: rabbitmq
+    ✓ Politiques HA configurées
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Vérification du cluster                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  État du cluster:
+
+  Test de connectivité:
+    queue-01: [0;31mKO[0m
+    queue-02: [0;31mKO[0m
+    queue-03: [0;31mKO[0m
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m CLUSTER RABBITMQ DÉPLOYÉ
+
+Endpoints:
+  • AMQP: queue-01:5672, queue-02:5672, queue-03:5672
+  • Management: http://queue-01:15672
+
+Credentials:
+  • User: admin
+  • Password: [dans /opt/keybuzz-installer/credentials/rabbitmq.env]
+
+Prochaine étape: ./rabbitmq_lb_service.sh pour le Load Balancer
+═══════════════════════════════════════════════════════════════════
+
+Logs (50 dernières lignes):
+═══════════════════════════════════════════════════════════════════
+    ✓ Container démarré
+    ✗ queue-03: Problème de démarrage
+║ ÉTAPE 2: Formation du cluster                                  ║
+  Ajout de queue-02 au cluster...
+    ✗ Échec de jonction
+  Ajout de queue-03 au cluster...
+    ✗ Échec de jonction
+    ✓ Politiques HA configurées
+║ ÉTAPE 4: Vérification du cluster                               ║
+  État du cluster:
+    queue-01: [0;31mKO[0m
+    queue-02: [0;31mKO[0m
+    queue-03: [0;31mKO[0m
+[0;32mOK[0m CLUSTER RABBITMQ DÉPLOYÉ

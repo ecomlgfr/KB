@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -u
+set -o pipefail
+
+echo "╔════════════════════════════════════════════════════════════════════╗"
+echo "║             02_DB_PREP_STORAGE - Préparation Stockage              ║"
+echo "╚════════════════════════════════════════════════════════════════════╝"
+
+OK='\033[0;32mOK\033[0m'; KO='\033[0;31mKO\033[0m'
+
+SERVERS_TSV="/opt/keybuzz-installer/inventory/servers.tsv"
+HOST=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --host) HOST="$2"; shift 2 ;;
+        *) shift ;;
+    esac
+done
+
+[ -z "$HOST" ] && { echo -e "$KO Usage: $0 --host <hostname>"; exit 1; }
+
+IP_PRIV=$(awk -F'\t' -v h="$HOST" '$2==h {print $3}' "$SERVERS_TSV")
+[ -z "$IP_PRIV" ] && { echo -e "$KO $HOST IP introuvable dans servers.tsv"; exit 1; }
+
+echo ""
+echo "═══ Préparation stockage sur $HOST ($IP_PRIV) ═══"
+echo ""
+
+ssh -o StrictHostKeyChecking=no root@"$IP_PRIV" bash <<'EOS'
+set -u
+set -o pipefail
+
+SERVICE="postgres"
+BASE="/opt/keybuzz/${SERVICE}"
+DATA="${BASE}/data"
+CFG="${BASE}/config"
+LOGS="${BASE}/logs"
+ST="${BASE}/status"
+
+mkdir -p "$CFG" "$LOGS" "$ST"
+
+# Vérifier si volume déjà monté
+if ! mountpoint -q "$DATA"; then
+    echo "Recherche volume..."
+    DEV=""
+    
+    # Chercher un device libre
+    for candidate in /dev/disk/by-id/scsi-* /dev/sd[b-z] /dev/vd[b-z]; do
+        [ -e "$candidate" ] || continue
+        real=$(readlink -f "$candidate" 2>/dev/null || echo "$candidate")
+        mount | grep -q " $real " && continue
+        DEV="$real"
+        break
+    done
+    
+    [ -z "$DEV" ] && { echo "KO Aucun volume disponible"; exit 1; }
+    
+    echo "Volume détecté: $DEV"
+    
+    # Formater si nécessaire
+    if ! blkid "$DEV" 2>/dev/null | grep -q xfs; then
+        echo "Formatage xfs..."
+        mkfs.xfs -f -m0 -O dir_index,has_journal,extent "$DEV" >/dev/null
+    fi
+    
+    # Créer point de montage
+    mkdir -p "$DATA"
+    
+    # Monter
+    mount "$DEV" "$DATA"
+    
+    # fstab
+    UUID=$(blkid -s UUID -o value "$DEV")
+    if ! grep -q " $DATA " /etc/fstab; then
+        echo "UUID=$UUID $DATA xfs noatime,inode64,logbufs=8,nofail 0 2" >> /etc/fstab
+    fi
+    
+    # Supprimer lost+found
+    [ -d "$DATA/lost+found" ] && rm -rf "$DATA/lost+found"
+    
+chown -R 999:999 "$DATA"
+    echo "✓ Volume $DEV monté sur $DATA"
+else
+    echo "✓ Volume déjà monté"
+fi
+
+# Permissions
+chmod 700 "$DATA"
+
+# Espace disque
+df -h "$DATA" | tail -1
+
+echo "OK" > "$ST/STATE"
+EOS
+
+[ $? -eq 0 ] && echo -e "$OK Stockage préparé sur $HOST" || echo -e "$KO Échec sur $HOST"
+
+# KeyBuzz: nettoyage + propriété
+rm -rf "$DATA/lost+found" 2>/dev/null || true
+# Si tu bind-mountes un répertoire host comme /var/lib/postgresql/data :
+# chown -R 999:999 "$DATA" 2>/dev/null || true

@@ -1,0 +1,18 @@
+╔════════════════════════════════════════════════════════════════╗
+║   KeyBuzz DB Suite Doctor – PgBouncer/HAProxy/Patroni (TCP)    
+║   no-interactive • idempotent • private IPs • SCRAM+auth_query 
+╚════════════════════════════════════════════════════════════════╝
+[1;33mINFO[0m Proxies: 10.0.0.11 / 10.0.0.12
+[1;33mINFO[0m DBs: 10.0.0.120 / 10.0.0.121 / 10.0.0.122 • VIP: 10.0.0.10  PGB:6432  RW:5432  RO:5433  HC:8008
+[0;31mKO[0m Impossible d'identifier le leader Patroni via :8008
+→ Patch pg_hba @ 10.0.0.120
+  hba: /var/lib/postgresql/data/pg_hba.conf
+  [0;32mOK[0m reload
+→ Patch pg_hba @ 10.0.0.121
+  hba: /var/lib/postgresql/data/pg_hba.conf
+  [0;32mOK[0m reload
+→ Patch pg_hba @ 10.0.0.122
+  hba: /var/lib/postgresql/data/pg_hba.conf
+  [0;32mOK[0m reload
+→ Patch HAProxy @ 10.0.0.11
+/opt/keybuzz-installer/scripts/08_PostgreSQL_16_HA_Patroni/kb_pgbouncer_full_doctor.sh: line 105: B2: unbound variable

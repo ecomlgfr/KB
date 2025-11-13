@@ -1,0 +1,27 @@
+[2025-11-04 07:04:55] Début installation K3s worker
+[2025-11-04 07:04:55] IP privée Hetzner : 10.0.0.111
+[2025-11-04 07:04:55] Server URL : https://10.0.0.100:6443
+[2025-11-04 07:04:55] Configuration UFW...
+Skipping adding existing rule
+Skipping adding existing rule
+[2025-11-04 07:04:56] UFW : règles K3s ajoutées
+[2025-11-04 07:04:56] Désactivation swap...
+[2025-11-04 07:04:56] Gestion du volume pour /var/lib/containerd...
+[2025-11-04 07:04:56] Volume déjà monté sur /var/lib/containerd
+[2025-11-04 07:04:56] Installation K3s agent...
+[INFO]  Using v1.28.5+k3s1 as release
+[INFO]  Downloading hash https://github.com/k3s-io/k3s/releases/download/v1.28.5+k3s1/sha256sum-amd64.txt
+[INFO]  Skipping binary downloaded, installed k3s matches hash
+[INFO]  Skipping installation of SELinux RPM
+[INFO]  Skipping /usr/local/bin/kubectl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/crictl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/ctr symlink to k3s, command exists in PATH at /usr/bin/ctr
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-agent-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s-agent.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s-agent.service
+[INFO]  systemd: Enabling k3s-agent unit
+[INFO]  systemd: Starting k3s-agent
+[2025-11-04 07:05:02] Attente démarrage K3s agent...
+[2025-11-04 07:05:02] K3s agent actif
+[2025-11-04 07:05:02] Installation worker terminée

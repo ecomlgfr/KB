@@ -1,0 +1,34 @@
+[2025-11-04 06:53:52] Début installation K3s master-01
+[2025-11-04 06:53:52] IP privée Hetzner : 10.0.0.100
+[2025-11-04 06:53:52] Load Balancers    : 10.0.0.5 / 10.0.0.6
+[2025-11-04 06:53:52] Configuration UFW...
+Skipping adding existing rule
+Skipping adding existing rule
+Skipping adding existing rule
+Skipping adding existing rule
+Skipping adding existing rule
+Skipping adding existing rule
+[2025-11-04 06:53:53] UFW : règles K3s ajoutées
+[2025-11-04 06:53:53] Désactivation swap...
+[2025-11-04 06:53:53] Installation K3s (cluster-init)...
+[INFO]  Using v1.28.5+k3s1 as release
+[INFO]  Downloading hash https://github.com/k3s-io/k3s/releases/download/v1.28.5+k3s1/sha256sum-amd64.txt
+[INFO]  Downloading binary https://github.com/k3s-io/k3s/releases/download/v1.28.5+k3s1/k3s
+[INFO]  Verifying binary download
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Skipping installation of SELinux RPM
+[INFO]  Creating /usr/local/bin/kubectl symlink to k3s
+[INFO]  Creating /usr/local/bin/crictl symlink to k3s
+[INFO]  Skipping /usr/local/bin/ctr symlink to k3s, command exists in PATH at /usr/bin/ctr
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+[INFO]  systemd: Enabling k3s unit
+[INFO]  systemd: Starting k3s
+[2025-11-04 06:54:05] Attente démarrage K3s...
+[2025-11-04 06:54:05] K3s actif
+[2025-11-04 06:54:05] Vérification du nœud...
+[2025-11-04 06:54:06] Nœud Ready
+[2025-11-04 06:54:06] Token récupéré : K100c8373c334fbecaa9...
+[2025-11-04 06:54:06] Installation master-01 terminée

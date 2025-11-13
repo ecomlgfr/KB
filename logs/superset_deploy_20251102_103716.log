@@ -1,0 +1,133 @@
+
+Déploiement Superset - Architecture KeyBuzz (CORRIGÉ)
+Timestamp: 2025-11-02 10:37:16
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Credentials Redis ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Vérification des services backend (via LB 10.0.0.10) :
+  → PostgreSQL (10.0.0.10:5432) ... [0;32mOK[0m
+  → Redis (10.0.0.10:6379) ... [0;32mOK[0m
+
+Architecture validée :
+  ✓ PostgreSQL : 10.0.0.10:5432 (via LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (via LB Hetzner → HAProxy → Sentinel)
+
+Continuer le déploiement Superset ? (yes/NO) : 
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0.5: Nettoyage des ressources existantes                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Suppression des ressources existantes (si présentes)...
+deployment.apps "superset" deleted from superset namespace
+  (déjà supprimé)
+  (déjà supprimé)
+Attente de la suppression complète (10s)...
+[0;32mOK[0m Nettoyage terminé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Création namespace et secrets                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m Namespace superset créé
+
+Création du secret Superset...
+secret/superset-secrets configured
+[0;32mOK[0m Secret superset-secrets créé
+
+Création du ConfigMap superset-config...
+configmap/superset-config unchanged
+[0;32mOK[0m ConfigMap superset-config créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Déploiement Superset (Init DB + Deployment)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+job.batch/superset-init-db created
+job.batch/superset-create-admin created
+deployment.apps/superset created
+service/superset unchanged
+ingress.networking.k8s.io/superset unchanged
+[0;32mOK[0m Ressources Superset créées
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Attente init DB et démarrage pods                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Attente du job init-db (180s max)...
+[0;33mWARN[0m Init DB prend plus de temps, vérification des logs...
+Defaulted container "init-db" out of: init-db, install-psycopg2 (init)
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x79eb4f9d8e20>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+
+Attente du job create-admin (120s max)...
+[0;33mWARN[0m Create admin prend plus de temps, vérification des logs...
+Defaulting to user installation because normal site-packages is not writeable
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7c6700514fd0>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7c6700515300>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7c67005154b0>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7c6700515660>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7c6700515810>: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /simple/psycopg2-binary/
+ERROR: Could not find a version that satisfies the requirement psycopg2-binary (from versions: none)
+ERROR: No matching distribution found for psycopg2-binary
+
+Attente des pods Superset (120s max)...
+pod/superset-create-admin-dzjm2 condition met
+[0;33mWARN[0m Pods pas encore prêts
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ FINAL                                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+État des jobs :
+NAME                    COMPLETIONS   DURATION   AGE
+superset-create-admin   0/1           7m         7m
+superset-init-db        0/1           7m         7m
+
+État des pods Superset :
+NAME                          READY   STATUS    RESTARTS       AGE    IP           NODE            NOMINATED NODE   READINESS GATES
+superset-create-admin-dzjm2   1/1     Running   2 (2m1s ago)   7m1s   10.42.7.18   k3s-worker-05   <none>           <none>
+superset-db5c4c8c8-98p4p      0/1     Running   1 (2m1s ago)   7m1s   10.42.3.47   k3s-worker-01   <none>           <none>
+superset-db5c4c8c8-z4vsz      0/1     Running   1 (2m ago)     7m1s   10.42.4.25   k3s-worker-02   <none>           <none>
+superset-init-db-7925b        1/1     Running   1 (2m ago)     7m1s   10.42.4.24   k3s-worker-02   <none>           <none>
+
+État du service :
+NAME       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+superset   ClusterIP   10.43.40.140   <none>        8088/TCP   32m
+
+État de l'Ingress :
+NAME       CLASS   HOSTS                 ADDRESS     PORTS   AGE
+superset   nginx   superset.keybuzz.io   localhost   80      41h
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m SUPERSET DÉPLOYÉ
+═══════════════════════════════════════════════════════════════════
+
+URL d'accès : http://superset.keybuzz.io
+
+⚠️  IMPORTANT - Configuration DNS requise :
+  superset.keybuzz.io  A  49.13.42.76      TTL 60
+  superset.keybuzz.io  A  138.199.132.240  TTL 60
+
+Credentials :
+  Username : admin
+  Password : Admin123!
+  Email    : admin@keybuzz.io
+
+Logs utiles :
+  kubectl logs -n superset -l app=superset --tail=50
+  kubectl logs -n superset job/superset-init-db
+  kubectl logs -n superset job/superset-create-admin
+
+Architecture :
+  ✓ PostgreSQL : 10.0.0.10:5432 (LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (LB Hetzner → HAProxy → Sentinel)
+
+Prochaine étape :
+  ./14_test_all_apps.sh
+

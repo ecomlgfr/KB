@@ -1,0 +1,27 @@
+
+Préparation de queue-01 pour RabbitMQ
+Timestamp: 2025-10-28 18:38:13
+
+  Host: queue-01
+  IP privée: 10.0.0.126
+
+  Chargement des credentials existants...
+
+═══ Configuration du serveur queue-01 ═══
+
+  Copie des credentials...
+  Création de la structure...
+  Vérification du volume...
+    Volume monté (système de fichiers: xfs)
+ad364a5ff4bf
+ad364a5ff4bf
+  ✓ Préparation terminée
+
+═══ Résumé ═══
+
+[0;32mOK[0m queue-01 préparé avec succès
+
+Logs (50 dernières lignes):
+═══════════════════════════
+  ✓ Préparation terminée
+[0;32mOK[0m queue-01 préparé avec succès

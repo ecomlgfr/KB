@@ -1,0 +1,8 @@
+psql: error: connection to server at "10.0.0.120", port 6432 failed: FATAL:  password authentication failed
+psql: error: connection to server at "10.0.0.121", port 6432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+psql: error: connection to server at "10.0.0.122", port 6432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+CREATE EXTENSION
+CREATE EXTENSION
+CREATE EXTENSION

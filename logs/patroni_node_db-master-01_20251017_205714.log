@@ -1,0 +1,20 @@
+Tuning PostgreSQL pour 7 GB RAM, 2 CPU:
+  shared_buffers: 1792MB
+  effective_cache_size: 5376MB
+  work_mem: 56MB
+  max_connections: 100
+
+Démarrage Patroni...
+time="2025-10-17T20:57:15Z" level=warning msg="/opt/keybuzz/postgres/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ patroni Pulling 
+ patroni Error Head "https://ghcr.io/v2/zalando/patroni/manifests/3.2-pg16": denied
+Error response from daemon: Head "https://ghcr.io/v2/zalando/patroni/manifests/3.2-pg16": denied
+Vérification santé Patroni...
+Attente health check... (5/30)
+Attente health check... (10/30)
+Attente health check... (15/30)
+Attente health check... (20/30)
+Attente health check... (25/30)
+Attente health check... (30/30)
+ERREUR: Timeout health check Patroni
+time="2025-10-17T20:58:26Z" level=warning msg="/opt/keybuzz/postgres/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"

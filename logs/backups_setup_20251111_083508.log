@@ -1,0 +1,139 @@
+
+Configuration backups automatiques - Architecture KeyBuzz
+Timestamp: 2025-11-11 08:35:08
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m IPs récupérées
+  MinIO       : 10.0.0.134
+  DB Master   : 10.0.0.120
+  Redis-01    : 10.0.0.123
+  K3s Master  : 10.0.0.100
+
+[0;32mOK[0m Credentials MinIO chargés
+[0;32mOK[0m Credentials PostgreSQL chargés
+
+Configurer les backups automatiques ? (yes/NO) : 
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Configuration bucket MinIO                           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+mc: <ERROR> Unable to initialize new alias from the provided credentials. Get "http://localhost:9000/probe-bsign-ka5mkrojcamoms0qyomszgs4jo03g9/?location=": dial tcp [::1]:9000: connect: connection refused.
+Bucket created successfully `keybuzz/keybuzz-backups`.
+Bucket created successfully `keybuzz/keybuzz-backups/postgresql`.
+Bucket created successfully `keybuzz/keybuzz-backups/redis`.
+Bucket created successfully `keybuzz/keybuzz-backups/k3s-resources`.
+Bucket created successfully `keybuzz/keybuzz-backups/apps-data`.
+mc: <ERROR> Unable to fetch lifecycle rules for keybuzz/keybuzz-backups: `GetLifecycle` is not supported for `filesystem`.
+✓ Bucket et dossiers créés
+[0;32mOK[0m Bucket MinIO configuré
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Script backup PostgreSQL                             ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✓ Script PostgreSQL créé
+[0;32mOK[0m Script backup PostgreSQL créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Script backup Redis                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✓ Script Redis créé
+[0;32mOK[0m Script backup Redis créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Script backup K3s Resources                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✓ Script K3s créé
+[0;32mOK[0m Script backup K3s créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Configuration crontabs                                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Configuration backup PostgreSQL...
+✓ Crontab PostgreSQL déjà configuré
+→ Configuration backup Redis...
+✓ Crontab Redis déjà configuré
+→ Configuration backup K3s...
+✓ Crontab K3s déjà configuré
+[0;32mOK[0m Crontabs configurés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Test des backups                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Lancer un test des backups maintenant ? (yes/NO) : 
+→ Test backup PostgreSQL...
+Backup postgres...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup n8n...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup chatwoot...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup litellm...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup superset...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup qdrant...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+Backup vault...
+/opt/keybuzz/scripts/backup_postgresql.sh: line 16: POSTGRES_PASSWORD: unbound variable
+/opt/keybuzz/scripts/backup_postgresql.sh: line 20: POSTGRES_PASSWORD: unbound variable
+/opt/keybuzz/scripts/backup_postgresql.sh: line 23: MINIO_ACCESS_KEY: unbound variable
+
+→ Test backup Redis...
+/opt/keybuzz/scripts/backup_redis.sh: line 12: REDIS_PASSWORD: unbound variable
+
+→ Test backup K3s...
+Backup resources K8s...
+/opt/keybuzz/scripts/backup_k3s.sh: line 36: MINIO_ACCESS_KEY: unbound variable
+
+[0;32mOK[0m Tests des backups terminés
+
+╔════════════════════════════════════════════════════════════════╗
+║         ✅ Backups automatiques configurés avec succès         ║
+╚════════════════════════════════════════════════════════════════╝
+
+📦 Configuration :
+  Bucket MinIO   : s3://keybuzz-backups/
+  Rétention      : 30 jours
+  URL MinIO      : http://s3.keybuzz.io:9000
+
+📅 Planning :
+  PostgreSQL     : Tous les jours à 2h00
+  Redis          : Tous les jours à 3h00
+  K3s Resources  : Tous les jours à 4h00
+
+📂 Dossiers MinIO :
+  PostgreSQL     : keybuzz-backups/postgresql/
+  Redis          : keybuzz-backups/redis/
+  K3s Resources  : keybuzz-backups/k3s-resources/
+
+🔧 Scripts créés :
+  PostgreSQL     : /opt/keybuzz/scripts/backup_postgresql.sh
+  Redis          : /opt/keybuzz/scripts/backup_redis.sh
+  K3s            : /opt/keybuzz/scripts/backup_k3s.sh
+
+📊 Logs :
+  PostgreSQL     : /var/log/backup_postgresql.log
+  Redis          : /var/log/backup_redis.log
+  K3s            : /var/log/backup_k3s.log
+
+🔍 Vérifier les backups :
+  mc ls keybuzz/keybuzz-backups/postgresql/
+  mc ls keybuzz/keybuzz-backups/redis/
+  mc ls keybuzz/keybuzz-backups/k3s-resources/
+
+⚠️  IMPORTANT :
+  - Testez régulièrement la restauration des backups
+  - Surveillez l'espace disque MinIO
+  - Configurez des alertes sur les échecs de backup
+
+Prochaine étape :
+  ./21_final_validation_complete.sh
+

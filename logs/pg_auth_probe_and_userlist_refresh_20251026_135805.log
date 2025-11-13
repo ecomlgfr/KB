@@ -1,0 +1,103 @@
+Unable to find image 'postgres:16-alpine' locally
+16-alpine: Pulling from library/postgres
+2d35ebdb57d9: Already exists
+68d154bb2020: Pulling fs layer
+36ffbe736a3e: Pulling fs layer
+fe767c9b6ce5: Pulling fs layer
+00d06ba48f3d: Pulling fs layer
+f1ef2039be87: Pulling fs layer
+77229534494d: Pulling fs layer
+586fd3f22b39: Pulling fs layer
+a7cf639c3010: Pulling fs layer
+576fcebcd39a: Pulling fs layer
+0a6aa09020da: Pulling fs layer
+00d06ba48f3d: Waiting
+f1ef2039be87: Waiting
+77229534494d: Waiting
+586fd3f22b39: Waiting
+a7cf639c3010: Waiting
+576fcebcd39a: Waiting
+0a6aa09020da: Waiting
+fe767c9b6ce5: Verifying Checksum
+fe767c9b6ce5: Download complete
+68d154bb2020: Download complete
+68d154bb2020: Pull complete
+36ffbe736a3e: Verifying Checksum
+36ffbe736a3e: Download complete
+36ffbe736a3e: Pull complete
+fe767c9b6ce5: Pull complete
+00d06ba48f3d: Download complete
+00d06ba48f3d: Pull complete
+77229534494d: Verifying Checksum
+77229534494d: Download complete
+586fd3f22b39: Verifying Checksum
+586fd3f22b39: Download complete
+a7cf639c3010: Verifying Checksum
+a7cf639c3010: Download complete
+576fcebcd39a: Verifying Checksum
+576fcebcd39a: Download complete
+0a6aa09020da: Verifying Checksum
+0a6aa09020da: Download complete
+f1ef2039be87: Verifying Checksum
+f1ef2039be87: Download complete
+f1ef2039be87: Pull complete
+77229534494d: Pull complete
+586fd3f22b39: Pull complete
+a7cf639c3010: Pull complete
+576fcebcd39a: Pull complete
+0a6aa09020da: Pull complete
+Digest: sha256:029660641a0cfc575b14f336ba448fb8a75fd595d42e1fa316b9fb4378742297
+Status: Downloaded newer image for postgres:16-alpine
+Unable to find image 'postgres:16-alpine' locally
+16-alpine: Pulling from library/postgres
+2d35ebdb57d9: Already exists
+68d154bb2020: Pulling fs layer
+36ffbe736a3e: Pulling fs layer
+fe767c9b6ce5: Pulling fs layer
+00d06ba48f3d: Pulling fs layer
+f1ef2039be87: Pulling fs layer
+77229534494d: Pulling fs layer
+586fd3f22b39: Pulling fs layer
+a7cf639c3010: Pulling fs layer
+576fcebcd39a: Pulling fs layer
+0a6aa09020da: Pulling fs layer
+00d06ba48f3d: Waiting
+f1ef2039be87: Waiting
+77229534494d: Waiting
+586fd3f22b39: Waiting
+a7cf639c3010: Waiting
+576fcebcd39a: Waiting
+0a6aa09020da: Waiting
+68d154bb2020: Verifying Checksum
+68d154bb2020: Download complete
+fe767c9b6ce5: Verifying Checksum
+fe767c9b6ce5: Download complete
+68d154bb2020: Pull complete
+36ffbe736a3e: Verifying Checksum
+36ffbe736a3e: Download complete
+36ffbe736a3e: Pull complete
+fe767c9b6ce5: Pull complete
+00d06ba48f3d: Verifying Checksum
+00d06ba48f3d: Download complete
+00d06ba48f3d: Pull complete
+77229534494d: Download complete
+586fd3f22b39: Verifying Checksum
+586fd3f22b39: Download complete
+a7cf639c3010: Verifying Checksum
+a7cf639c3010: Download complete
+576fcebcd39a: Verifying Checksum
+576fcebcd39a: Download complete
+0a6aa09020da: Verifying Checksum
+0a6aa09020da: Download complete
+f1ef2039be87: Verifying Checksum
+f1ef2039be87: Download complete
+f1ef2039be87: Pull complete
+77229534494d: Pull complete
+586fd3f22b39: Pull complete
+a7cf639c3010: Pull complete
+576fcebcd39a: Pull complete
+0a6aa09020da: Pull complete
+Digest: sha256:029660641a0cfc575b14f336ba448fb8a75fd595d42e1fa316b9fb4378742297
+Status: Downloaded newer image for postgres:16-alpine
+ Container pgbouncer  Running
+ Container pgbouncer  Running

@@ -1,0 +1,88 @@
+# Airbyte OSS - config simplifiée avec DB interne
+
+# DATABASE INTERNE (pas externe PostgreSQL)
+global:
+  database:
+    type: internal
+
+# PostgreSQL interne
+postgresql:
+  enabled: true
+  auth:
+    username: airbyte
+    password: airbyte123
+    database: airbyte
+
+# MinIO interne
+minio:
+  enabled: true
+  auth:
+    rootUser: minioadmin
+    rootPassword: minioadmin123
+  persistence:
+    enabled: true
+    size: 10Gi
+
+# Webapp
+webapp:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  nodeSelector:
+    role: apps
+
+# Worker
+worker:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  nodeSelector:
+    role: background
+
+# Server
+server:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Temporal
+temporal:
+  enabled: true
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Ingress
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: etl.keybuzz.io
+      paths:
+        - path: /
+          pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"

@@ -1,0 +1,64 @@
+
+Configuration du Load Balancer pour RabbitMQ
+Timestamp: 2025-10-28 18:40:35
+
+Configuration:
+  Load Balancers: haproxy-01 (10.0.0.11), haproxy-02 (10.0.0.12)
+  Backend RabbitMQ: queue-01 (10.0.0.126), queue-02 (10.0.0.127), queue-03 (10.0.0.128)
+  VIP: 10.0.0.10
+
+╔═══════════════════════════════════════════════════════════════╗
+║ Configuration des HAProxy pour RabbitMQ                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01...
+haproxy-rabbitmq
+haproxy-rabbitmq
+8bdbfcdfde4ab1a6810356ce371a63097e7a7098052ce75e3aa82d0d17109ac0
+    ✓ HAProxy RabbitMQ démarré
+  Configuration de haproxy-02...
+haproxy-rabbitmq
+haproxy-rabbitmq
+03c6c2f1157dfa21b7e74aa842cc4d030be9f2e629680d3cc81dad19dbec2c26
+    ✓ HAProxy RabbitMQ démarré
+
+╔═══════════════════════════════════════════════════════════════╗
+║ Test de connectivité                                           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test des HAProxy locaux:
+    haproxy-01 AMQP (5672): [0;31mKO[0m
+    haproxy-01 Management (15672): [0;31mKO[0m
+    haproxy-02 AMQP (5672): [0;31mKO[0m
+    haproxy-02 Management (15672): [0;31mKO[0m
+
+  Test via Load Balancer VIP (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management (15672): [0;32mOK[0m
+
+  Test d'authentification Management UI:
+    [0;31mKO[0m Code HTTP: 000000
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA LOAD BALANCER CONFIGURÉ
+
+Endpoints disponibles:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672
+  • User: admin
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════
+
+Logs (50 dernières lignes):
+═══════════════════════════════════════════════════════════════════
+    ✓ HAProxy RabbitMQ démarré
+    ✓ HAProxy RabbitMQ démarré
+    haproxy-01 AMQP (5672): [0;31mKO[0m
+    haproxy-01 Management (15672): [0;31mKO[0m
+    haproxy-02 AMQP (5672): [0;31mKO[0m
+    haproxy-02 Management (15672): [0;31mKO[0m
+    AMQP (5672): [0;32mOK[0m
+    Management (15672): [0;32mOK[0m
+    [0;31mKO[0m Code HTTP: 000000
+[0;32mOK[0m RABBITMQ HA LOAD BALANCER CONFIGURÉ

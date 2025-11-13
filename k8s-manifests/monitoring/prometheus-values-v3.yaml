@@ -1,0 +1,124 @@
+# kube-prometheus-stack values V3
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec: {}
+    
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+    
+    additionalScrapeConfigs:
+      - job_name: 'patroni'
+        static_configs:
+          - targets:
+            - '10.0.0.120:8008'
+            - '10.0.0.121:8008'
+            - '10.0.0.122:8008'
+      
+      - job_name: 'haproxy'
+        static_configs:
+          - targets:
+            - '10.0.0.11:8404'
+            - '10.0.0.12:8405'
+      
+      - job_name: 'redis-sentinel'
+        static_configs:
+          - targets:
+            - '10.0.0.123:26379'
+            - '10.0.0.124:26379'
+            - '10.0.0.125:26379'
+      
+      - job_name: 'rabbitmq'
+        static_configs:
+          - targets:
+            - '10.0.0.126:15692'
+            - '10.0.0.127:15692'
+            - '10.0.0.128:15692'
+
+grafana:
+  enabled: true
+  adminPassword: "KeyBuzz2025!"
+  
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - monitor.keybuzz.io
+    path: /
+    pathType: Prefix
+  
+  # CRITICAL: UNE SEULE datasource par défaut
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+          access: proxy
+          isDefault: true
+          editable: true
+  
+  # Désactiver sidecars datasources pour éviter conflit
+  sidecar:
+    datasources:
+      enabled: false
+    dashboards:
+      enabled: true
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

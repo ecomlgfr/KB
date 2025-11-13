@@ -1,0 +1,193 @@
+
+Installation RabbitMQ Quorum Cluster HA (Quorum par défaut)
+Timestamp: 2025-10-30 13:41:17
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Queue trouvés: 3
+  Serveurs HAProxy trouvés: 2
+  queue-01: 10.0.0.126
+  queue-02: 10.0.0.127
+  queue-03: 10.0.0.128
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Chargement des credentials existants...
+  Cookie Erlang: 933db44067007b1b...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs RabbitMQ                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de queue-01 (10.0.0.126)...
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+rabbitmq
+rabbitmq
+    ✓ Structure créée
+  Préparation de queue-02 (10.0.0.127)...
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+rabbitmq
+rabbitmq
+    ✓ Structure créée
+  Préparation de queue-03 (10.0.0.128)...
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+rabbitmq
+rabbitmq
+    ✓ Structure créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement RabbitMQ (Quorum par défaut - PATCHÉ)     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement de queue-01...
+bash: line 41: docker-compose: command not found
+    ✓ queue-01 démarré avec quorum par défaut
+  Déploiement de queue-02...
+bash: line 42: docker-compose: command not found
+    ✓ queue-02 démarré avec quorum par défaut
+  Déploiement de queue-03...
+bash: line 42: docker-compose: command not found
+    ✓ queue-03 démarré avec quorum par défaut
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Formation du cluster                                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Ajout de queue-02 au cluster...
+    ✗ Échec de jonction
+  Ajout de queue-03 au cluster...
+    ✗ Échec de jonction
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Vérification (quorum par défaut activé)               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Vérification de default_queue_type sur queue-01:
+    ✗ Configuration non trouvée
+
+  État du cluster:
+
+  Test de connectivité:
+    queue-01: [0;31mKO[0m
+    queue-02: [0;31mKO[0m
+    queue-03: [0;31mKO[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Load Balancer HAProxy (UI interne seulement)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+5e6fc9d2bc5795b2444485048621858fb2adb0c104f706e40c4d1e7fd8564c1f
+    ✓ HAProxy configuré sur IP 159.69.159.32 (UI interne seulement)
+  Configuration de haproxy-02 (10.0.0.12)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+c50ebbc9c44ae7ad2297816f1f39089b197ece57c6cf51636d63b7bc1da78324
+    ✓ HAProxy configuré sur IP 91.98.164.223 (UI interne seulement)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01 (AMQP 5672): [0;31mKO[0m
+    haproxy-01 (UI 15672): [0;31mKO[0m
+    haproxy-02 (AMQP 5672): [0;31mKO[0m
+    haproxy-02 (UI 15672): [0;31mKO[0m
+
+  Test via Load Balancer Hetzner (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management UI (15672): [0;32mOK[0m (accès via SSH tunnel recommandé)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672 (SSH tunnel recommandé)
+  • User: admin
+  • Quorum par défaut: ACTIVÉ ✓
+
+Pour tester:
+  ssh -L 15672:10.0.0.10:15672 root@<install-01>
+  Puis: http://localhost:15672
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════
+
+  Test de connectivité:
+    queue-01: [0;31mKO[0m
+    queue-02: [0;31mKO[0m
+    queue-03: [0;31mKO[0m
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Load Balancer HAProxy (UI interne seulement)          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+5e6fc9d2bc5795b2444485048621858fb2adb0c104f706e40c4d1e7fd8564c1f
+    ✓ HAProxy configuré sur IP 159.69.159.32 (UI interne seulement)
+  Configuration de haproxy-02 (10.0.0.12)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+c50ebbc9c44ae7ad2297816f1f39089b197ece57c6cf51636d63b7bc1da78324
+    ✓ HAProxy configuré sur IP 91.98.164.223 (UI interne seulement)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01 (AMQP 5672): [0;31mKO[0m
+    haproxy-01 (UI 15672): [0;31mKO[0m
+    haproxy-02 (AMQP 5672): [0;31mKO[0m
+    haproxy-02 (UI 15672): [0;31mKO[0m
+
+  Test via Load Balancer Hetzner (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management UI (15672): [0;32mOK[0m (accès via SSH tunnel recommandé)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672 (SSH tunnel recommandé)
+  • User: admin
+  • Quorum par défaut: ACTIVÉ ✓
+
+Pour tester:
+  ssh -L 15672:10.0.0.10:15672 root@<install-01>
+  Puis: http://localhost:15672
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════

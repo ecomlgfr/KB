@@ -1,0 +1,9 @@
+▶️ KeyBuzz – Hotfix Round2 Tue Oct 28 09:43:55 AM UTC 2025
+DBs: 10.0.0.120 10.0.0.121 10.0.0.122; Proxies: 10.0.0.11 10.0.0.12; LB: 10.0.0.10
+🧩 Rewrite clean of /opt/keybuzz-installer/credentials/postgres.env
+✅ postgres.env rewritten
+🧩 Patching /opt/keybuzz-installer/scripts/08_PostgreSQL_16_HA_Patroni/08_patroni_raft_final.sh (env noise, awk quotes, patroni.yml template)...
+✅ /opt/keybuzz-installer/scripts/08_PostgreSQL_16_HA_Patroni/08_patroni_raft_final.sh patched
+🔐 UFW proxy @10.0.0.11
+🔐 UFW proxy @10.0.0.12
+ℹ️  Hotfix terminé. Prochaine étape: relancer Patroni/HAProxy/PgBouncer.

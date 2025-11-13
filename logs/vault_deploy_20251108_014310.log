@@ -1,0 +1,16 @@
+
+Déploiement Vault - Architecture KeyBuzz
+Timestamp: 2025-11-08 01:43:10
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Configuration :
+  PostgreSQL : 10.0.0.10:5432 (LB → HAProxy → Patroni)
+  Port Vault : 8200
+  Backend    : PostgreSQL (HA)
+

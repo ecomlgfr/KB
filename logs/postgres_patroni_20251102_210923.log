@@ -1,0 +1,144 @@
+
+═══ 1. Gestion des credentials ═══
+
+  Credentials existants conservés
+
+═══ 2. Configuration des nœuds ═══
+
+→ Configuration db-master-01 (10.0.0.120)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-01 (10.0.0.121)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-02 (10.0.0.122)
+  [0;32mOK[0m Configuration terminée
+
+═══ 3. Démarrage parallèle du cluster RAFT ═══
+
+[0;33m⚠[0m Avec RAFT, tous les nœuds doivent démarrer ensemble pour le quorum
+
+→ Lancement db-master-01 (10.0.0.120)...
+→ Lancement db-slave-01 (10.0.0.121)...
+→ Lancement db-slave-02 (10.0.0.122)...
+
+  Attente établissement du quorum RAFT (60s)...
+
+═══ 4. Vérification du quorum et élection du leader ═══
+
+  Tentative 1/10...
+  Pas de leader encore, attente 10s...
+  Tentative 2/10...
+  Pas de leader encore, attente 10s...
+  Tentative 3/10...
+  Pas de leader encore, attente 10s...
+  Tentative 4/10...
+  Pas de leader encore, attente 10s...
+  Tentative 5/10...
+  Pas de leader encore, attente 10s...
+  Tentative 6/10...
+  Pas de leader encore, attente 10s...
+  Tentative 7/10...
+  Pas de leader encore, attente 10s...
+  Tentative 8/10...
+  Pas de leader encore, attente 10s...
+  Tentative 9/10...
+  Pas de leader encore, attente 10s...
+  Tentative 10/10...
+[0;31mKO[0m Aucun leader élu après 100 secondes
+
+Logs des nœuds:
+
+=== db-master-01 ===
+2025-11-02 21:13:05.466 UTC [538] DETAIL:  Connection matched file "/var/lib/postgresql/data/pg_hba.conf" line 129: "host all all 10.0.0.0/16 scram-sha-256"
+2025-11-02 21:13:05,466 ERROR: get_postgresql_status
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1411, in query
+    heartbeat_connection.get()  # try to open psycopg connection to postgres
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/postgresql/connection.py", line 54, in get
+    self._connection = psycopg.connect(**self._conn_kwargs)
+                       ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/psycopg.py", line 104, in connect
+    ret = _connect(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "10.0.0.120", port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1288, in get_postgresql_status
+    row = self.query(stmt.format(postgresql.wal_name, postgresql.lsn_name,
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 postgresql.wal_flush), retry=retry)[0]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1221, in query
+    return self.server.query(sql, *params)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1413, in query
+    raise PostgresConnectionException('connection problems') from exc
+patroni.exceptions.PostgresConnectionException: connection problems
+
+=== db-slave-01 ===
+2025-11-02 21:13:06.750 UTC [902] DETAIL:  Connection matched file "/var/lib/postgresql/data/pg_hba.conf" line 129: "host all all 10.0.0.0/16 scram-sha-256"
+2025-11-02 21:13:06,750 ERROR: get_postgresql_status
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1411, in query
+    heartbeat_connection.get()  # try to open psycopg connection to postgres
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/postgresql/connection.py", line 54, in get
+    self._connection = psycopg.connect(**self._conn_kwargs)
+                       ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/psycopg.py", line 104, in connect
+    ret = _connect(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "10.0.0.121", port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1288, in get_postgresql_status
+    row = self.query(stmt.format(postgresql.wal_name, postgresql.lsn_name,
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 postgresql.wal_flush), retry=retry)[0]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1221, in query
+    return self.server.query(sql, *params)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1413, in query
+    raise PostgresConnectionException('connection problems') from exc
+patroni.exceptions.PostgresConnectionException: connection problems
+
+=== db-slave-02 ===
+2025-11-02 21:13:07.823 UTC [889] DETAIL:  Connection matched file "/var/lib/postgresql/data/pg_hba.conf" line 129: "host all all 10.0.0.0/16 scram-sha-256"
+2025-11-02 21:13:07,823 ERROR: get_postgresql_status
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1411, in query
+    heartbeat_connection.get()  # try to open psycopg connection to postgres
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/postgresql/connection.py", line 54, in get
+    self._connection = psycopg.connect(**self._conn_kwargs)
+                       ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/psycopg.py", line 104, in connect
+    ret = _connect(*args, **kwargs)
+  File "/usr/lib/python3/dist-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "10.0.0.122", port 5432 failed: FATAL:  password authentication failed for user "postgres"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1288, in get_postgresql_status
+    row = self.query(stmt.format(postgresql.wal_name, postgresql.lsn_name,
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 postgresql.wal_flush), retry=retry)[0]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1221, in query
+    return self.server.query(sql, *params)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/patroni/api.py", line 1413, in query
+    raise PostgresConnectionException('connection problems') from exc
+patroni.exceptions.PostgresConnectionException: connection problems

@@ -1,0 +1,158 @@
+
+═══ Configuration ═══
+  Master-01         : 10.0.0.100
+  Apps .env         : /opt/keybuzz-installer/apps
+  Log               : /opt/keybuzz-installer/logs/apps_helm_deploy.log
+
+Applications à déployer :
+  1. n8n       - Workflow automation
+  2. Chatwoot  - Customer support
+  3. ERPNext   - ERP/CRM
+  4. LiteLLM   - LLM Router
+  5. Qdrant    - Vector database
+  6. Superset  - Business Intelligence
+
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 1/7 : Installation de Helm ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:45:46] Vérification de Helm...
+[2025-10-31 16:45:46] Installation de Helm...
+Downloading https://get.helm.sh/helm-v3.19.0-linux-amd64.tar.gz
+Verifying checksum... Done.
+Preparing to install helm into /usr/local/bin
+helm installed into /usr/local/bin/helm
+  ✓ Helm installé
+[2025-10-31 16:45:48] Configuration des repos Helm...
+"bitnami" has been added to your repositories
+"stable" has been added to your repositories
+"qdrant" has been added to your repositories
+  ✓ Repos Helm configurés
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 2/7 : Copie des fichiers .env vers master-01 ═══
+═══════════════════════════════════════════════════════════════════
+
+  [0;32mOK[0m n8n.env copié
+  [0;32mOK[0m chatwoot.env copié
+  [0;32mOK[0m erpnext.env copié
+  [0;32mOK[0m litellm.env copié
+  [0;32mOK[0m qdrant.env copié
+  [0;32mOK[0m superset.env copié
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 3/7 : Création des secrets Kubernetes ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:46:09] Création des secrets depuis les .env...
+  ✓ Secret n8n-config créé dans namespace n8n
+  ✓ Secret chatwoot-config créé dans namespace chatwoot
+  ✓ Secret erpnext-config créé dans namespace erpnext
+  ✓ Secret litellm-config créé dans namespace litellm
+  ✓ Secret qdrant-config créé dans namespace qdrant
+  ✓ Secret superset-config créé dans namespace superset
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 4/7 : Déploiement n8n ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:46:12] Déploiement n8n...
+persistentvolumeclaim/n8n-data created
+deployment.apps/n8n created
+service/n8n created
+  ✓ n8n déployé
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 5/7 : Déploiement Chatwoot ═══
+═══════════════════════════════════════════════════════════════════
+
+[2025-10-31 16:46:23] Déploiement Chatwoot...
+persistentvolumeclaim/chatwoot-storage created
+deployment.apps/chatwoot-web created
+deployment.apps/chatwoot-worker created
+service/chatwoot created
+  ✓ Chatwoot déployé
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 6/7 : Déploiement LiteLLM, Qdrant, Superset ═══
+═══════════════════════════════════════════════════════════════════
+
+→ Déploiement LiteLLM...
+deployment.apps/litellm created
+service/litellm created
+  ✓ LiteLLM déployé
+→ Déploiement Qdrant...
+persistentvolumeclaim/qdrant-storage created
+statefulset.apps/qdrant created
+service/qdrant created
+  ✓ Qdrant déployé
+→ Déploiement Superset...
+deployment.apps/superset created
+service/superset created
+  ✓ Superset déployé
+
+═══════════════════════════════════════════════════════════════════
+═══ ÉTAPE 7/7 : Vérification des déploiements ═══
+═══════════════════════════════════════════════════════════════════
+
+Attente du démarrage des pods (60s)...
+
+État des applications :
+
+━━━ Namespace: n8n ━━━
+NAME                   READY   STATUS    RESTARTS      AGE    IP          NODE            NOMINATED NODE   READINESS GATES
+n8n-575976d7c6-dhjvh   0/1     Error     1 (28s ago)   117s   10.42.6.4   k3s-worker-04   <none>           <none>
+n8n-575976d7c6-rxwjt   0/1     Running   2 (14s ago)   117s   10.42.6.5   k3s-worker-04   <none>           <none>
+
+━━━ Namespace: chatwoot ━━━
+NAME                               READY   STATUS       RESTARTS      AGE    IP          NODE            NOMINATED NODE   READINESS GATES
+chatwoot-web-6bcd5c66c7-6lhzp      0/1     Init:Error   2 (32s ago)   106s   10.42.3.8   k3s-worker-01   <none>           <none>
+chatwoot-web-6bcd5c66c7-xb7zl      0/1     Init:Error   2 (31s ago)   106s   10.42.3.7   k3s-worker-01   <none>           <none>
+chatwoot-worker-79bbdb5998-2fr7m   0/1     Error        2 (35s ago)   106s   10.42.3.6   k3s-worker-01   <none>           <none>
+chatwoot-worker-79bbdb5998-wt2pw   0/1     Error        2 (37s ago)   106s   10.42.3.9   k3s-worker-01   <none>           <none>
+
+━━━ Namespace: litellm ━━━
+NAME                       READY   STATUS    RESTARTS   AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+litellm-6d4877db58-4d5h2   1/1     Running   0          95s   10.42.7.3   k3s-worker-05   <none>           <none>
+litellm-6d4877db58-rjwdk   1/1     Running   0          95s   10.42.4.3   k3s-worker-02   <none>           <none>
+
+━━━ Namespace: qdrant ━━━
+NAME       READY   STATUS    RESTARTS   AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+qdrant-0   1/1     Running   0          85s   10.42.5.6   k3s-worker-03   <none>           <none>
+
+━━━ Namespace: superset ━━━
+NAME                        READY   STATUS       RESTARTS      AGE   IP          NODE            NOMINATED NODE   READINESS GATES
+superset-6b56fc5cdd-hnnvk   0/1     Init:Error   1 (22s ago)   73s   10.42.7.4   k3s-worker-05   <none>           <none>
+superset-6b56fc5cdd-q9flb   0/1     Init:Error   1 (19s ago)   73s   10.42.4.4   k3s-worker-02   <none>           <none>
+
+━━━ Ingress configurés ━━━
+Aucun ingress
+
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m DÉPLOIEMENT DES APPLICATIONS TERMINÉ
+═══════════════════════════════════════════════════════════════════
+
+Applications déployées :
+  ✓ n8n        → https://n8n.keybuzz.io
+  ✓ Chatwoot   → https://chat.keybuzz.io
+  ✓ LiteLLM    → https://llm.keybuzz.io
+  ✓ Qdrant     → https://qdrant.keybuzz.io
+  ✓ Superset   → https://superset.keybuzz.io
+
+Note : ERPNext nécessite un chart Helm spécifique (non inclus dans ce script)
+
+Commandes utiles :
+  # Voir l'état des pods
+  ssh root@10.0.0.100 kubectl get pods -A
+
+  # Voir les ingress
+  ssh root@10.0.0.100 kubectl get ingress -A
+
+  # Logs d'une application
+  ssh root@10.0.0.100 kubectl logs -n n8n -l app=n8n
+
+Prochaine étape :
+  ./apps_final_tests.sh
+

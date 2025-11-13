@@ -1,0 +1,129 @@
+
+Installation Redis HA - Architecture complète
+Timestamp: 2025-10-28 18:18:24
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Redis trouvés: 3
+  Serveurs HAProxy trouvés: 2
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Chargement des credentials existants...
+  Hash du mot de passe: e692a9301269609a...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs Redis                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de redis-01 (10.0.0.123)...
+8430a037b12f
+8430a037b12f
+25d1d21065be
+25d1d21065be
+    ✓ Préparé et nettoyé
+  Préparation de redis-02 (10.0.0.124)...
+085283ab28f1
+085283ab28f1
+ca9ecd3f63a9
+ca9ecd3f63a9
+    ✓ Préparé et nettoyé
+  Préparation de redis-03 (10.0.0.125)...
+cbae03c57a4f
+cbae03c57a4f
+1eea0bab0b3b
+1eea0bab0b3b
+    ✓ Préparé et nettoyé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement Redis et Sentinel                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Master initial: redis-01 (10.0.0.123)
+
+  Déploiement redis-01 (master)...
+time="2025-10-28T18:18:32Z" level=warning msg="/opt/keybuzz/redis/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container redis  Creating
+ Container redis  Created
+ Container sentinel  Creating
+ Container sentinel  Created
+ Container redis  Starting
+ Container redis  Started
+ Container sentinel  Starting
+ Container sentinel  Started
+2
+    ✓ Redis + Sentinel démarrés
+  Déploiement redis-02 (replica)...
+time="2025-10-28T18:18:39Z" level=warning msg="/opt/keybuzz/redis/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container redis  Creating
+ Container redis  Created
+ Container sentinel  Creating
+ Container sentinel  Created
+ Container redis  Starting
+ Container redis  Started
+ Container sentinel  Starting
+ Container sentinel  Started
+2
+    ✓ Redis + Sentinel démarrés
+  Déploiement redis-03 (replica)...
+time="2025-10-28T18:18:45Z" level=warning msg="/opt/keybuzz/redis/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container redis  Creating
+ Container redis  Created
+ Container sentinel  Creating
+ Container sentinel  Created
+ Container redis  Starting
+ Container redis  Started
+ Container sentinel  Starting
+ Container sentinel  Started
+2
+    ✓ Redis + Sentinel démarrés
+
+  Attente de stabilisation du cluster (15s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Vérification du cluster Redis                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test de connexion Redis:
+    redis-01: [0;32mOK[0m (role: master)
+    redis-02: [0;32mOK[0m (role: slave)
+    redis-03: [0;32mOK[0m (role: slave)
+
+  Test des Sentinels (avec timeout):
+    redis-01: [0;32mOK[0m (voit master: 10.0.0.123)
+    redis-02: [0;32mOK[0m (voit master: 10.0.0.123)
+    redis-03: [0;32mOK[0m (voit master: 10.0.0.123)
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Configuration Load Balancer sur HAProxy               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration haproxy-01 (10.0.0.11)...
+b0c1007b002494e018d2aab5776ebbba59e6d4351754b47b6595d46c682919cd
+    ✓ Load Balancer configuré
+  Configuration haproxy-02 (10.0.0.12)...
+8a9b8582262320f559c9340098964a1e8f7411c4d255b4594714e31d9f4fa7f6
+    ✓ Load Balancer configuré
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test HAProxy locaux:
+    haproxy-01: [0;32mOK[0m
+    haproxy-02: [0;32mOK[0m
+
+  Test via Load Balancer Hetzner:
+    10.0.0.10:6379: [0;31mKO[0m
+
+  Test de réplication:
+    Écriture sur master via LB: [0;31mKO[0m
+
+═══════════════════════════════════════════════════════════════════
+[0;31mKO[0m Installation incomplète
+Vérifier les logs: /opt/keybuzz-installer/logs/redis_install_20251028_181824.log
+═══════════════════════════════════════════════════════════════════

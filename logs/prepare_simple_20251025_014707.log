@@ -1,0 +1,111 @@
+[0;32m✓[0m 43 serveurs détectés
+
+[1;33m⚠[0m Ce script va:
+  • Mettre à jour apt
+  • Installer outils de base
+  • Vérifier Docker + compose
+  • Créer structure /opt/keybuzz
+  • Activer UFW (règles sécurisées)
+
+  SANS installer WireGuard (réseau Hetzner natif conservé)
+
+Continuer? (y/N) 
+[0;32m✓[0m Démarrage préparation...
+
+Installation parallèle (10 jobs):
+
+OK
+k3s-worker-05: OK
+OK
+k3s-worker-03: OK
+OK
+k3s-worker-01: OK
+OK
+k3s-worker-02: OK
+OK
+k3s-worker-04: OK
+OK
+redis-01: OK
+OK
+queue-01: OK
+OK
+redis-03: OK
+OK
+redis-02: OK
+OK
+queue-03: OK
+OK
+queue-02: OK
+OK
+temporal-db-01: OK
+OK
+analytics-db-01: OK
+OK
+connect-01: OK
+OK
+k3s-master-01: OK
+OK
+crm-01: OK
+OK
+minio-01: OK
+OK
+k3s-master-03: OK
+OK
+connect-02: OK
+OK
+litellm-01: OK
+OK
+api-gateway-01: OK
+OK
+vector-db-01: OK
+OK
+k3s-master-02: OK
+OK
+db-master-01: OK
+OK
+analytics-01: OK
+OK
+etl-01: OK
+OK
+nocodb-01: OK
+OK
+temporal-01: OK
+OK
+baserow-01: OK
+OK
+ml-platform-01: OK
+OK
+mail-mx-01: OK
+OK
+mail-core-01: OK
+install-01: KO (SSH)
+OK
+backup-01: OK
+OK
+monitor-01: OK
+OK
+vault-01: OK
+OK
+builder-01: OK
+OK
+db-slave-01: OK
+OK
+mail-mx-02: OK
+OK
+siem-01: OK
+OK
+db-slave-02: OK
+OK
+haproxy-01: OK
+OK
+haproxy-02: OK
+
+══════════════════════════════════════════════════════════════════
+RÉSUMÉ:
+  Total:   43
+  Réussis: 84
+  Échecs:  1
+
+[1;33m⚠[0m 1 serveurs en échec
+
+Logs: /opt/keybuzz-installer/logs/prepare_simple_20251025_014707.log

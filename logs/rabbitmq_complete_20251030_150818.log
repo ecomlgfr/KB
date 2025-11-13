@@ -1,0 +1,277 @@
+
+Installation RabbitMQ Quorum Cluster HA (3 nœuds)
+Timestamp: 2025-10-30 15:08:18
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Serveurs Queue trouvés: 3
+  Serveurs HAProxy trouvés: 2
+  queue-01: 10.0.0.126
+  queue-02: 10.0.0.127
+  queue-03: 10.0.0.128
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Gestion sécurisée des credentials                     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Chargement des credentials existants...
+  Cookie Erlang: 933db44067007b1b...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Préparation des serveurs Queue                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Préparation de queue-01 (10.0.0.126)...
+d84ef7a67384
+d84ef7a67384
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+  Préparation de queue-02 (10.0.0.127)...
+834a6b81000c
+834a6b81000c
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+  Préparation de queue-03 (10.0.0.128)...
+45091e65a607
+45091e65a607
+    Volume monté (système: xfs)
+    ✓ Préparé et nettoyé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Déploiement RabbitMQ sur chaque nœud                  ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Déploiement sur queue-01 (10.0.0.126)...
+time="2025-10-30T15:08:27Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+  Déploiement sur queue-02 (10.0.0.127)...
+time="2025-10-30T15:08:32Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+  Déploiement sur queue-03 (10.0.0.128)...
+time="2025-10-30T15:08:38Z" level=warning msg="/opt/keybuzz/rabbitmq/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container rabbitmq  Creating
+ Container rabbitmq  Created
+ Container rabbitmq  Starting
+ Container rabbitmq  Started
+    ✓ RabbitMQ démarré
+
+  Attente de stabilisation (20s)...
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Formation du cluster RabbitMQ                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  État initial de queue-01...
+Cluster status of node rabbit@queue-01 ...
+rabbit@queue-01
+rabbit@queue-02
+rabbit@queue-03
+Running Nodes
+rabbit@queue-01
+rabbit@queue-02
+rabbit@queue-03
+rabbit@queue-01: RabbitMQ 3.13.7 on Erlang 26.2.5.15
+rabbit@queue-02: RabbitMQ 3.13.7 on Erlang 26.2.5.15
+rabbit@queue-03: RabbitMQ 3.13.7 on Erlang 26.2.5.15
+Node: rabbit@queue-01, available CPU cores: 2
+Node: rabbit@queue-02, available CPU cores: 2
+Node: rabbit@queue-03, available CPU cores: 2
+Node: rabbit@queue-01, status: not under maintenance
+Node: rabbit@queue-02, status: not under maintenance
+Node: rabbit@queue-03, status: not under maintenance
+Node: rabbit@queue-01, interface: [::], port: 15672, protocol: http, purpose: HTTP API
+Node: rabbit@queue-01, interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
+Node: rabbit@queue-01, interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
+Node: rabbit@queue-01, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
+Node: rabbit@queue-02, interface: [::], port: 15672, protocol: http, purpose: HTTP API
+Node: rabbit@queue-02, interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
+Node: rabbit@queue-02, interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
+Node: rabbit@queue-02, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
+Node: rabbit@queue-03, interface: [::], port: 15672, protocol: http, purpose: HTTP API
+Node: rabbit@queue-03, interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
+Node: rabbit@queue-03, interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
+Node: rabbit@queue-03, interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
+
+  Ajout de queue-02 au cluster...
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 03:08:21 PM UTC 2025
+
+  System load:  0.0               Processes:             151
+  Usage of /:   6.5% of 37.23GB   Users logged in:       0
+  Memory usage: 22%               IPv4 address for eth0: 91.98.167.159
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1b:9e02::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+24 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Stopping rabbit application on node rabbit@queue-02 ...
+Resetting node rabbit@queue-02 ...
+Clustering node rabbit@queue-02 with rabbit@queue-01
+Starting node rabbit@queue-02 ...
+    ✓ queue-02 a rejoint le cluster
+
+  Ajout de queue-03 au cluster...
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 03:08:24 PM UTC 2025
+
+  System load:  0.04              Processes:             145
+  Usage of /:   6.5% of 37.23GB   Users logged in:       0
+  Memory usage: 21%               IPv4 address for eth0: 91.98.68.35
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1a:b50c::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+24 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Stopping rabbit application on node rabbit@queue-03 ...
+Resetting node rabbit@queue-03 ...
+Clustering node rabbit@queue-03 with rabbit@queue-01
+Starting node rabbit@queue-03 ...
+    ✓ queue-03 a rejoint le cluster
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Configuration des politiques HA                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-71-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Oct 30 03:09:40 PM UTC 2025
+
+  System load:  0.06              Processes:             155
+  Usage of /:   6.5% of 37.23GB   Users logged in:       0
+  Memory usage: 22%               IPv4 address for eth0: 23.88.105.16
+  Swap usage:   0%                IPv6 address for eth0: 2a01:4f8:1c1c:20de::1
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+52 updates can be applied immediately.
+24 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Setting policy "ha-all" for pattern ".*" to "{"ha-mode":"all","ha-sync-mode":"automatic"}" with priority "0" for vhost "/" ...
+Setting policy "quorum-queues" for pattern "^quorum\." to "{"queue-type":"quorum"}" with priority "1" for vhost "/" ...
+Error:
+Validation failed
+
+[{<<"queue-type">>,<<"quorum">>}] are not recognised policy settings
+
+    ✓ Politiques HA configurées
+
+  État final du cluster:
+Running Nodes
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Configuration Load Balancer sur HAProxy               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Configuration de haproxy-01 (10.0.0.11)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+2f7b9b1605db372b0b2d11056bf0a9e3531f7560cddc26d3a0b505588ffba4e2
+    ✓ HAProxy RabbitMQ démarré
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Firewall reloaded
+  Configuration de haproxy-02 (10.0.0.12)...
+haproxy-rabbitmq
+haproxy-rabbitmq
+264452bd52ffecc615969bd456ad090f3aec4d9f8b2daa501f2f13099da8fcf2
+    ✓ HAProxy RabbitMQ démarré
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Firewall reloaded
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 7: Tests finaux                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+  Test des nœuds RabbitMQ:
+    queue-01 AMQP (5672): [0;32mOK[0m
+    queue-02 AMQP (5672): [0;32mOK[0m
+    queue-03 AMQP (5672): [0;32mOK[0m
+
+  Test des HAProxy:
+    haproxy-01 AMQP (5672): [0;32mOK[0m
+    haproxy-01 Management (15672): [0;32mOK[0m
+    haproxy-02 AMQP (5672): [0;32mOK[0m
+    haproxy-02 Management (15672): [0;32mOK[0m
+
+  Test via Load Balancer VIP (10.0.0.10):
+    AMQP (5672): [0;32mOK[0m
+    Management (15672): [0;32mOK[0m
+
+  Test authentification Management UI:
+    [0;32mOK[0m Authentification réussie (HTTP 200)
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m RABBITMQ HA INSTALLATION COMPLÈTE ET OPÉRATIONNELLE
+
+Endpoints:
+  • AMQP: 10.0.0.10:5672
+  • Management: http://10.0.0.10:15672
+  • User: admin
+  • Cookie Erlang: 933db44067007b1b...
+
+Pour tester:
+  Management UI: http://10.0.0.10:15672
+  Login: admin
+  Password: [voir /opt/keybuzz-installer/credentials/rabbitmq.env]
+
+Résumé complet: /opt/keybuzz-installer/credentials/rabbitmq-summary.txt
+═══════════════════════════════════════════════════════════════════

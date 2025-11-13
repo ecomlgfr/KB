@@ -1,0 +1,8 @@
+
+═══ Installation HAProxy sur les nœuds proxy ═══
+
+Note: Le Load Balancer Hetzner (10.0.0.10) route le trafic
+      vers haproxy-01 (10.0.0.11) et haproxy-02 (10.0.0.12)
+
+→ Configuration haproxy-01 (10.0.0.11)
+  [0;31mKO[0m Échec installation

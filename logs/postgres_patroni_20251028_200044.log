@@ -1,0 +1,27 @@
+
+═══ 1. Gestion des credentials ═══
+
+  Credentials existants conservés
+
+═══ 2. Configuration des nœuds ═══
+
+→ Configuration db-master-01 (10.0.0.120)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-01 (10.0.0.121)
+  [0;32mOK[0m Configuration terminée
+→ Configuration db-slave-02 (10.0.0.122)
+  [0;32mOK[0m Configuration terminée
+
+═══ 3. Démarrage du cluster ═══
+
+→ Bootstrap db-master-01 (premier nœud)
+  Attente initialisation (45s)...
+  Vérification bootstrap: [0;31mKO[0m
+  Logs:
+2025-10-28 20:03:47,675 INFO: No PostgreSQL configuration items changed, nothing to reload.
+2025-10-28 20:03:49,690 INFO: Lock owner: None; I am db-master-01
+2025-10-28 20:04:01,700 INFO: failed to acquire initialize lock
+2025-10-28 20:04:01,702 WARNING: Loop time exceeded, rescheduling immediately.
+2025-10-28 20:04:03,704 INFO: Lock owner: None; I am db-master-01
+2025-10-28 20:04:15,711 INFO: failed to acquire initialize lock
+2025-10-28 20:04:15,712 WARNING: Loop time exceeded, rescheduling immediately.

@@ -1,0 +1,19 @@
+Copie servers.tsv local...
+Recherche device pour etcd data...
+Aucun volume libre trouvé, utilisation stockage système
+time="2025-10-17T20:36:40Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Arrêt etcd existant...
+time="2025-10-17T20:36:40Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container etcd  Stopping
+ Container etcd  Stopped
+ Container etcd  Removing
+ Container etcd  Removed
+Démarrage etcd...
+time="2025-10-17T20:36:41Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container etcd  Creating
+ Container etcd  Created
+ Container etcd  Starting
+ Container etcd  Started
+time="2025-10-17T20:36:46Z" level=warning msg="/opt/keybuzz/etcd/config/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+etcd démarré
+etcd healthy

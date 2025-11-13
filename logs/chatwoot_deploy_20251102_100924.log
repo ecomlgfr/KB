@@ -1,0 +1,120 @@
+
+Déploiement Chatwoot - Architecture KeyBuzz
+Timestamp: 2025-11-02 10:09:24
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Credentials Redis ... [0;32mOK[0m
+→ Credentials RabbitMQ ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Vérification des services backend (via LB 10.0.0.10) :
+  → PostgreSQL (10.0.0.10:5432) ... [0;32mOK[0m
+  → Redis (10.0.0.10:6379) ... [0;32mOK[0m
+  → RabbitMQ (10.0.0.10:5672) ... [0;32mOK[0m
+
+Architecture validée :
+  ✓ PostgreSQL : 10.0.0.10:5432 (via LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (via LB Hetzner → HAProxy → Sentinel)
+  ✓ RabbitMQ   : 10.0.0.10:5672 (via LB Hetzner → HAProxy → Cluster)
+
+Continuer le déploiement Chatwoot ? (yes/NO) : 
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Création namespace et secrets                         ║
+╚═══════════════════════════════════════════════════════════════╝
+
+[0;32mOK[0m Namespace chatwoot créé
+
+Création du secret Chatwoot...
+secret/chatwoot-secrets created
+[0;32mOK[0m Secret chatwoot-secrets créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Déploiement Chatwoot (Web + Workers + Migration)     ║
+╚═══════════════════════════════════════════════════════════════╝
+
+job.batch/chatwoot-db-migrate created
+service/chatwoot configured
+ingress.networking.k8s.io/chatwoot configured
+Error from server (Invalid): error when applying patch:
+{"metadata":{"annotations":{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"chatwoot\",\"component\":\"web\"},\"name\":\"chatwoot-web\",\"namespace\":\"chatwoot\"},\"spec\":{\"replicas\":2,\"selector\":{\"matchLabels\":{\"app\":\"chatwoot\",\"component\":\"web\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"chatwoot\",\"component\":\"web\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"POSTGRES_HOST\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_HOST\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_PORT\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_PORT\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_DATABASE\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_DATABASE\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_USERNAME\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_USERNAME\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_PASSWORD\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"REDIS_URL\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"REDIS_URL\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"REDIS_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"REDIS_PASSWORD\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"RABBITMQ_URL\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"RABBITMQ_URL\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"SECRET_KEY_BASE\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"SECRET_KEY_BASE\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"FRONTEND_URL\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"FRONTEND_URL\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"RAILS_ENV\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"RAILS_ENV\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"NODE_ENV\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"NODE_ENV\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"INSTALLATION_ENV\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"INSTALLATION_ENV\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"ACTIVE_STORAGE_SERVICE\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"ACTIVE_STORAGE_SERVICE\",\"name\":\"chatwoot-secrets\"}}}],\"image\":\"chatwoot/chatwoot:latest\",\"livenessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":3000},\"initialDelaySeconds\":60,\"periodSeconds\":30,\"timeoutSeconds\":5},\"name\":\"chatwoot\",\"ports\":[{\"containerPort\":3000,\"name\":\"http\"}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":3000},\"initialDelaySeconds\":30,\"periodSeconds\":10,\"timeoutSeconds\":5},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"2Gi\"},\"requests\":{\"cpu\":\"250m\",\"memory\":\"512Mi\"}}}]}}}}\n"},"labels":{"app":"chatwoot","component":"web"}},"spec":{"selector":{"matchLabels":{"app":"chatwoot","component":"web"}},"template":{"metadata":{"labels":{"app":"chatwoot","component":"web"}},"spec":{"$setElementOrder/containers":[{"name":"chatwoot"}],"containers":[{"$setElementOrder/env":[{"name":"POSTGRES_HOST"},{"name":"POSTGRES_PORT"},{"name":"POSTGRES_DATABASE"},{"name":"POSTGRES_USERNAME"},{"name":"POSTGRES_PASSWORD"},{"name":"REDIS_URL"},{"name":"REDIS_PASSWORD"},{"name":"RABBITMQ_URL"},{"name":"SECRET_KEY_BASE"},{"name":"FRONTEND_URL"},{"name":"RAILS_ENV"},{"name":"NODE_ENV"},{"name":"INSTALLATION_ENV"},{"name":"ACTIVE_STORAGE_SERVICE"}],"command":null,"env":[{"name":"POSTGRES_HOST","valueFrom":{"secretKeyRef":{"key":"POSTGRES_HOST","name":"chatwoot-secrets"}}},{"name":"POSTGRES_PORT","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PORT","name":"chatwoot-secrets"}}},{"name":"POSTGRES_DATABASE","valueFrom":{"secretKeyRef":{"key":"POSTGRES_DATABASE","name":"chatwoot-secrets"}}},{"name":"POSTGRES_USERNAME","valueFrom":{"secretKeyRef":{"key":"POSTGRES_USERNAME","name":"chatwoot-secrets"}}},{"name":"POSTGRES_PASSWORD","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PASSWORD","name":"chatwoot-secrets"}}},{"name":"REDIS_URL","valueFrom":{"secretKeyRef":{"key":"REDIS_URL","name":"chatwoot-secrets"}}},{"name":"REDIS_PASSWORD","valueFrom":{"secretKeyRef":{"key":"REDIS_PASSWORD","name":"chatwoot-secrets"}}},{"name":"RABBITMQ_URL","valueFrom":{"secretKeyRef":{"key":"RABBITMQ_URL","name":"chatwoot-secrets"}}},{"name":"SECRET_KEY_BASE","valueFrom":{"secretKeyRef":{"key":"SECRET_KEY_BASE","name":"chatwoot-secrets"}}},{"name":"FRONTEND_URL","valueFrom":{"secretKeyRef":{"key":"FRONTEND_URL","name":"chatwoot-secrets"}}},{"name":"RAILS_ENV","value":null,"valueFrom":{"secretKeyRef":{"key":"RAILS_ENV","name":"chatwoot-secrets"}}},{"name":"NODE_ENV","value":null,"valueFrom":{"secretKeyRef":{"key":"NODE_ENV","name":"chatwoot-secrets"}}},{"name":"INSTALLATION_ENV","valueFrom":{"secretKeyRef":{"key":"INSTALLATION_ENV","name":"chatwoot-secrets"}}},{"name":"ACTIVE_STORAGE_SERVICE","valueFrom":{"secretKeyRef":{"key":"ACTIVE_STORAGE_SERVICE","name":"chatwoot-secrets"}}},{"$patch":"delete","name":"PORT"}],"envFrom":null,"livenessProbe":{"failureThreshold":null,"httpGet":{"path":"/health"},"initialDelaySeconds":60,"timeoutSeconds":5},"name":"chatwoot","readinessProbe":{"failureThreshold":null,"httpGet":{"path":"/health"},"initialDelaySeconds":30},"resources":{"limits":{"cpu":"1000m"}}}],"initContainers":null}}}}
+to:
+Resource: "apps/v1, Resource=deployments", GroupVersionKind: "apps/v1, Kind=Deployment"
+Name: "chatwoot-web", Namespace: "chatwoot"
+for: "STDIN": error when patching "STDIN": Deployment.apps "chatwoot-web" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app":"chatwoot", "component":"web"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
+Error from server (Invalid): error when applying patch:
+{"metadata":{"annotations":{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"chatwoot\",\"component\":\"worker\"},\"name\":\"chatwoot-worker\",\"namespace\":\"chatwoot\"},\"spec\":{\"replicas\":2,\"selector\":{\"matchLabels\":{\"app\":\"chatwoot\",\"component\":\"worker\"}},\"template\":{\"metadata\":{\"labels\":{\"app\":\"chatwoot\",\"component\":\"worker\"}},\"spec\":{\"containers\":[{\"command\":[\"bundle\",\"exec\",\"sidekiq\",\"-C\",\"config/sidekiq.yml\"],\"env\":[{\"name\":\"POSTGRES_HOST\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_HOST\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_PORT\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_PORT\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_DATABASE\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_DATABASE\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_USERNAME\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_USERNAME\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"POSTGRES_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"POSTGRES_PASSWORD\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"REDIS_URL\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"REDIS_URL\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"REDIS_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"REDIS_PASSWORD\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"RABBITMQ_URL\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"RABBITMQ_URL\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"SECRET_KEY_BASE\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"SECRET_KEY_BASE\",\"name\":\"chatwoot-secrets\"}}},{\"name\":\"RAILS_ENV\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"RAILS_ENV\",\"name\":\"chatwoot-secrets\"}}}],\"image\":\"chatwoot/chatwoot:latest\",\"name\":\"worker\",\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"2Gi\"},\"requests\":{\"cpu\":\"250m\",\"memory\":\"512Mi\"}}}]}}}}\n"},"labels":{"app":"chatwoot","component":"worker"}},"spec":{"selector":{"matchLabels":{"app":"chatwoot","component":"worker"}},"template":{"metadata":{"labels":{"app":"chatwoot","component":"worker"}},"spec":{"$setElementOrder/containers":[{"name":"worker"}],"containers":[{"$setElementOrder/env":[{"name":"POSTGRES_HOST"},{"name":"POSTGRES_PORT"},{"name":"POSTGRES_DATABASE"},{"name":"POSTGRES_USERNAME"},{"name":"POSTGRES_PASSWORD"},{"name":"REDIS_URL"},{"name":"REDIS_PASSWORD"},{"name":"RABBITMQ_URL"},{"name":"SECRET_KEY_BASE"},{"name":"RAILS_ENV"}],"env":[{"name":"POSTGRES_HOST","valueFrom":{"secretKeyRef":{"key":"POSTGRES_HOST","name":"chatwoot-secrets"}}},{"name":"POSTGRES_PORT","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PORT","name":"chatwoot-secrets"}}},{"name":"POSTGRES_DATABASE","valueFrom":{"secretKeyRef":{"key":"POSTGRES_DATABASE","name":"chatwoot-secrets"}}},{"name":"POSTGRES_USERNAME","valueFrom":{"secretKeyRef":{"key":"POSTGRES_USERNAME","name":"chatwoot-secrets"}}},{"name":"POSTGRES_PASSWORD","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PASSWORD","name":"chatwoot-secrets"}}},{"name":"REDIS_URL","valueFrom":{"secretKeyRef":{"key":"REDIS_URL","name":"chatwoot-secrets"}}},{"name":"REDIS_PASSWORD","valueFrom":{"secretKeyRef":{"key":"REDIS_PASSWORD","name":"chatwoot-secrets"}}},{"name":"RABBITMQ_URL","valueFrom":{"secretKeyRef":{"key":"RABBITMQ_URL","name":"chatwoot-secrets"}}},{"name":"SECRET_KEY_BASE","valueFrom":{"secretKeyRef":{"key":"SECRET_KEY_BASE","name":"chatwoot-secrets"}}},{"name":"RAILS_ENV","value":null,"valueFrom":{"secretKeyRef":{"key":"RAILS_ENV","name":"chatwoot-secrets"}}},{"$patch":"delete","name":"NODE_ENV"}],"envFrom":null,"name":"worker","resources":{"limits":{"cpu":"1000m"}}}]}}}}
+to:
+Resource: "apps/v1, Resource=deployments", GroupVersionKind: "apps/v1, Kind=Deployment"
+Name: "chatwoot-worker", Namespace: "chatwoot"
+for: "STDIN": error when patching "STDIN": Deployment.apps "chatwoot-worker" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app":"chatwoot", "component":"worker"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
+[0;32mOK[0m Ressources Chatwoot créées
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Attente migration DB et démarrage pods               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Attente du job de migration (60s max)...
+[0;33mWARN[0m Migration prend plus de temps, vérification des logs...
+/gems/ruby/3.4.0/gems/reline-0.3.6/lib/reline/terminfo.rb:2: warning: /usr/local/lib/ruby/3.4.0/fiddle.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.5.0.
+You can add fiddle to your Gemfile or gemspec to silence this warning.
+Also please contact the author of reline-0.3.6 to request adding fiddle into its gemspec.
+[1mUnrecognized command "db:chatwoot:prepare" ([1;4mRails::Command::UnrecognizedCommandError[m[1m)[m
+
+Attente des pods Web (60s max)...
+[0;33mWARN[0m Pods pas encore prêts
+
+Attente des pods Workers (30s max)...
+[0;33mWARN[0m Workers pas encore prêts
+
+╔═══════════════════════════════════════════════════════════════╗
+║ RÉSUMÉ FINAL                                                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+État des pods Chatwoot :
+NAME                               READY   STATUS    RESTARTS      AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+chatwoot-db-migrate-ndcfm          0/1     Error     2 (30s ago)   61s   10.42.4.20   k3s-worker-02   <none>           <none>
+chatwoot-web-7c4f44fddd-ctzqq      1/1     Running   0             34h   10.42.2.5    k3s-master-03   <none>           <none>
+chatwoot-web-7c4f44fddd-phr59      1/1     Running   0             34h   10.42.1.6    k3s-master-02   <none>           <none>
+chatwoot-worker-7b75fc8ccf-cw2k6   1/1     Running   0             34h   10.42.7.11   k3s-worker-05   <none>           <none>
+chatwoot-worker-7b75fc8ccf-khljv   1/1     Running   0             34h   10.42.3.36   k3s-worker-01   <none>           <none>
+
+État du service :
+NAME       TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+chatwoot   ClusterIP   10.43.13.99   <none>        3000/TCP   41h
+
+État de l'Ingress :
+NAME       CLASS   HOSTS             ADDRESS     PORTS   AGE
+chatwoot   nginx   chat.keybuzz.io   localhost   80      41h
+
+═══════════════════════════════════════════════════════════════════
+[0;32mOK[0m CHATWOOT DÉPLOYÉ
+═══════════════════════════════════════════════════════════════════
+
+URL d'accès : http://chat.keybuzz.io
+
+⚠️  IMPORTANT - Configuration DNS requise :
+  chat.keybuzz.io  A  49.13.42.76      TTL 60
+  chat.keybuzz.io  A  138.199.132.240  TTL 60
+
+Premier accès :
+  1. Ouvrir http://chat.keybuzz.io
+  2. Créer le premier compte (sera admin)
+  3. Configurer l'entreprise
+
+Logs utiles :
+  kubectl logs -n chatwoot -l component=web --tail=50
+  kubectl logs -n chatwoot -l component=worker --tail=50
+  kubectl logs -n chatwoot job/chatwoot-db-migrate
+
+Architecture :
+  ✓ PostgreSQL : 10.0.0.10:5432 (LB Hetzner → HAProxy → Patroni)
+  ✓ Redis      : 10.0.0.10:6379 (LB Hetzner → HAProxy → Sentinel)
+  ✓ RabbitMQ   : 10.0.0.10:5672 (LB Hetzner → HAProxy → Cluster)
+
+Prochaine étape :
+  ./13_deploy_superset.sh
+

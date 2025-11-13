@@ -1,0 +1,96 @@
+
+Déploiement Vault - Architecture KeyBuzz
+Timestamp: 2025-11-08 00:59:44
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 0: Vérifications préalables                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+→ Credentials PostgreSQL ... [0;32mOK[0m
+→ Cluster K3s ... [0;32mOK[0m
+
+Configuration :
+  PostgreSQL : 10.0.0.10:5432 (LB → HAProxy → Patroni)
+  Port Vault : 8200
+  Backend    : PostgreSQL (HA)
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 1: Préparation base PostgreSQL                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Création base et user Vault...
+[0;32mOK[0m Connexion PostgreSQL OK
+DO
+GRANT
+You are now connected to database "vault" as user "postgres".
+ALTER SCHEMA
+GRANT
+GRANT
+GRANT
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES
+[0;32mOK[0m Base vault créée
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 2: Création namespace                                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+namespace/vault created
+[0;32mOK[0m Namespace vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 3: Création secrets                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+secret/vault-secrets created
+[0;32mOK[0m Secrets Vault créés
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 4: Déploiement Vault DaemonSet                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+configmap/vault-config created
+daemonset.apps/vault created
+service/vault created
+Error from server (BadRequest): error decoding patch: invalid character '\n' in string literal
+[0;32mOK[0m Vault DaemonSet déployé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 5: Création Ingress                                      ║
+╚═══════════════════════════════════════════════════════════════╝
+
+ingress.networking.k8s.io/vault created
+[0;32mOK[0m Ingress vault créé
+
+╔═══════════════════════════════════════════════════════════════╗
+║ ÉTAPE 6: Attente démarrage (60s)                              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════
+═══ Vérification ═══
+═══════════════════════════════════════════════════════════════════
+
+Pods Vault :
+NAME          READY   STATUS             RESTARTS      AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+vault-24qcf   0/1     CrashLoopBackOff   3 (4s ago)    61s   10.0.0.102   k3s-master-03   <none>           <none>
+vault-27vxd   0/1     CrashLoopBackOff   3 (5s ago)    61s   10.0.0.100   k3s-master-01   <none>           <none>
+vault-8qv9p   0/1     CrashLoopBackOff   3 (16s ago)   61s   10.0.0.111   k3s-worker-02   <none>           <none>
+vault-cdfrm   0/1     CrashLoopBackOff   3 (5s ago)    61s   10.0.0.114   k3s-worker-05   <none>           <none>
+vault-krcsg   0/1     CrashLoopBackOff   2 (34s ago)   61s   10.0.0.112   k3s-worker-03   <none>           <none>
+vault-l8wl9   0/1     CrashLoopBackOff   3 (16s ago)   61s   10.0.0.101   k3s-master-02   <none>           <none>
+vault-thhbg   0/1     CrashLoopBackOff   3 (15s ago)   61s   10.0.0.110   k3s-worker-01   <none>           <none>
+vault-zwf2l   0/1     Error              3 (34s ago)   61s   10.0.0.113   k3s-worker-04   <none>           <none>
+
+Services :
+NAME    TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                         AGE
+vault   NodePort   10.43.43.198   <none>        8200:30820/TCP,8201:30821/TCP   61s
+
+Ingress :
+NAME    CLASS   HOSTS              ADDRESS     PORTS   AGE
+vault   nginx   vault.keybuzz.io   localhost   80      60s
+
+DaemonSet :
+NAME    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+vault   8         8         0       8            0           <none>          61s
