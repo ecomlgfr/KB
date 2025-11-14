@@ -1,1 +1,2 @@
 .env.mariadb_proxysql_erpnext
+.env.k3s_apps
