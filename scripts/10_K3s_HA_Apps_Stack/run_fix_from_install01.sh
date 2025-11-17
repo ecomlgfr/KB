@@ -11,11 +11,11 @@ set -u
 set -o pipefail
 
 # ╔════════════════════════════════════════════════════════════════════╗
-# ║  CONFIGURATION                                                     ║
+# ║  CONFIGURATION (depuis servers.tsv)                                ║
 # ╚════════════════════════════════════════════════════════════════════╝
 
-# IP de install-01 (serveur d'orchestration)
-INSTALL01_IP="${INSTALL01_IP:-10.0.0.1}"
+# install-01 : 91.98.128.153 / 10.0.0.20 / install-01.keybuzz.io
+INSTALL01_IP="${INSTALL01_IP:-10.0.0.20}"
 INSTALL01_USER="${INSTALL01_USER:-root}"
 
 # Chemin vers le script de fix
@@ -52,7 +52,7 @@ if [ ! -f "$SCRIPT_PATH" ]; then
     exit 1
 fi
 
-log "$INFO Connexion à install-01 ($INSTALL01_IP)..."
+log "$INFO Connexion à install-01 ($INSTALL01_IP - install-01.keybuzz.io)..."
 
 # Tester la connexion SSH
 if ! ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no "$INSTALL01_USER@$INSTALL01_IP" "echo OK" &>/dev/null; then
@@ -61,7 +61,12 @@ if ! ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no "$INSTALL01_USER@$INSTA
     log "Vérifiez:"
     log "  1. L'IP de install-01 est correcte: $INSTALL01_IP"
     log "  2. Les clés SSH sont configurées"
-    log "  3. Le firewall autorise SSH"
+    log "  3. Le firewall autorise SSH (port 22)"
+    log ""
+    log "Informations depuis servers.tsv:"
+    log "  Hostname: install-01.keybuzz.io"
+    log "  IP Wireguard: 10.0.0.20"
+    log "  IP Publique: 91.98.128.153"
     log ""
     log "Pour définir une IP différente:"
     log "  export INSTALL01_IP=<ip_de_install01>"

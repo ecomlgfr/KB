@@ -98,7 +98,7 @@ if [ -z "$KUBECONFIG_FOUND" ]; then
     log "Ce script doit être exécuté depuis un serveur ayant accès au cluster K3s."
     log ""
     log "Options:"
-    log "  1. Exécuter depuis install-01 (serveur d'orchestration)"
+    log "  1. Exécuter depuis install-01 (10.0.0.20 / install-01.keybuzz.io)"
     log "  2. Exécuter depuis un master K3s (10.0.0.100-102)"
     log "  3. Définir KUBECONFIG manuellement:"
     log "     export KUBECONFIG=/chemin/vers/k3s.yaml"
