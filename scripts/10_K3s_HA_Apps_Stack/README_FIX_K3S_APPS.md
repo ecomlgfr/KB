@@ -262,8 +262,63 @@ Pour plus d'informations :
 - Scripts K3s : `/scripts/10_K3s_HA_Apps_Stack/`
 - Logs : `/opt/keybuzz-installer/logs/`
 
+## Scripts Supplémentaires
+
+### diagnose_remaining_issues.sh
+
+Script de diagnostic approfondi pour investiguer les problèmes restants :
+- Investigation du format URL Redis (test de différents formats)
+- Analyse des timeouts Connect API (nginx.conf, upstreams)
+- Tests de latence réseau entre Ingress et pods backend
+- Vérification de la configuration ACL Redis
+
+**Usage** :
+```bash
+ssh root@10.0.0.20
+cd /opt/keybuzz-installer/KB/scripts/10_K3s_HA_Apps_Stack/
+./diagnose_remaining_issues.sh
+```
+
+### fix_final_issues.sh
+
+Script de correction finale pour les 2 derniers problèmes :
+
+1. **Format URL Redis** : Teste et applique le format avec user 'default' explicite
+   - Format testé : `redis://default:PASSWORD@10.0.0.10:6379/3`
+   - Applique à ERPNext si le test réussit
+   - Redémarre le pod socketio
+
+2. **Timeout Connect API** : Force les timeouts à 600s partout
+   - Patch ConfigMap Ingress NGINX avec tous les timeouts
+   - Ajoute toutes les annotations timeout aux Ingress
+   - Redémarre Ingress NGINX Controller
+   - Vérifie la config nginx.conf finale
+
+**Usage** :
+```bash
+ssh root@10.0.0.20
+cd /opt/keybuzz-installer/KB/scripts/10_K3s_HA_Apps_Stack/
+./fix_final_issues.sh
+```
+
+### fix_upstream_timeouts.sh
+
+Script spécialisé pour corriger les timeouts upstream (connexion aux pods backend) :
+- Patch les Ingress avec annotations upstream-specific
+- Configure les timeouts globaux dans le ConfigMap
+- Redémarre Ingress NGINX pour appliquer la config
+
+**Usage** :
+```bash
+./fix_upstream_timeouts.sh
+```
+
 ## Historique des Modifications
 
-- **2025-11-17** : Création initiale du script
+- **2025-11-17** : Création initiale du script fix_k3s_apps_issues.sh
 - **2025-11-17** : Ajout de l'auto-détection kubeconfig
 - **2025-11-17** : Création du script wrapper pour install-01
+- **2025-11-17** : Fix CoreDNS (forward vers 8.8.8.8 au lieu de 127.0.0.53)
+- **2025-11-17** : Ajout authentification Redis pour ERPNext
+- **2025-11-17** : Scripts de diagnostic et correction des timeouts Ingress
+- **2025-11-17** : Création diagnose_remaining_issues.sh et fix_final_issues.sh
