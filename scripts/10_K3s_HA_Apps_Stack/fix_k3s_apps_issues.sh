@@ -32,11 +32,84 @@ mkdir -p "$LOG_DIR"
 
 exec > >(tee -a "$LOG") 2>&1
 
-export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
+# ╔════════════════════════════════════════════════════════════════════╗
+# ║  DÉTECTION ET CONFIGURATION KUBECONFIG                            ║
+# ╚════════════════════════════════════════════════════════════════════╝
 
+# Fonction de log (doit être définie avant l'utilisation)
 log() {
     echo -e "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
 }
+
+# Essayer plusieurs emplacements de kubeconfig
+KUBECONFIG_LOCATIONS=(
+    "${KUBECONFIG}"  # Variable d'environnement si déjà définie
+    "/opt/keybuzz-installer/credentials/k3s.yaml"
+    "/etc/rancher/k3s/k3s.yaml"
+    "$HOME/.kube/config"
+)
+
+KUBECONFIG_FOUND=""
+for kubeconfig_path in "${KUBECONFIG_LOCATIONS[@]}"; do
+    if [ -n "$kubeconfig_path" ] && [ -f "$kubeconfig_path" ]; then
+        # Tester si le kubeconfig fonctionne
+        if KUBECONFIG="$kubeconfig_path" kubectl version --client &>/dev/null; then
+            KUBECONFIG_FOUND="$kubeconfig_path"
+            export KUBECONFIG="$kubeconfig_path"
+            log "✓ Kubeconfig trouvé: $kubeconfig_path"
+            break
+        fi
+    fi
+done
+
+# Si aucun kubeconfig trouvé, essayer de le récupérer depuis un master K3s
+if [ -z "$KUBECONFIG_FOUND" ]; then
+    log "⚠ Aucun kubeconfig trouvé, tentative de récupération depuis master K3s..."
+
+    # IPs des masters K3s (selon cahier des charges)
+    K3S_MASTERS=("10.0.0.100" "10.0.0.101" "10.0.0.102")
+
+    for master_ip in "${K3S_MASTERS[@]}"; do
+        log "  Tentative de connexion à $master_ip..."
+        if scp -o ConnectTimeout=5 -o StrictHostKeyChecking=no \
+            root@"$master_ip":/etc/rancher/k3s/k3s.yaml \
+            /tmp/k3s_kubeconfig_temp.yaml &>/dev/null; then
+
+            # Remplacer 127.0.0.1 par l'IP réelle du master
+            sed -i "s/127.0.0.1/$master_ip/g" /tmp/k3s_kubeconfig_temp.yaml
+
+            # Créer le répertoire credentials si nécessaire
+            mkdir -p /opt/keybuzz-installer/credentials
+            mv /tmp/k3s_kubeconfig_temp.yaml /opt/keybuzz-installer/credentials/k3s.yaml
+            chmod 600 /opt/keybuzz-installer/credentials/k3s.yaml
+
+            export KUBECONFIG="/opt/keybuzz-installer/credentials/k3s.yaml"
+            KUBECONFIG_FOUND="$KUBECONFIG"
+            log "✓ Kubeconfig récupéré depuis $master_ip"
+            break
+        fi
+    done
+fi
+
+# Vérifier que kubectl fonctionne
+if [ -z "$KUBECONFIG_FOUND" ]; then
+    log "✗ ERREUR: Impossible de trouver ou récupérer un kubeconfig valide"
+    log ""
+    log "Ce script doit être exécuté depuis un serveur ayant accès au cluster K3s."
+    log ""
+    log "Options:"
+    log "  1. Exécuter depuis install-01 (serveur d'orchestration)"
+    log "  2. Exécuter depuis un master K3s (10.0.0.100-102)"
+    log "  3. Définir KUBECONFIG manuellement:"
+    log "     export KUBECONFIG=/chemin/vers/k3s.yaml"
+    log ""
+    log "Pour récupérer manuellement le kubeconfig:"
+    log "  scp root@10.0.0.100:/etc/rancher/k3s/k3s.yaml /opt/keybuzz-installer/credentials/k3s.yaml"
+    log "  sed -i 's/127.0.0.1/10.0.0.100/g' /opt/keybuzz-installer/credentials/k3s.yaml"
+    log "  chmod 600 /opt/keybuzz-installer/credentials/k3s.yaml"
+    log "  export KUBECONFIG=/opt/keybuzz-installer/credentials/k3s.yaml"
+    exit 1
+fi
 
 echo "╔════════════════════════════════════════════════════════════════════╗"
 echo "║      DIAGNOSTIC ET CORRECTION AUTOMATIQUE - K3s Apps              ║"
