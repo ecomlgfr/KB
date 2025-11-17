@@ -43,7 +43,7 @@ log() {
 
 # Essayer plusieurs emplacements de kubeconfig
 KUBECONFIG_LOCATIONS=(
-    "${KUBECONFIG}"  # Variable d'environnement si déjà définie
+    "${KUBECONFIG:-}"  # Variable d'environnement si déjà définie (vide par défaut)
     "/opt/keybuzz-installer/credentials/k3s.yaml"
     "/etc/rancher/k3s/k3s.yaml"
     "$HOME/.kube/config"
